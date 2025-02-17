@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fallout FoundryVTT Server Status</title>
+    <title>Fallout & Pathfinder FoundryVTT Status</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,7 +16,11 @@
         #server-status {
             margin: 50px auto;
         }
-        #status-image {
+        .status-container {
+            display: inline-block;
+            margin: 20px;
+        }
+        .status-image {
             width: 300px;
             height: auto;
             cursor: not-allowed;
@@ -44,10 +48,19 @@
     <img id="logo" src="creator_logo.png" alt="Creator Logo">
     
     <div id="server-status">
-        <a id="server-link" href="#" target="_blank">
-            <img id="status-image" src="offline.png" alt="Server Offline">
-        </a>
-        <p id="status-text">Checking server status...</p>
+        <div class="status-container">
+            <a id="fallout-link" href="#" target="_blank">
+                <img id="fallout-image" class="status-image" src="offline_fallout.png" alt="Fallout Server Offline">
+            </a>
+            <p id="fallout-text">Checking Fallout Server...</p>
+        </div>
+
+        <div class="status-container">
+            <a id="pathfinder-link" href="#" target="_blank">
+                <img id="pathfinder-image" class="status-image" src="offline_pathfinder.png" alt="Pathfinder Server Offline">
+            </a>
+            <p id="pathfinder-text">Checking Pathfinder Server...</p>
+        </div>
     </div>
     
     <div id="social-links">
@@ -59,53 +72,48 @@
     
     <script>
         async function checkServerStatus() {
-            const foundryLocalURL = "http://localhost:30000"; // FoundryVTT local check
-            const serverURL = "https://cloudheartfoundry.duckdns.org/"; // Your actual server URL
-            
-            const isFoundryRunning = await checkFoundryProcess(foundryLocalURL);
-            if (!isFoundryRunning) {
-                console.log("FoundryVTT is NOT running locally. Marking server as offline.");
-                updateStatus(false);
-                return;
-            }
+            const foundryLocalURL = "http://localhost:30000"; // Local FoundryVTT API URL
+            const serverURL = "https://cloudheartfoundry.duckdns.org/"; // Shared URL for both servers
 
-            try {
-                const response = await fetch(serverURL, { mode: 'no-cors' });
+            let foundryTitle = await getFoundryTitle(foundryLocalURL);
 
-                if (response.ok) {
-                    updateStatus(true);
-                } else {
-                    updateStatus(false);
-                }
-            } catch (error) {
-                updateStatus(false);
-            }
+            // Determine which server is running based on the title
+            let isFalloutRunning = foundryTitle.includes("Fallout");
+            let isPathfinderRunning = foundryTitle.includes("Pathfinder");
+
+            // Update Fallout Server UI
+            updateStatus(isFalloutRunning, "fallout", serverURL);
+
+            // Update Pathfinder Server UI
+            updateStatus(isPathfinderRunning, "pathfinder", serverURL);
         }
 
-        async function checkFoundryProcess(url) {
+        async function getFoundryTitle(url) {
             try {
                 const response = await fetch(url, { mode: 'no-cors' });
-                return response.ok; // Returns true if FoundryVTT is running
+                const text = await response.text();
+                const titleMatch = text.match(/<title>(.*?)<\/title>/i);
+                return titleMatch ? titleMatch[1] : "";
             } catch (error) {
-                return false; // FoundryVTT is not running locally
+                return ""; // If Foundry isn't running, return an empty string
             }
         }
 
-        function updateStatus(isOnline) {
-            const statusImage = document.getElementById("status-image");
-            const statusText = document.getElementById("status-text");
-            const serverLink = document.getElementById("server-link");
+        function updateStatus(isOnline, type, serverURL) {
+            const image = document.getElementById(`${type}-image`);
+            const text = document.getElementById(`${type}-text`);
+            const link = document.getElementById(`${type}-link`);
 
             if (isOnline) {
-                statusImage.src = "online.png";
-                statusText.innerText = "Server Online! Click to Join.";
-                serverLink.href = "https://cloudheartfoundry.duckdns.org/";
-                statusImage.style.cursor = "pointer";
+                image.src = `online_${type}.png`; // e.g., online_fallout.png, online_pathfinder.png
+                text.innerText = `${type.charAt(0).toUpperCase() + type.slice(1)} Server Online! Click to Join.`;
+                link.href = serverURL;
+                image.style.cursor = "pointer";
             } else {
-                statusImage.src = "offline.png";
-                statusText.innerText = "Server Offline";
-                serverLink.removeAttribute("href");
-                statusImage.style.cursor = "not-allowed";
+                image.src = `offline_${type}.png`; // e.g., offline_fallout.png, offline_pathfinder.png
+                text.innerText = `${type.charAt(0).toUpperCase() + type.slice(1)} Server Offline`;
+                link.removeAttribute("href");
+                image.style.cursor = "not-allowed";
             }
         }
 
