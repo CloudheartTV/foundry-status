@@ -59,21 +59,57 @@
     
     <script>
         async function checkServerStatus() {
-            const serverURL = "https://cloudheartfoundry.duckdns.org/"; // Replace with actual server URL
+            const foundryLocalURL = "http://localhost:30000"; // FoundryVTT local check
+            const serverURL = "https://cloudheartfoundry.duckdns.org/"; // Your actual server URL
+            
+            const isFoundryRunning = await checkFoundryProcess(foundryLocalURL);
+            if (!isFoundryRunning) {
+                console.log("FoundryVTT is NOT running locally. Marking server as offline.");
+                updateStatus(false);
+                return;
+            }
+
             try {
                 const response = await fetch(serverURL, { mode: 'no-cors' });
-                document.getElementById("status-image").src = "online.png";
-                document.getElementById("status-text").innerText = "Server Online! Click to Join.";
-                document.getElementById("server-link").href = serverURL;
-                document.getElementById("status-image").style.cursor = "pointer";
+
+                if (response.ok) {
+                    updateStatus(true);
+                } else {
+                    updateStatus(false);
+                }
             } catch (error) {
-                document.getElementById("status-image").src = "offline.png";
-                document.getElementById("status-text").innerText = "Server Offline";
-                document.getElementById("server-link").removeAttribute("href");
-                document.getElementById("status-image").style.cursor = "not-allowed";
+                updateStatus(false);
             }
         }
-        
+
+        async function checkFoundryProcess(url) {
+            try {
+                const response = await fetch(url, { mode: 'no-cors' });
+                return response.ok; // Returns true if FoundryVTT is running
+            } catch (error) {
+                return false; // FoundryVTT is not running locally
+            }
+        }
+
+        function updateStatus(isOnline) {
+            const statusImage = document.getElementById("status-image");
+            const statusText = document.getElementById("status-text");
+            const serverLink = document.getElementById("server-link");
+
+            if (isOnline) {
+                statusImage.src = "online.png";
+                statusText.innerText = "Server Online! Click to Join.";
+                serverLink.href = "https://cloudheartfoundry.duckdns.org/";
+                statusImage.style.cursor = "pointer";
+            } else {
+                statusImage.src = "offline.png";
+                statusText.innerText = "Server Offline";
+                serverLink.removeAttribute("href");
+                statusImage.style.cursor = "not-allowed";
+            }
+        }
+
+        // Run the status check when the page loads
         checkServerStatus();
     </script>
 </body>
