@@ -61,7 +61,7 @@
         async function checkServerStatus() {
             const serverURL = "https://174.79.6.181:30000/"; // Replace with actual server URL
             try {
-                const response = await fetch(serverURL, { mode: 'cors' });
+                const response = await fetch(serverURL, { mode: 'no-cors' });
                 document.getElementById("status-image").src = "online.png";
                 document.getElementById("status-text").innerText = "Server Online! Click to Join.";
                 document.getElementById("server-link").href = serverURL;
