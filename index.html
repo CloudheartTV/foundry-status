@@ -72,14 +72,14 @@
     
     <script>
         async function checkServerStatus() {
-            const foundryLocalURL = "http://localhost:30000"; // Local FoundryVTT API URL
+            const foundryAPIURL = "http://localhost:30000/api/status"; // Foundry API
             const serverURL = "https://cloudheartfoundry.duckdns.org/"; // Shared URL for both servers
 
-            let foundryTitle = await getFoundryTitle(foundryLocalURL);
+            let worldName = await getFoundryWorld(foundryAPIURL);
 
-            // Determine which server is running based on the title
-            let isFalloutRunning = foundryTitle.includes("Fallout");
-            let isPathfinderRunning = foundryTitle.includes("Pathfinder");
+            // Determine which server is running based on the world name
+            let isFalloutRunning = worldName.includes("Fallout");
+            let isPathfinderRunning = worldName.includes("Pathfinder");
 
             // Update Fallout Server UI
             updateStatus(isFalloutRunning, "fallout", serverURL);
@@ -88,12 +88,13 @@
             updateStatus(isPathfinderRunning, "pathfinder", serverURL);
         }
 
-        async function getFoundryTitle(url) {
+        async function getFoundryWorld(url) {
             try {
-                const response = await fetch(url, { mode: 'no-cors' });
-                const text = await response.text();
-                const titleMatch = text.match(/<title>(.*?)<\/title>/i);
-                return titleMatch ? titleMatch[1] : "";
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Foundry API unreachable");
+
+                const jsonData = await response.json();
+                return jsonData.world ?? ""; // Extract world name, or empty if not available
             } catch (error) {
                 return ""; // If Foundry isn't running, return an empty string
             }
