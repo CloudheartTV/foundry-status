@@ -59,7 +59,7 @@
     
     <script>
         async function checkServerStatus() {
-            const serverURL = "https://174.79.6.181:30000/"; // Replace with actual server URL
+            const serverURL = "https://cloudheartfoundry.duckdns.org/"; // Replace with actual server URL
             try {
                 const response = await fetch(serverURL, { mode: 'no-cors' });
                 document.getElementById("status-image").src = "online.png";
