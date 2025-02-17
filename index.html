@@ -78,8 +78,8 @@
             let worldName = await getFoundryWorld(foundryAPIURL);
 
             // Determine which server is running based on the world name
-            let isFalloutRunning = worldName.includes("Fallout");
-            let isPathfinderRunning = worldName.includes("Pathfinder");
+            let isFalloutRunning = worldName.includes("fallout");
+            let isPathfinderRunning = worldName.includes("pathfinder");
 
             // Update Fallout Server UI
             updateStatus(isFalloutRunning, "fallout", serverURL);
