@@ -59,7 +59,7 @@
     
     <script>
         async function checkServerStatus() {
-            const serverURL = "http://174.79.6.181:30000/"; // Replace with actual server URL
+            const serverURL = "http://174.79.6.181:30000"; // Replace with actual server URL
             try {
                 const response = await fetch(serverURL, { mode: 'no-cors' });
                 document.getElementById("status-image").src = "online.png";
