@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fallout & Pathfinder FoundryVTT Status</title>
     <style>
-        /* General Styling */
+
 /* General Styling */
+
         body {
             font-family: 'Arial', sans-serif;
             text-align: center;
-            background-color: #1e1e2e; /* Dark Gray-Purple */
-            color: #e0e0e0; /* Light Gray */
+            background-color: #ffffff; /* White Background */
+            color: #333333; /* Dark Gray Text */
             margin: 0;
             padding: 0;
         }
@@ -26,7 +27,7 @@
         
         /* Individual Server Containers */
         .status-container {
-            background-color: #2b2b3b; /* Deep Purple */
+            background-color: #e6e6e6; /* Light Gray */
             padding: 20px;
             border-radius: 15px;
             transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -62,31 +63,43 @@
             width: 120px;
         }
         
-        /* Social Links */
+        /* Social Links - Now Icons */
         #social-links {
             position: absolute;
-            bottom: 10px;
-            left: 10px;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
         }
         
         #social-links a {
-            color: #7fffd4; /* Irish Green */
-            margin-right: 15px;
-            text-decoration: none;
-            font-size: 22px;
-            font-weight: bold;
-            transition: color 0.3s ease-in-out;
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        #social-links a img {
+            width: 100%;
+            height: auto;
+            filter: grayscale(100%);
+            transition: filter 0.3s ease-in-out;
         }
         
         #social-links a:hover {
-            color: #9370db; /* Light Purple */
+            transform: scale(1.2);
+        }
+        
+        #social-links a:hover img {
+            filter: grayscale(0%);
         }
         
         /* Server Status Text */
         .status-text {
             font-size: 20px;
             font-weight: bold;
-            color: #ffffff; /* White */
+            color: #333333; /* Dark Gray */
         }
         
         /* Online & Offline Cursor Adjustments */
@@ -94,6 +107,7 @@
             pointer-events: none;
             cursor: not-allowed;
         }
+
 
     </style>
 </head>
@@ -117,11 +131,20 @@
     </div>
     
     <div id="social-links">
-        <a href="https://discord.gg/NtXEEJRbH4" target="_blank">Discord</a>
-        <a href="https://www.twitch.tv/CloudheartTV" target="_blank">Twitch</a>
-        <a href="https://www.youtube.com/@Cloudharte" target="_blank">YouTube</a>
-        <a href="https://steamcommunity.com/id/Cloudheart/" target="_blank">Steam</a>
+        <a href="https://discord.gg/NtXEEJRbH4" target="_blank">
+            <img src="discord_icon.png" alt="Discord">
+        </a>
+        <a href="https://www.twitch.tv/CloudheartTV" target="_blank">
+            <img src="twitch_icon.png" alt="Twitch">
+        </a>
+        <a href="https://www.youtube.com/@Cloudharte" target="_blank">
+            <img src="youtube_icon.png" alt="YouTube">
+        </a>
+        <a href="https://steamcommunity.com/id/Cloudheart/" target="_blank">
+            <img src="steam_icon.png" alt="Steam">
+        </a>
     </div>
+
     
     <script>
         async function checkServerStatus() {
