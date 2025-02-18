@@ -6,84 +6,94 @@
     <title>Fallout & Pathfinder FoundryVTT Status</title>
     <style>
         /* General Styling */
-body {
-    font-family: 'Arial', sans-serif;
-    text-align: center;
-    background-color: #1e1e2e; /* Dark Gray-Purple */
-    color: #e0e0e0; /* Light Gray */
-    margin: 0;
-    padding: 0;
-}
-
-/* Server Status Section */
-#server-status {
-    margin: 50px auto;
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-}
-
-/* Individual Server Containers */
-.status-container {
-    background-color: #2b2b3b; /* Deep Purple */
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 0 10px rgba(0, 255, 127, 0.5); /* Irish Green Glow */
-    transition: transform 0.2s ease-in-out;
-}
-
-.status-container:hover {
-    transform: scale(1.05);
-}
-
-/* Status Images */
-.status-image {
-    width: 250px; /* Consistent Image Size */
-    height: 250px; /* Keep It Square */
-    object-fit: contain; /* Maintain Aspect Ratio */
-    cursor: not-allowed;
-}
-
-/* Logo */
-#logo {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 120px;
-}
-
-/* Social Links */
-#social-links {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-}
-
-#social-links a {
-    color: #7fffd4; /* Irish Green */
-    margin-right: 15px;
-    text-decoration: none;
-    font-size: 22px;
-    font-weight: bold;
-    transition: color 0.3s ease-in-out;
-}
-
-#social-links a:hover {
-    color: #9370db; /* Light Purple */
-}
-
-/* Server Status Text */
-.status-text {
-    font-size: 20px;
-    font-weight: bold;
-    color: #ffffff; /* White */
-}
-
-/* Online & Offline Cursor Adjustments */
-a[disabled] {
-    pointer-events: none;
-    cursor: not-allowed;
-}
+/* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #1e1e2e; /* Dark Gray-Purple */
+            color: #e0e0e0; /* Light Gray */
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Server Status Section */
+        #server-status {
+            margin: 50px auto;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+        
+        /* Individual Server Containers */
+        .status-container {
+            background-color: #2b2b3b; /* Deep Purple */
+            padding: 20px;
+            border-radius: 15px;
+            transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        
+        /* Online Glow (Irish Green) */
+        .online {
+            box-shadow: 0 0 15px rgba(0, 255, 127, 0.7); /* Irish Green Glow */
+        }
+        
+        /* Offline Glow (Red) */
+        .offline {
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7); /* Red Glow */
+        }
+        
+        .status-container:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Status Images */
+        .status-image {
+            width: 250px; /* Consistent Image Size */
+            height: 250px; /* Keep It Square */
+            object-fit: contain; /* Maintain Aspect Ratio */
+            cursor: not-allowed;
+        }
+        
+        /* Logo */
+        #logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 120px;
+        }
+        
+        /* Social Links */
+        #social-links {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+        }
+        
+        #social-links a {
+            color: #7fffd4; /* Irish Green */
+            margin-right: 15px;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
+        }
+        
+        #social-links a:hover {
+            color: #9370db; /* Light Purple */
+        }
+        
+        /* Server Status Text */
+        .status-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff; /* White */
+        }
+        
+        /* Online & Offline Cursor Adjustments */
+        a[disabled] {
+            pointer-events: none;
+            cursor: not-allowed;
+        }
 
     </style>
 </head>
@@ -91,14 +101,14 @@ a[disabled] {
     <img id="logo" src="creator_logo.png" alt="Creator Logo">
     
     <div id="server-status">
-        <div class="status-container">
+        <div class="status-container fallout-container">
             <a id="fallout-link" href="#" target="_blank">
                 <img id="fallout-image" class="status-image" src="offline_fallout.png" alt="Fallout Server Offline">
             </a>
             <p id="fallout-text">Checking Fallout Server...</p>
         </div>
-
-        <div class="status-container">
+    
+        <div class="status-container pathfinder-container">
             <a id="pathfinder-link" href="#" target="_blank">
                 <img id="pathfinder-image" class="status-image" src="offline_pathfinder.png" alt="Pathfinder Server Offline">
             </a>
@@ -153,16 +163,21 @@ a[disabled] {
 
 
         function updateStatus(isOnline, type, serverURL) {
+            const container = document.querySelector(`.${type}-container`);
             const image = document.getElementById(`${type}-image`);
             const text = document.getElementById(`${type}-text`);
             const link = document.getElementById(`${type}-link`);
-
+        
             if (isOnline) {
+                container.classList.remove("offline");
+                container.classList.add("online");
                 image.src = `online_${type}.png`; // e.g., online_fallout.png, online_pathfinder.png
                 text.innerText = `${type.charAt(0).toUpperCase() + type.slice(1)} Server Online! Click to Join.`;
                 link.href = serverURL;
                 image.style.cursor = "pointer";
             } else {
+                container.classList.remove("online");
+                container.classList.add("offline");
                 image.src = `offline_${type}.png`; // e.g., offline_fallout.png, offline_pathfinder.png
                 text.innerText = `${type.charAt(0).toUpperCase() + type.slice(1)} Server Offline`;
                 link.removeAttribute("href");
