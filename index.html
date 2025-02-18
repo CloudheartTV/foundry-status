@@ -5,43 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fallout & Pathfinder FoundryVTT Status</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #1e1e1e;
-            color: white;
-            margin: 0;
-            padding: 0;
-        }
-        #server-status {
-            margin: 50px auto;
-        }
-        .status-container {
-            display: inline-block;
-            margin: 20px;
-        }
-        .status-image {
-            width: 300px;
-            height: auto;
-            cursor: not-allowed;
-        }
-        #logo {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 100px;
-        }
-        #social-links {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-        }
-        #social-links a {
-            color: white;
-            margin-right: 10px;
-            text-decoration: none;
-            font-size: 20px;
-        }
+        /* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    background-color: #1e1e2e; /* Dark Gray-Purple */
+    color: #e0e0e0; /* Light Gray */
+    margin: 0;
+    padding: 0;
+}
+
+/* Server Status Section */
+#server-status {
+    margin: 50px auto;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+/* Individual Server Containers */
+.status-container {
+    background-color: #2b2b3b; /* Deep Purple */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 255, 127, 0.5); /* Irish Green Glow */
+    transition: transform 0.2s ease-in-out;
+}
+
+.status-container:hover {
+    transform: scale(1.05);
+}
+
+/* Status Images */
+.status-image {
+    width: 250px; /* Consistent Image Size */
+    height: 250px; /* Keep It Square */
+    object-fit: contain; /* Maintain Aspect Ratio */
+    cursor: not-allowed;
+}
+
+/* Logo */
+#logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 120px;
+}
+
+/* Social Links */
+#social-links {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+#social-links a {
+    color: #7fffd4; /* Irish Green */
+    margin-right: 15px;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+#social-links a:hover {
+    color: #9370db; /* Light Purple */
+}
+
+/* Server Status Text */
+.status-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff; /* White */
+}
+
+/* Online & Offline Cursor Adjustments */
+a[disabled] {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
     </style>
 </head>
 <body>
