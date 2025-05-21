@@ -144,9 +144,23 @@
     
         <div class="status-container kingmaker-container">
             <a id="kingmaker-link" href="#" target="_blank">
-                <img id="kingmaker-image" class="status-image" src="offline_pathfinder.png" alt="Pathfinder Server Offline">
+                <img id="kingmaker-image" class="status-image" src="offline_pathfinder.png" alt="Kingmaker Server Offline">
             </a>
             <p id="kingmaker-text">Checking Kingmaker Server...</p>
+        </div>
+
+        <div class="status-container powderkids-container">
+            <a id="powderkids-link" href="#" target="_blank">
+                <img id="powderkids-image" class="status-image" src="offline_powderkids.png" alt="Outlaws of Alkenstar Server Offline">
+            </a>
+            <p id="powderkids-text">Checking Powderkids Server...</p>
+        </div>
+
+        <div class="status-container tabra-container">
+            <a id="tabra-link" href="#" target="_blank">
+                <img id="tabra-image" class="status-image" src="offline_tabra.png" alt="TABRA Server Offline">
+            </a>
+            <p id="tabra-text">Checking TABRA Server...</p>
         </div>
     </div>
     
@@ -176,12 +190,20 @@
             // Determine which server is running based on the world name
             let isFalloutRunning = worldName.includes("fallout");
             let isKingmakerRunning = worldName.includes("kingmaker");
+            let isPowderkidsRunning = worldName.includes("powderkids");
+            let isTabraRunning = worldName.includes("tabra");
 
             // Update Fallout Server UI
             updateStatus(isFalloutRunning, "fallout", serverURL);
 
             // Update Kingmaker Server UI
             updateStatus(isKingmakerRunning, "kingmaker", serverURL);
+
+            // Update Powderkids Server UI
+            updateStatus(isPowderkidsRunning, "powderkids", serverURL);
+
+            // Update TABRA Server UI
+            updateStatus(isTabraRunning, "tabra", serverURL);
         }
 
         async function getFoundryWorld(url) {
