@@ -186,6 +186,7 @@
             const serverURL = "https://cloudheartfoundry.duckdns.org/"; // Shared URL for both servers
 
             let worldName = await getFoundryWorld(foundryAPIURL);
+            worldName = worldName.toLowerCase();
 
             // Determine which server is running based on the world name
             let isFalloutRunning = worldName.includes("fallout");
