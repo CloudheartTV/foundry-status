@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fallout & Pathfinder FoundryVTT Status</title>
+    <title>Actual Plays FoundryVTT Status</title>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
     <style>
 
@@ -142,11 +142,11 @@
             <p id="fallout-text">Checking Fallout Server...</p>
         </div>
     
-        <div class="status-container pathfinder-container">
-            <a id="pathfinder-link" href="#" target="_blank">
-                <img id="pathfinder-image" class="status-image" src="offline_pathfinder.png" alt="Pathfinder Server Offline">
+        <div class="status-container kingmaker-container">
+            <a id="kingmaker-link" href="#" target="_blank">
+                <img id="kingmaker-image" class="status-image" src="offline_pathfinder.png" alt="Pathfinder Server Offline">
             </a>
-            <p id="pathfinder-text">Checking Pathfinder Server...</p>
+            <p id="kingmaker-text">Checking Kingmaker Server...</p>
         </div>
     </div>
     
@@ -175,13 +175,13 @@
 
             // Determine which server is running based on the world name
             let isFalloutRunning = worldName.includes("fallout");
-            let isPathfinderRunning = worldName.includes("pf2e");
+            let isKingmakerRunning = worldName.includes("kingmaker");
 
             // Update Fallout Server UI
             updateStatus(isFalloutRunning, "fallout", serverURL);
 
-            // Update Pathfinder Server UI
-            updateStatus(isPathfinderRunning, "pathfinder", serverURL);
+            // Update Kingmaker Server UI
+            updateStatus(isKingmakerRunning, "kingmaker", serverURL);
         }
 
         async function getFoundryWorld(url) {
