@@ -27,6 +27,10 @@
       display: flex;
       transition: transform 0.4s ease-in-out;
       scroll-behavior: smooth;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      width: 100%;
     }
 
     .status-container, .logo-container {
@@ -113,6 +117,9 @@
       .arrow {
         display: none;
       }
+      #carousel-wrapper {
+        overflow-x: auto;
+      }
     }
 
     #social-links {
@@ -198,7 +205,7 @@
     function scrollCarousel(direction) {
       const totalItems = serverStatus.children.length;
       currentIndex = Math.max(0, Math.min(totalItems - 1, currentIndex + direction));
-      serverStatus.style.transform = `translateX(-${currentIndex * 100}vw)`;
+      serverStatus.scrollTo({ left: currentIndex * window.innerWidth, behavior: 'smooth' });
     }
 
     async function checkServerStatus() {
