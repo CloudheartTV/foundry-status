@@ -13,29 +13,37 @@
       color: #333333;
       margin: 0;
       padding: 0;
+      overflow-x: hidden;
     }
 
-    /* Scrollable container for mobile */
+    #carousel-wrapper {
+      position: relative;
+      overflow: hidden;
+      margin: 60px auto 0 auto;
+      max-width: 100%;
+    }
+
     #server-status {
-      margin: 50px auto;
       display: flex;
-      justify-content: center;
-      gap: 40px;
-      flex-wrap: wrap;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      padding: 0 20px;
+      transition: transform 0.4s ease-in-out;
+      scroll-behavior: smooth;
     }
 
-    /* Server containers */
-    .status-container {
-      flex: 0 0 auto;
-      background-color: #e6e6e6;
+    .status-container, .logo-container {
+      flex: 0 0 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       padding: 20px;
+      scroll-snap-align: start;
+    }
+
+    .status-container {
+      background-color: #e6e6e6;
       border-radius: 15px;
       transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
-      scroll-snap-align: start;
+      min-height: 400px;
     }
 
     .status-container:hover {
@@ -63,7 +71,10 @@
       color: #333;
     }
 
-    /* Logo default (desktop) */
+    .logo-container img {
+      width: 200px;
+    }
+
     #logo {
       position: absolute;
       top: 10px;
@@ -76,28 +87,34 @@
       transform: scale(1.2);
     }
 
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.8);
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .arrow.left {
+      left: 10px;
+    }
+
+    .arrow.right {
+      right: 10px;
+    }
+
     @media (max-width: 800px) {
-      /* Hide fixed logo on mobile */
       #logo {
         display: none;
       }
-
-      /* Add mobile-specific logo as a scrollable item */
-      .logo-container {
-        flex: 0 0 auto;
-        scroll-snap-align: end;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .logo-container img {
-        width: 180px;
-        height: auto;
+      .arrow {
+        display: none;
       }
     }
 
-    /* Social links */
     #social-links {
       position: absolute;
       bottom: 20px;
@@ -128,54 +145,45 @@
     #social-links a:hover img {
       filter: grayscale(0%);
     }
-
-    a[disabled] {
-      pointer-events: none;
-      cursor: not-allowed;
-    }
   </style>
 </head>
 <body>
-  <!-- Fixed logo (desktop only) -->
   <img id="logo" src="creator_logo.png" alt="Creator Logo">
 
-  <!-- Server status scrollable section -->
-  <div id="server-status">
-    <div class="status-container fallout-container">
-      <a id="fallout-link" href="#" target="_blank">
-        <img id="fallout-image" class="status-image" src="offline_fallout.png" alt="Fallout Server Offline">
-      </a>
-      <p id="fallout-text">Checking Fallout Server...</p>
+  <div id="carousel-wrapper">
+    <button class="arrow left" onclick="scrollCarousel(-1)">&#10094;</button>
+    <div id="server-status">
+      <div class="status-container fallout-container">
+        <a id="fallout-link" href="#" target="_blank">
+          <img id="fallout-image" class="status-image" src="offline_fallout.png" alt="Fallout Server Offline">
+        </a>
+        <p id="fallout-text">Checking Fallout Server...</p>
+      </div>
+      <div class="status-container kingmaker-container">
+        <a id="kingmaker-link" href="#" target="_blank">
+          <img id="kingmaker-image" class="status-image" src="offline_pathfinder.png" alt="Kingmaker Server Offline">
+        </a>
+        <p id="kingmaker-text">Checking Kingmaker Server...</p>
+      </div>
+      <div class="status-container powderkids-container">
+        <a id="powderkids-link" href="#" target="_blank">
+          <img id="powderkids-image" class="status-image" src="offline_powderkids.png" alt="Powderkids Server Offline">
+        </a>
+        <p id="powderkids-text">Checking Powderkids Server...</p>
+      </div>
+      <div class="status-container tabra-container">
+        <a id="tabra-link" href="#" target="_blank">
+          <img id="tabra-image" class="status-image" src="offline_tabra.png" alt="TABRA Server Offline">
+        </a>
+        <p id="tabra-text">Checking TABRA Server...</p>
+      </div>
+      <div class="logo-container">
+        <img src="creator_logo.png" alt="Creator Logo">
+      </div>
     </div>
-
-    <div class="status-container kingmaker-container">
-      <a id="kingmaker-link" href="#" target="_blank">
-        <img id="kingmaker-image" class="status-image" src="offline_pathfinder.png" alt="Kingmaker Server Offline">
-      </a>
-      <p id="kingmaker-text">Checking Kingmaker Server...</p>
-    </div>
-
-    <div class="status-container powderkids-container">
-      <a id="powderkids-link" href="#" target="_blank">
-        <img id="powderkids-image" class="status-image" src="offline_powderkids.png" alt="Powderkids Server Offline">
-      </a>
-      <p id="powderkids-text">Checking Powderkids Server...</p>
-    </div>
-
-    <div class="status-container tabra-container">
-      <a id="tabra-link" href="#" target="_blank">
-        <img id="tabra-image" class="status-image" src="offline_tabra.png" alt="TABRA Server Offline">
-      </a>
-      <p id="tabra-text">Checking TABRA Server...</p>
-    </div>
-
-    <!-- Logo for mobile at end -->
-    <div class="logo-container">
-      <img src="creator_logo.png" alt="Creator Logo">
-    </div>
+    <button class="arrow right" onclick="scrollCarousel(1)">&#10095;</button>
   </div>
 
-  <!-- Social links -->
   <div id="social-links">
     <a href="https://discord.gg/NtXEEJRbH4" target="_blank"><img src="discord_icon.png" alt="Discord"></a>
     <a href="https://www.twitch.tv/CloudheartTV" target="_blank"><img src="twitch_icon.png" alt="Twitch"></a>
@@ -184,6 +192,15 @@
   </div>
 
   <script>
+    const serverStatus = document.getElementById('server-status');
+    let currentIndex = 0;
+
+    function scrollCarousel(direction) {
+      const totalItems = serverStatus.children.length;
+      currentIndex = Math.max(0, Math.min(totalItems - 1, currentIndex + direction));
+      serverStatus.style.transform = `translateX(-${currentIndex * 100}vw)`;
+    }
+
     async function checkServerStatus() {
       const foundryAPIURL = "https://cloudheartfoundry.duckdns.org/api/status";
       const serverURL = "https://cloudheartfoundry.duckdns.org/";
@@ -201,13 +218,10 @@
       try {
         const response = await fetch(url, {
           method: 'GET',
-          headers: {
-            'Accept': 'application/json'
-          }
+          headers: { 'Accept': 'application/json' }
         });
 
         if (!response.ok) throw new Error("Foundry API unreachable");
-
         const jsonData = await response.json();
         return jsonData.world ?? "";
       } catch (error) {
