@@ -6,6 +6,7 @@
   <title>Actual Plays FoundryVTT Status</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   <style>
+    /* General page styling */
     body {
       font-family: 'Arial', sans-serif;
       text-align: center;
@@ -16,6 +17,7 @@
       overflow-x: hidden;
     }
 
+    /* Wrapper for horizontal scrolling section */
     #carousel-wrapper {
       position: relative;
       overflow: hidden;
@@ -23,6 +25,7 @@
       max-width: 100%;
     }
 
+    /* Horizontal scrolling list of server blades */
     #server-status {
       display: flex;
       transition: transform 0.4s ease-in-out;
@@ -33,6 +36,7 @@
       width: 100%;
     }
 
+    /* Individual blade (server container or logo) */
     .status-container, .logo-container {
       flex: 0 0 100vw;
       display: flex;
@@ -79,6 +83,7 @@
       width: 200px;
     }
 
+    /* Creator logo pinned top-left (desktop only) */
     #logo {
       position: absolute;
       top: 10px;
@@ -91,6 +96,7 @@
       transform: scale(1.2);
     }
 
+    /* Scroll arrows on desktop */
     .arrow {
       position: absolute;
       top: 50%;
@@ -102,26 +108,16 @@
       z-index: 10;
     }
 
-    .arrow.left {
-      left: 10px;
-    }
-
-    .arrow.right {
-      right: 10px;
-    }
+    .arrow.left { left: 10px; }
+    .arrow.right { right: 10px; }
 
     @media (max-width: 800px) {
-      #logo {
-        display: none;
-      }
-      .arrow {
-        display: none;
-      }
-      #carousel-wrapper {
-        overflow-x: auto;
-      }
+      #logo { display: none; }
+      .arrow { display: none; }
+      #carousel-wrapper { overflow-x: auto; }
     }
 
+    /* Social links pinned bottom center */
     #social-links {
       position: absolute;
       bottom: 20px;
@@ -155,34 +151,48 @@
   </style>
 </head>
 <body>
+  <!-- Fixed logo for desktop view -->
+  <img id="logo" src="creator_logo.png" alt="Creator Logo">
 
   <div id="carousel-wrapper">
     <button class="arrow left" onclick="scrollCarousel(-1)">&#10094;</button>
     <div id="server-status">
+      <!-- Fallout: Georgia Server -->
       <div class="status-container fallout-container">
         <a id="fallout-link" href="#" target="_blank">
           <img id="fallout-image" class="status-image" src="offline_fallout.png" alt="Fallout Server Offline">
         </a>
         <p id="fallout-text">Checking Fallout Server...</p>
       </div>
+      <!-- Pathfinder: Kingmaker Server -->
       <div class="status-container kingmaker-container">
         <a id="kingmaker-link" href="#" target="_blank">
           <img id="kingmaker-image" class="status-image" src="offline_pathfinder.png" alt="Kingmaker Server Offline">
         </a>
         <p id="kingmaker-text">Checking Kingmaker Server...</p>
       </div>
+      <!-- Powderkids (Outlaws of Alkenstar) Server -->
       <div class="status-container powderkids-container">
         <a id="powderkids-link" href="#" target="_blank">
           <img id="powderkids-image" class="status-image" src="offline_powderkids.png" alt="Powderkids Server Offline">
         </a>
         <p id="powderkids-text">Checking Powderkids Server...</p>
       </div>
+      <!-- TABRA Campaign Server -->
       <div class="status-container tabra-container">
         <a id="tabra-link" href="#" target="_blank">
           <img id="tabra-image" class="status-image" src="offline_tabra.png" alt="TABRA Server Offline">
         </a>
         <p id="tabra-text">Checking TABRA Server...</p>
       </div>
+      <!-- Elder Scrolls: Gaol Server (NEW) -->
+      <div class="status-container scrolls-container">
+        <a id="scrolls-link" href="#" target="_blank">
+          <img id="scrolls-image" class="status-image" src="offline_elderscrolls.png" alt="Elder Scrolls: Gaol Server Offline">
+        </a>
+        <p id="scrolls-text">Checking Gaol Server...</p>
+      </div>
+      <!-- Cloudheart Logo Blade (final pane) -->
       <div class="logo-container">
         <img src="creator_logo.png" alt="Creator Logo">
       </div>
@@ -190,6 +200,7 @@
     <button class="arrow right" onclick="scrollCarousel(1)">&#10095;</button>
   </div>
 
+  <!-- Social links for brand presence -->
   <div id="social-links">
     <a href="https://discord.gg/NtXEEJRbH4" target="_blank"><img src="discord_icon.png" alt="Discord"></a>
     <a href="https://www.twitch.tv/CloudheartTV" target="_blank"><img src="twitch_icon.png" alt="Twitch"></a>
@@ -201,12 +212,14 @@
     const serverStatus = document.getElementById('server-status');
     let currentIndex = 0;
 
+    // Moves the carousel to the next or previous server
     function scrollCarousel(direction) {
       const totalItems = serverStatus.children.length;
       currentIndex = Math.max(0, Math.min(totalItems - 1, currentIndex + direction));
       serverStatus.scrollTo({ left: currentIndex * window.innerWidth, behavior: 'smooth' });
     }
 
+    // Fetch and update server status based on Foundry API
     async function checkServerStatus() {
       const foundryAPIURL = "https://cloudheartfoundry.duckdns.org/api/status";
       const serverURL = "https://cloudheartfoundry.duckdns.org/";
@@ -218,15 +231,16 @@
       updateStatus(worldName.includes("kingmaker"), "kingmaker", serverURL);
       updateStatus(worldName.includes("powderkids"), "powderkids", serverURL);
       updateStatus(worldName.includes("tabra"), "tabra", serverURL);
+      updateStatus(worldName.includes("scrolls"), "scrolls", serverURL); // NEW: Gaol support
     }
 
+    // Helper to query Foundry API for running world name
     async function getFoundryWorld(url) {
       try {
         const response = await fetch(url, {
           method: 'GET',
           headers: { 'Accept': 'application/json' }
         });
-
         if (!response.ok) throw new Error("Foundry API unreachable");
         const jsonData = await response.json();
         return jsonData.world ?? "";
@@ -236,6 +250,7 @@
       }
     }
 
+    // Update DOM and image for each server blade
     function updateStatus(isOnline, type, serverURL) {
       const container = document.querySelector(`.${type}-container`);
       const image = document.getElementById(`${type}-image`);
