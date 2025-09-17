@@ -186,11 +186,11 @@
         <p id="tabra-text">Checking TABRA Server...</p>
       </div>
       <!-- Elder Scrolls: Gaol Server (NEW) -->
-      <div class="status-container scrolls-container">
-        <a id="scrolls-link" href="#" target="_blank">
-          <img id="scrolls-image" class="status-image" src="offline_elderscrolls.png" alt="Elder Scrolls: Gaol Server Offline">
+      <div class="status-container elder-container">
+        <a id="elder-link" href="#" target="_blank">
+          <img id="elder-image" class="status-image" src="offline_elderscrolls.png" alt="Elder Scrolls: Gaol Server Offline">
         </a>
-        <p id="scrolls-text">Checking Gaol Server...</p>
+        <p id="elder-text">Checking Gaol Server...</p>
       </div>
       <!-- Cloudheart Logo Blade (final pane) -->
       <div class="logo-container">
@@ -231,7 +231,7 @@
       updateStatus(worldName.includes("kingmaker"), "kingmaker", serverURL);
       updateStatus(worldName.includes("powderkids"), "powderkids", serverURL);
       updateStatus(worldName.includes("tabra"), "tabra", serverURL);
-      updateStatus(worldName.includes("scrolls"), "scrolls", serverURL); // NEW: Gaol support
+      updateStatus(worldName.includes("elder"), "elder", serverURL); // NEW: Gaol support
     }
 
     // Helper to query Foundry API for running world name
@@ -278,3 +278,4 @@
   </script>
 </body>
 </html>
+
