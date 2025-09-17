@@ -157,42 +157,7 @@
   <div id="carousel-wrapper">
     <button class="arrow left" onclick="scrollCarousel(-1)">&#10094;</button>
     <div id="server-status">
-      <!-- Fallout: Georgia Server -->
-      <div class="status-container fallout-container">
-        <a id="fallout-link" href="#" target="_blank">
-          <img id="fallout-image" class="status-image" src="offline_fallout.png" alt="Fallout Server Offline">
-        </a>
-        <p id="fallout-text">Checking Fallout Server...</p>
-      </div>
-      <!-- Pathfinder: Kingmaker Server -->
-      <div class="status-container kingmaker-container">
-        <a id="kingmaker-link" href="#" target="_blank">
-          <img id="kingmaker-image" class="status-image" src="offline_pathfinder.png" alt="Kingmaker Server Offline">
-        </a>
-        <p id="kingmaker-text">Checking Kingmaker Server...</p>
-      </div>
-      <!-- Powderkids (Outlaws of Alkenstar) Server -->
-      <div class="status-container powderkids-container">
-        <a id="powderkids-link" href="#" target="_blank">
-          <img id="powderkids-image" class="status-image" src="offline_powderkids.png" alt="Powderkids Server Offline">
-        </a>
-        <p id="powderkids-text">Checking Powderkids Server...</p>
-      </div>
-      <!-- TABRA Campaign Server -->
-      <div class="status-container tabra-container">
-        <a id="tabra-link" href="#" target="_blank">
-          <img id="tabra-image" class="status-image" src="offline_tabra.png" alt="TABRA Server Offline">
-        </a>
-        <p id="tabra-text">Checking TABRA Server...</p>
-      </div>
-      <!-- Elder Scrolls: Gaol Server (NEW) -->
-      <div class="status-container Elder Scrolls-container">
-        <a id="Elder Scrolls-link" href="#" target="_blank">
-          <img id="Elder Scrolls-image" class="status-image" src="offline_elderscrolls.png" alt="Elder Scrolls: Gaol Server Offline">
-        </a>
-        <p id="Elder Scrolls-text">Checking Gaol Server...</p>
-      </div>
-      <!-- Cloudheart Logo Blade (final pane) -->
+      <!-- Server blades will be populated by JS -->
       <div class="logo-container">
         <img src="creator_logo.png" alt="Creator Logo">
       </div>
@@ -212,14 +177,36 @@
     const serverStatus = document.getElementById('server-status');
     let currentIndex = 0;
 
-    // Moves the carousel to the next or previous server
+    // Define servers with keys and display labels
+    const servers = [
+      { key: 'fallout', label: 'Fallout: Georgia' },
+      { key: 'kingmaker', label: 'Kingmaker' },
+      { key: 'powderkids', label: 'Powderkids' },
+      { key: 'tabra', label: 'TABRA' },
+      { key: 'elder-scrolls', label: 'Elder Scrolls: Gaol' }
+    ];
+
+    // Dynamically render each server container
+    servers.forEach(server => {
+      const container = document.createElement('div');
+      container.className = `status-container ${server.key}-container`;
+
+      container.innerHTML = `
+        <a id="${server.key}-link" href="#" target="_blank">
+          <img id="${server.key}-image" class="status-image" src="offline_${server.key}.png" alt="${server.label} Server Offline">
+        </a>
+        <p id="${server.key}-text">Checking ${server.label} Server...</p>
+      `;
+
+      serverStatus.insertBefore(container, serverStatus.lastElementChild); // Before logo
+    });
+
     function scrollCarousel(direction) {
       const totalItems = serverStatus.children.length;
       currentIndex = Math.max(0, Math.min(totalItems - 1, currentIndex + direction));
       serverStatus.scrollTo({ left: currentIndex * window.innerWidth, behavior: 'smooth' });
     }
 
-    // Fetch and update server status based on Foundry API
     async function checkServerStatus() {
       const foundryAPIURL = "https://cloudheartfoundry.duckdns.org/api/status";
       const serverURL = "https://cloudheartfoundry.duckdns.org/";
@@ -227,14 +214,12 @@
       let worldName = await getFoundryWorld(foundryAPIURL);
       worldName = worldName.toLowerCase();
 
-      updateStatus(worldName.includes("fallout"), "fallout", serverURL);
-      updateStatus(worldName.includes("kingmaker"), "kingmaker", serverURL);
-      updateStatus(worldName.includes("powderkids"), "powderkids", serverURL);
-      updateStatus(worldName.includes("tabra"), "tabra", serverURL);
-      updateStatus(worldName.includes("elder"), "elder-scrolls", serverURL); // NEW: Gaol support
+      servers.forEach(server => {
+        const isRunning = worldName.includes(server.key);
+        updateStatus(isRunning, server.key, serverURL, server.label);
+      });
     }
 
-    // Helper to query Foundry API for running world name
     async function getFoundryWorld(url) {
       try {
         const response = await fetch(url, {
@@ -250,8 +235,7 @@
       }
     }
 
-    // Update DOM and image for each server blade
-    function updateStatus(isOnline, type, serverURL) {
+    function updateStatus(isOnline, type, serverURL, label) {
       const container = document.querySelector(`.${type}-container`);
       const image = document.getElementById(`${type}-image`);
       const text = document.getElementById(`${type}-text`);
@@ -261,14 +245,14 @@
         container.classList.remove("offline");
         container.classList.add("online");
         image.src = `online_${type}.png`;
-        text.innerText = `${type.charAt(0).toUpperCase() + type.slice(1)} Server Online! Click to Join.`;
+        text.innerText = `${label} Server Online! Click to Join.`;
         link.href = serverURL;
         image.style.cursor = "pointer";
       } else {
         container.classList.remove("online");
         container.classList.add("offline");
         image.src = `offline_${type}.png`;
-        text.innerText = `${type.charAt(0).toUpperCase() + type.slice(1)} Server Offline`;
+        text.innerText = `${label} Server Offline`;
         link.removeAttribute("href");
         image.style.cursor = "not-allowed";
       }
@@ -278,7 +262,3 @@
   </script>
 </body>
 </html>
-
-
-
-
