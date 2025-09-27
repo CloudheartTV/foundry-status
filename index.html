@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Actual Plays FoundryVTT Status</title>
+  <title>Now Airing - FoundryVTT</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   <style>
-    /* General page styling */
     body {
       font-family: 'Arial', sans-serif;
       text-align: center;
@@ -14,48 +13,19 @@
       color: #333333;
       margin: 0;
       padding: 0;
-      overflow-x: hidden;
     }
 
-    /* Wrapper for horizontal scrolling section */
-    #carousel-wrapper {
-      position: relative;
-      overflow: hidden;
-      margin: 60px auto 0 auto;
-      max-width: 100%;
-    }
-
-    /* Horizontal scrolling list of server blades */
-    #server-status {
-      display: flex;
-      transition: transform 0.4s ease-in-out;
-      scroll-behavior: smooth;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      width: 100%;
-    }
-
-    /* Individual blade (server container or logo) */
-    .status-container, .logo-container {
-      flex: 0 0 100vw;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      scroll-snap-align: start;
+    #now-airing {
+      padding-top: 60px;
     }
 
     .status-container {
       background-color: #e6e6e6;
       border-radius: 15px;
-      transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
-      min-height: 400px;
-    }
-
-    .status-container:hover {
-      transform: scale(1.05);
+      margin: 20px auto;
+      max-width: 600px;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
 
     .online {
@@ -70,20 +40,14 @@
       width: 250px;
       height: 250px;
       object-fit: contain;
-      cursor: not-allowed;
     }
 
     .status-text {
       font-size: 20px;
       font-weight: bold;
-      color: #333;
+      margin-top: 15px;
     }
 
-    .logo-container img {
-      width: 200px;
-    }
-
-    /* Creator logo pinned top-left (desktop only) */
     #logo {
       position: absolute;
       top: 10px;
@@ -96,28 +60,6 @@
       transform: scale(1.2);
     }
 
-    /* Scroll arrows on desktop */
-    .arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.8);
-      border: none;
-      font-size: 2rem;
-      cursor: pointer;
-      z-index: 10;
-    }
-
-    .arrow.left { left: 10px; }
-    .arrow.right { right: 10px; }
-
-    @media (max-width: 800px) {
-      #logo { display: none; }
-      .arrow { display: none; }
-      #carousel-wrapper { overflow-x: auto; }
-    }
-
-    /* Social links pinned bottom center */
     #social-links {
       position: absolute;
       bottom: 20px;
@@ -151,18 +93,15 @@
   </style>
 </head>
 <body>
-  <div id="carousel-wrapper">
-    <button class="arrow left" onclick="scrollCarousel(-1)">&#10094;</button>
-    <div id="server-status">
-      <!-- Server blades will be populated by JS -->
-      <div class="logo-container">
-        <img src="creator_logo.png" alt="Creator Logo">
-      </div>
+  <img id="logo" src="creator_logo.png" alt="Creator Logo">
+
+  <div id="now-airing">
+    <h1 id="now-airing-header">Now Airing</h1>
+    <div id="active-server-container">
+      <!-- Filled dynamically -->
     </div>
-    <button class="arrow right" onclick="scrollCarousel(1)">&#10095;</button>
   </div>
 
-  <!-- Social links for brand presence -->
   <div id="social-links">
     <a href="https://discord.gg/NtXEEJRbH4" target="_blank"><img src="discord_icon.png" alt="Discord"></a>
     <a href="https://www.twitch.tv/CloudheartTV" target="_blank"><img src="twitch_icon.png" alt="Twitch"></a>
@@ -171,10 +110,6 @@
   </div>
 
   <script>
-    const serverStatus = document.getElementById('server-status');
-    let currentIndex = 0;
-
-    // Define servers with keys and display labels
     const servers = [
       { key: 'fallout', label: 'Fallout: Georgia' },
       { key: 'kingmaker', label: 'Kingmaker' },
@@ -183,38 +118,33 @@
       { key: 'elder-scrolls', label: 'Elder Scrolls: Gaol' }
     ];
 
-    // Dynamically render each server container
-    servers.forEach(server => {
-      const container = document.createElement('div');
-      container.className = `status-container ${server.key}-container`;
-
-      container.innerHTML = `
-        <a id="${server.key}-link" href="#" target="_blank">
-          <img id="${server.key}-image" class="status-image" src="offline_${server.key}.png" alt="${server.label} Server Offline">
-        </a>
-        <p id="${server.key}-text">Checking ${server.label} Server...</p>
-      `;
-
-      serverStatus.insertBefore(container, serverStatus.lastElementChild); // Before logo
-    });
-
-    function scrollCarousel(direction) {
-      const totalItems = serverStatus.children.length;
-      currentIndex = Math.max(0, Math.min(totalItems - 1, currentIndex + direction));
-      serverStatus.scrollTo({ left: currentIndex * window.innerWidth, behavior: 'smooth' });
-    }
-
     async function checkServerStatus() {
-      const foundryAPIURL = "https://cloudheartfoundry.duckdns.org/api/status";
+      const apiURL = "https://cloudheartfoundry.duckdns.org/api/status";
       const serverURL = "https://cloudheartfoundry.duckdns.org/";
+      const container = document.getElementById("active-server-container");
+      const header = document.getElementById("now-airing-header");
 
-      let worldName = await getFoundryWorld(foundryAPIURL);
+      let worldName = await getFoundryWorld(apiURL);
       worldName = worldName.toLowerCase();
 
-      servers.forEach(server => {
-        const isRunning = worldName.includes(server.key);
-        updateStatus(isRunning, server.key, serverURL, server.label);
-      });
+      const match = servers.find(server => worldName.includes(server.key));
+
+      if (match) {
+        const div = document.createElement("div");
+        div.className = `status-container online`;
+
+        div.innerHTML = `
+          <a href="${serverURL}" target="_blank">
+            <img class="status-image" src="online_${match.key}.png" alt="${match.label} Server">
+          </a>
+          <p class="status-text">${match.label} Server Online! Click to Join.</p>
+        `;
+
+        container.appendChild(div);
+      } else {
+        header.innerText = "No Active Server";
+        container.innerHTML = `<p style="font-size: 18px; font-weight: bold;">All servers are currently offline.</p>`;
+      }
     }
 
     async function getFoundryWorld(url) {
@@ -232,31 +162,7 @@
       }
     }
 
-    function updateStatus(isOnline, type, serverURL, label) {
-      const container = document.querySelector(`.${type}-container`);
-      const image = document.getElementById(`${type}-image`);
-      const text = document.getElementById(`${type}-text`);
-      const link = document.getElementById(`${type}-link`);
-
-      if (isOnline) {
-        container.classList.remove("offline");
-        container.classList.add("online");
-        image.src = `online_${type}.png`;
-        text.innerText = `${label} Server Online! Click to Join.`;
-        link.href = serverURL;
-        image.style.cursor = "pointer";
-      } else {
-        container.classList.remove("online");
-        container.classList.add("offline");
-        image.src = `offline_${type}.png`;
-        text.innerText = `${label} Server Offline`;
-        link.removeAttribute("href");
-        image.style.cursor = "not-allowed";
-      }
-    }
-
     checkServerStatus();
   </script>
 </body>
 </html>
-
