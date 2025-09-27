@@ -118,34 +118,44 @@
       { key: 'elder-scrolls', label: 'Elder Scrolls: Gaol' }
     ];
 
-    async function checkServerStatus() {
-      const apiURL = "https://cloudheartfoundry.duckdns.org/api/status";
-      const serverURL = "https://cloudheartfoundry.duckdns.org/";
-      const container = document.getElementById("active-server-container");
-      const header = document.getElementById("now-airing-header");
+async function checkServerStatus() {
+  const apiURL = "https://cloudheartfoundry.duckdns.org/api/status";
+  const serverURL = "https://cloudheartfoundry.duckdns.org/";
+  const container = document.getElementById("active-server-container");
+  const header = document.getElementById("now-airing-header");
 
-      let worldName = await getFoundryWorld(apiURL);
-      worldName = worldName.toLowerCase();
+  let worldName = await getFoundryWorld(apiURL);
+  worldName = worldName.toLowerCase();
 
-      const match = servers.find(server => worldName.includes(server.key));
+  const match = servers.find(server => worldName.includes(server.key));
 
-      if (match) {
-        const div = document.createElement("div");
-        div.className = `status-container online`;
+  if (match) {
+    const div = document.createElement("div");
+    div.className = `status-container online`;
 
-        div.innerHTML = `
-          <a href="${serverURL}" target="_blank">
-            <img class="status-image" src="online_${match.key}.png" alt="${match.label} Server">
-          </a>
-          <p class="status-text">${match.label} Server Online! Click to Join.</p>
-        `;
+    div.innerHTML = `
+      <a href="${serverURL}" target="_blank">
+        <img class="status-image" src="online_${match.key}.png" alt="${match.label} Server">
+      </a>
+      <p class="status-text">${match.label} Server Online! Click to Join.</p>
+    `;
 
-        container.appendChild(div);
-      } else {
-        header.innerText = "No Active Server";
-        container.innerHTML = `<p style="font-size: 18px; font-weight: bold;">All servers are currently offline.</p>`;
-      }
-    }
+    container.appendChild(div);
+  } else {
+    // Show fallback: All Servers Offline
+    header.innerText = "No Active Server";
+    const div = document.createElement("div");
+    div.className = `status-container offline`;
+
+    div.innerHTML = `
+      <img class="status-image" src="AllServersOffline.png" alt="All Servers Offline">
+      <p class="status-text">All servers are currently offline.</p>
+    `;
+
+    container.appendChild(div);
+  }
+}
+
 
     async function getFoundryWorld(url) {
       try {
@@ -166,3 +176,4 @@
   </script>
 </body>
 </html>
+
