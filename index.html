@@ -48,10 +48,15 @@
       margin-top: 15px;
     }
 
-    #logo {
+    /* === Logo Styling === */
+    #logo-wrapper {
       position: absolute;
       top: 10px;
       left: 10px;
+      z-index: 100;
+    }
+
+    #logo {
       width: 240px;
       transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
     }
@@ -60,6 +65,7 @@
       transform: scale(1.2);
     }
 
+    /* === Social Links === */
     #social-links {
       position: absolute;
       bottom: 20px;
@@ -90,10 +96,30 @@
     #social-links a:hover img {
       filter: grayscale(0%);
     }
+
+    /* === Responsive Mobile Layout === */
+    @media (max-width: 800px) {
+      #logo-wrapper {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        margin: 20px auto 10px auto;
+        top: 0;
+        left: 0;
+      }
+
+      #logo {
+        width: 160px;
+        transform: none !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <img id="logo" src="creator_logo.png" alt="Creator Logo">
+  <!-- Wrapped logo for responsive positioning -->
+  <div id="logo-wrapper">
+    <img id="logo" src="creator_logo.png" alt="Creator Logo">
+  </div>
 
   <div id="now-airing">
     <h1 id="now-airing-header">Now Airing</h1>
@@ -105,75 +131,4 @@
   <div id="social-links">
     <a href="https://discord.gg/NtXEEJRbH4" target="_blank"><img src="discord_icon.png" alt="Discord"></a>
     <a href="https://www.twitch.tv/CloudheartTV" target="_blank"><img src="twitch_icon.png" alt="Twitch"></a>
-    <a href="https://www.youtube.com/@CloudheartTV" target="_blank"><img src="youtube_icon.png" alt="YouTube"></a>
-    <a href="https://steamcommunity.com/id/Cloudheart/" target="_blank"><img src="steam_icon.png" alt="Steam"></a>
-  </div>
-
-  <script>
-    const servers = [
-      { key: 'fallout', label: 'Fallout: Georgia' },
-      { key: 'kingmaker', label: 'Kingmaker' },
-      { key: 'powderkids', label: 'Powderkids' },
-      { key: 'tabra', label: 'TABRA' },
-      { key: 'elder-scrolls', label: 'Elder Scrolls: Gaol' }
-    ];
-
-async function checkServerStatus() {
-  const apiURL = "https://cloudheartfoundry.duckdns.org/api/status";
-  const serverURL = "https://cloudheartfoundry.duckdns.org/";
-  const container = document.getElementById("active-server-container");
-  const header = document.getElementById("now-airing-header");
-
-  let worldName = await getFoundryWorld(apiURL);
-  worldName = worldName.toLowerCase();
-
-  const match = servers.find(server => worldName.includes(server.key));
-
-  if (match) {
-    const div = document.createElement("div");
-    div.className = `status-container online`;
-
-    div.innerHTML = `
-      <a href="${serverURL}" target="_blank">
-        <img class="status-image" src="online_${match.key}.png" alt="${match.label} Server">
-      </a>
-      <p class="status-text">${match.label} Server Online! Click to Join.</p>
-    `;
-
-    container.appendChild(div);
-  } else {
-    // Show fallback: All Servers Offline
-    header.innerText = "No Active Server";
-    const div = document.createElement("div");
-    div.className = `status-container offline`;
-
-    div.innerHTML = `
-      <img class="status-image" src="AllServersOffline.png" alt="All Servers Offline">
-      <p class="status-text">All servers are currently offline.</p>
-    `;
-
-    container.appendChild(div);
-  }
-}
-
-
-    async function getFoundryWorld(url) {
-      try {
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: { 'Accept': 'application/json' }
-        });
-        if (!response.ok) throw new Error("Foundry API unreachable");
-        const jsonData = await response.json();
-        return jsonData.world ?? "";
-      } catch (error) {
-        console.error("Error fetching Foundry API:", error);
-        return "";
-      }
-    }
-
-    checkServerStatus();
-  </script>
-</body>
-</html>
-
+    <a href="https://www.you
