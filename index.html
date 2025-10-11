@@ -14,7 +14,36 @@
       margin: 0;
       padding: 0;
     }
-
+    /* Dark Mode Styles */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212;
+        color: #f0f0f0;
+      }
+    
+      .status-container {
+        background-color: #1e1e1e;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+      }
+    
+      /* Invert all target images */
+      .invert-on-dark {
+        filter: invert(1) hue-rotate(180deg);
+      }
+    
+      /* Optional: make links and icons stand out */
+      #social-links a img {
+        filter: invert(1) grayscale(100%) !important;
+      }
+    
+      #logo:hover {
+        filter: invert(1) hue-rotate(180deg) brightness(1.2);
+      }
+    
+      a {
+        color: #90caf9;
+      }
+    }
     #now-airing {
       padding-top: 60px;
     }
@@ -118,7 +147,7 @@
 <body>
   <!-- Wrapped logo for responsive positioning -->
   <div id="logo-wrapper">
-    <img id="logo" src="creator_logo.png" alt="Creator Logo">
+    <img id="logo" class="invert-on-dark" src="creator_logo.png" alt="Creator Logo">
   </div>
 
   <div id="now-airing">
@@ -129,10 +158,10 @@
   </div>
 
   <div id="social-links">
-    <a href="https://discord.gg/NtXEEJRbH4" target="_blank"><img src="discord_icon.png" alt="Discord"></a>
-    <a href="https://www.twitch.tv/CloudheartTV" target="_blank"><img src="twitch_icon.png" alt="Twitch"></a>
-    <a href="https://www.youtube.com/@CloudheartTV" target="_blank"><img src="youtube_icon.png" alt="YouTube"></a>
-    <a href="https://steamcommunity.com/id/Cloudheart/" target="_blank"><img src="steam_icon.png" alt="Steam"></a>
+    <a href="https://discord.gg/NtXEEJRbH4" target="_blank"><img class="invert-on-dark" src="discord_icon.png" alt="Discord"></a>
+    <a href="https://www.twitch.tv/CloudheartTV" target="_blank"><img class="invert-on-dark" src="twitch_icon.png" alt="Twitch"></a>
+    <a href="https://www.youtube.com/@CloudheartTV" target="_blank"><img class="invert-on-dark" src="youtube_icon.png" alt="YouTube"></a>
+    <a href="https://steamcommunity.com/id/Cloudheart/" target="_blank"><img class="invert-on-dark" src="steam_icon.png" alt="Steam"></a>
   </div>
 
   <script>
@@ -201,3 +230,4 @@
   </script>
 </body>
 </html>
+
