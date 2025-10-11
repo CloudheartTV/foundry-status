@@ -209,22 +209,13 @@
       if (match) {
         const div = document.createElement("div");
         div.className = `status-container online`;
-        div.innerHTML = `
-          <a href="${serverURL}" target="_blank">
-            <img src="online_${match.key}.png" alt="${match.label} Server">
-          </a>
-          <p class="status-text">${match.label} Server Online! Click to Join.</p>
-        `;
-        container.appendChild(div);
+        div.innerHTML = <a href="${serverURL}" target="_blank"> <img class="status-image" src="online_${match.key}.png" alt="${match.label} Server"> </a> <p class="status-text">${match.label} Server Online! Click to Join.</p> ; container.appendChild(div);
       } else {
-        header.innerText = "No Active Server";
-        const div = document.createElement("div");
-        div.className = `status-container offline`;
-        div.innerHTML = `
-          <img src="AllServersOffline.png" alt="All Servers Offline">
-          <p class="status-text">All servers are currently offline.</p>
-        `;
-        container.appendChild(div);
+        // Show fallback: All Servers Offline 
+        header.innerText = "No Active Server"; 
+        const div = document.createElement("div"); 
+        div.className = status-container offline; 
+        div.innerHTML = <img class="status-image" src="AllServersOffline.png" alt="All Servers Offline"> <p class="status-text">All servers are currently offline.</p> ; container.appendChild(div);
       }
     }
 
@@ -247,4 +238,5 @@
   </script>
 </body>
 </html>
+
 
