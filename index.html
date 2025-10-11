@@ -211,7 +211,7 @@
         div.className = `status-container online`;
         div.innerHTML = `
           <a href="${serverURL}" target="_blank">
-            <img class="status-image invert-on-dark" src="online_${match.key}.png" alt="${match.label} Server">
+            <img src="online_${match.key}.png" alt="${match.label} Server">
           </a>
           <p class="status-text">${match.label} Server Online! Click to Join.</p>
         `;
@@ -221,7 +221,7 @@
         const div = document.createElement("div");
         div.className = `status-container offline`;
         div.innerHTML = `
-          <img class="status-image invert-on-dark" src="AllServersOffline.png" alt="All Servers Offline">
+          <img src="AllServersOffline.png" alt="All Servers Offline">
           <p class="status-text">All servers are currently offline.</p>
         `;
         container.appendChild(div);
@@ -247,3 +247,4 @@
   </script>
 </body>
 </html>
+
