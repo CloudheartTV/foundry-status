@@ -201,16 +201,20 @@
       const container = document.getElementById("active-server-container");
       const header = document.getElementById("now-airing-header");
 
+      // clear previous content so we don't append repeatedly on re-check
+      container.innerHTML = '';
+
       let worldName = await getFoundryWorld(apiURL);
-      worldName = worldName.toLowerCase();
+      worldName = (worldName || "").toLowerCase();
 
       const match = servers.find(server => worldName.includes(server.key));
 
       if (match) {
         const div = document.createElement("div");
-        div.className = `status-container online`;
+        div.className = 'status-container online';
         div.innerHTML = `
           <a href="${serverURL}" target="_blank">
+            <!-- status-image intentionally DOES NOT have invert-on-dark -->
             <img class="status-image" src="online_${match.key}.png" alt="${match.label} Server">
           </a>
           <p class="status-text">${match.label} Server Online! Click to Join.</p>
@@ -220,8 +224,9 @@
         // Show fallback: All Servers Offline 
         header.innerText = "No Active Server"; 
         const div = document.createElement("div"); 
-        div.className = status-container offline; 
+        div.className = 'status-container offline'; 
         div.innerHTML = `
+          <!-- offline image also DOES NOT have invert-on-dark -->
           <img class="status-image" src="AllServersOffline.png" alt="All Servers Offline">
           <p class="status-text">All servers are currently offline.</p>
         `;
@@ -248,6 +253,3 @@
   </script>
 </body>
 </html>
-
-
-
