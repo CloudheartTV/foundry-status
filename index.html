@@ -805,7 +805,7 @@
         const card = document.createElement('div');
         card.className = `status-card ${isOnline ? 'online' : 'offline'}`;
         card.innerHTML = `
-          <img class="status-img" src="${s.img}" alt="${s.label}" onerror="this.style.display='none'">
+          <img class="status-img" src="${isOnline ? s.img : s.img.replace('online_', 'offline_')}" alt="${s.label}" onerror="this.style.display='none'">
           <div class="status-indicator">
             <span class="status-dot"></span>
             <span>${isOnline ? 'ONLINE' : 'OFFLINE'}</span>
