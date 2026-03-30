@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Elder Scrolls: GAOL — CloudheartTV</title>
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0c0608;
+      --bg2:       #130a0b;
+      --surface:   #1a0d0f;
+      --border:    rgba(212, 160, 23, 0.2);
+      --text:      #f0e8d8;
+      --muted:     #9a8070;
+      --accent:    #d4a017;
+      --accent2:   #e8c060;
+      --red:       #8b1a1a;
+      --red2:      #c02828;
+      --accent-glow: rgba(212, 160, 23, 0.4);
+      --font-display: 'Cinzel Decorative', serif;
+      --font-sub:     'Cinzel', serif;
+      --font-body:    'Cormorant Garamond', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Gold border texture along edges */
+    body::after {
+      content: '';
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), var(--accent), transparent);
+      z-index: 9999;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(12,6,8,0.95);
+      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-back {
+      font-family: var(--font-sub); font-size: 0.65rem;
+      letter-spacing: 0.12em; color: var(--muted);
+      text-decoration: none; display: flex; align-items: center; gap: 8px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--accent2); }
+    .nav-logo { height: 36px; filter: sepia(1) saturate(0.5) brightness(0.9); }
+    .nav-system {
+      font-family: var(--font-sub); font-size: 0.6rem;
+      color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase;
+    }
+
+    /* ─── BANNER ─── */
+    .banner {
+      position: relative; height: 560px; overflow: hidden;
+    }
+    .banner::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background:
+        radial-gradient(ellipse at center bottom, rgba(139,26,26,0.25) 0%, transparent 65%),
+        linear-gradient(to bottom, transparent 20%, rgba(12,6,8,0.55) 65%, var(--bg) 100%);
+    }
+    .banner-img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(0.5) saturate(1.3) sepia(0.2);
+    }
+    .banner-content {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      padding: 56px 64px;
+    }
+    .banner-tag {
+      display: inline-block;
+      font-family: var(--font-sub); font-size: 0.58rem;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      border: 1px solid var(--accent);
+      color: var(--accent); padding: 4px 14px;
+      margin-bottom: 20px;
+    }
+    .banner-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 5vw, 3.8rem);
+      font-weight: 900; line-height: 1.1;
+      color: #fff;
+      text-shadow: 0 2px 40px var(--accent-glow), 0 0 80px rgba(139,26,26,0.4);
+    }
+    .banner-title .subtitle {
+      display: block;
+      font-family: var(--font-display); font-size: 0.55em;
+      color: var(--accent2); letter-spacing: 0.25em;
+      text-transform: uppercase; margin-top: 8px;
+    }
+
+    /* Decorative divider */
+    .divider {
+      text-align: center; padding: 12px 0;
+      font-size: 1.4rem; color: var(--accent);
+      letter-spacing: 0.5em; opacity: 0.6;
+    }
+
+    /* ─── LAYOUT ─── */
+    .page-body {
+      max-width: 1200px; margin: 0 auto;
+      padding: 56px 64px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 56px;
+    }
+
+    /* ─── ABOUT ─── */
+    .section-eyebrow {
+      font-family: var(--font-sub); font-size: 0.58rem;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: var(--font-display); font-size: 1.8rem;
+      font-weight: 700; margin-bottom: 24px;
+      color: var(--accent2);
+    }
+    .section-body {
+      font-size: 1.05rem; line-height: 2;
+      color: var(--muted); font-weight: 300;
+      font-style: italic;
+    }
+    .section-body p + p { margin-top: 16px; }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar { display: flex; flex-direction: column; gap: 2px; }
+    .info-block {
+      border: 1px solid var(--border);
+      border-bottom: none;
+      padding: 20px 24px;
+      background: var(--surface);
+    }
+    .info-block:last-of-type { border-bottom: 1px solid var(--border); }
+    .info-label {
+      font-family: var(--font-sub); font-size: 0.58rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 8px;
+    }
+    .info-value {
+      font-family: var(--font-sub); font-size: 0.9rem;
+      letter-spacing: 0.05em;
+    }
+
+    .join-btn {
+      display: block; width: 100%;
+      font-family: var(--font-display); font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      background: linear-gradient(135deg, var(--red) 0%, var(--red2) 50%, var(--red) 100%);
+      color: var(--accent2);
+      border: 1px solid var(--accent);
+      padding: 18px;
+      text-align: center; text-decoration: none;
+      cursor: pointer; transition: opacity 0.2s, transform 0.2s;
+      margin-top: 24px;
+    }
+    .join-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* ─── CAROUSEL ─── */
+    .carousel-section {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 64px 80px;
+    }
+    .carousel-wrap {
+      position: relative; aspect-ratio: 16/9;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    #carousel-track { width: 100%; height: 100%; }
+    .carousel-slide { display: none; width: 100%; height: 100%; position: absolute; inset: 0; }
+    .carousel-slide.active { display: block; }
+
+    .carousel-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 48px; height: 48px;
+      background: rgba(12,6,8,0.8);
+      border: 1px solid var(--border);
+      color: var(--accent2); font-size: 1.2rem;
+      cursor: pointer; z-index: 10;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .carousel-btn:hover { background: var(--red); border-color: var(--accent); }
+    #carousel-prev { left: 16px; }
+    #carousel-next { right: 16px; }
+
+    .carousel-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0; border-top: 1px solid var(--border);
+    }
+    #carousel-counter {
+      font-family: var(--font-sub); font-size: 0.65rem;
+      color: var(--muted); letter-spacing: 0.12em;
+    }
+    #carousel-dots { display: flex; gap: 8px; align-items: center; }
+    .carousel-dot {
+      width: 20px; height: 2px;
+      background: var(--border);
+      border: none; cursor: pointer; transition: background 0.2s;
+    }
+    .carousel-dot.active { background: var(--accent); }
+
+    @media (max-width: 900px) {
+      nav, .page-body, .carousel-section { padding-left: 24px; padding-right: 24px; }
+      .banner-content { padding: 36px 24px; }
+      .page-body { grid-template-columns: 1fr; }
+      .banner { height: 360px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html" class="nav-back">← Return to Hub</a>
+    <img class="nav-logo" src="../creator_logo.png" alt="CloudheartTV">
+    <span class="nav-system">UESRPG 3e v4</span>
+  </nav>
+
+  <div class="banner">
+    <img class="banner-img" src="bannerimage.png" alt="The Elder Scrolls: GAOL">
+    <div class="banner-content">
+      <div class="banner-tag">Active Campaign</div>
+      <h1 class="banner-title">
+        The Elder Scrolls
+        <span class="subtitle">⸻ G A O L ⸻</span>
+      </h1>
+    </div>
+  </div>
+
+  <div class="divider">✦ ✦ ✦</div>
+
+  <div class="page-body">
+    <main>
+      <p class="section-eyebrow">About the Campaign</p>
+      <h2 class="section-title">Chains of the Fourth Era</h2>
+      <div class="section-body">
+        <p>Fifty years after the fall of Alduin, Tamriel groans under a resurgent and cruel Imperial authority. The Thalmor threat grows teeth, and despite defying them openly, the Empire has not reversed the White-Gold Condordat. Your average citizen is happier (until they are arrested), considering the law operating well and good, but the old freedoms — of leeway, of magic, of faith — are being excised, quietly and without ceremony.</p>
+        <p>You are prisoners. Not necessarily of serious crimes, but of inconveniences, breaking some law, however minor or major. Your existence is a problem the Empire rather solve with your cooperation. GAOL is a campaign about survival, resistance, and what it means to be free in a world that has decided you aren't.</p>
+        <p>Featuring elements from the hit game series by Bethesda, this is a love letter to the world of Tamriel, the games that got me hooked on fantasy, the often insane at times deep lore of the whole team of writers for Elder Scrolls across the last 30 years, including Kirkbride's work, and, finally, the community which keeps these games and world alive and relevant.</p>
+      </div>
+    </main>
+
+    <aside class="sidebar">
+      <div class="info-block">
+        <p class="info-label">System</p>
+        <p class="info-value">UESRPG 3e v4</p>
+      </div>
+      <div class="info-block">
+        <p class="info-label">Setting</p>
+        <p class="info-value">Tamriel, 4E 252</p>
+      </div>
+      <div class="info-block">
+        <p class="info-label">Tone</p>
+        <p class="info-value">Heroic High Fantasy · Survival · Cosmic</p>
+      </div>
+      <div class="info-block">
+        <p class="info-label">Platform</p>
+        <p class="info-value">FoundryVTT · Twitch · Discord</p>
+      </div>
+	  <div class="info-block">
+		<p class="info-label">Sessions</p>
+		<p class="info-value">Wednesdays 7pm EST and Thursdays 8pm EST</p>
+	  </div>
+      <a href="https://startplaying.games/adventure/cmkzzcusb00avkw04c2xnrkkl"
+         target="_blank" class="join-btn">
+        Seek an Audience on Start Playing
+      </a>
+    </aside>
+  </div>
+
+  <div class="carousel-section">
+    <p class="section-eyebrow" style="margin-bottom:24px;">Campaign Chronicle</p>
+    <div class="carousel-wrap">
+      <div id="carousel-track"></div>
+      <button class="carousel-btn" id="carousel-prev">&#8592;</button>
+      <button class="carousel-btn" id="carousel-next">&#8594;</button>
+    </div>
+    <div class="carousel-footer">
+      <span id="carousel-counter">— / —</span>
+      <div id="carousel-dots"></div>
+    </div>
+  </div>
+
+  <script src="/campaign-page.js"></script>
+  <script>
+    CampaignPage.init({ campaignKey: 'esg', folder: '.'});
+  </script>
+</body>
+</html>

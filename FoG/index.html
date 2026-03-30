@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fallout: Georgia — CloudheartTV</title>
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&family=Share+Tech+Mono&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0e0906;
+      --bg2:       #160d08;
+      --surface:   #1e1109;
+      --border:    rgba(196, 92, 42, 0.25);
+      --text:      #e8d8cc;
+      --muted:     #8a7060;
+      --accent:    #c45c2a;
+      --accent2:   #e8873a;
+      --accent-glow: rgba(196, 92, 42, 0.35);
+      --font-display: 'Oswald', sans-serif;
+      --font-mono:    'Share Tech Mono', monospace;
+      --font-body:    'Barlow', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Scanline texture */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
+      );
+      pointer-events: none; z-index: 9998;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(14,9,6,0.92);
+      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-back {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.1em; color: var(--muted);
+      text-decoration: none; display: flex; align-items: center; gap: 8px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--accent2); }
+    .nav-logo { height: 36px; }
+    .nav-system {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      color: var(--muted); letter-spacing: 0.15em;
+    }
+
+    /* ─── BANNER ─── */
+    .banner {
+      position: relative; height: 500px; overflow: hidden;
+    }
+    .banner-img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(0.55) saturate(1.2);
+    }
+    .banner-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to bottom,
+        transparent 30%,
+        rgba(14,9,6,0.6) 70%,
+        var(--bg) 100%
+      );
+    }
+    .banner-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 48px;
+    }
+    .tag {
+      display: inline-block;
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      border: 1px solid var(--accent);
+      color: var(--accent); padding: 4px 12px;
+      margin-bottom: 16px;
+    }
+    .banner-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700; line-height: 0.95;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 0 60px var(--accent-glow);
+      letter-spacing: 0.02em;
+    }
+    .banner-title span { color: var(--accent2); }
+
+    /* ─── LAYOUT ─── */
+    .page-body {
+      max-width: 1200px; margin: 0 auto;
+      padding: 64px 48px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 64px;
+    }
+
+    /* ─── ABOUT ─── */
+    .section-eyebrow {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-eyebrow::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .section-title {
+      font-family: var(--font-display); font-size: 2rem;
+      font-weight: 500; text-transform: uppercase;
+      margin-bottom: 24px; letter-spacing: 0.04em;
+    }
+    .section-body {
+      font-size: 0.95rem; line-height: 1.9;
+      color: var(--muted); font-weight: 300;
+    }
+    .section-body p + p { margin-top: 16px; }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar { display: flex; flex-direction: column; gap: 24px; }
+    .info-block {
+      border: 1px solid var(--border);
+      padding: 24px;
+      background: var(--surface);
+    }
+    .info-label {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 12px;
+    }
+    .info-value {
+      font-family: var(--font-display); font-size: 1rem;
+      font-weight: 400; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .info-value a { color: var(--text); text-decoration: none; }
+    .info-value a:hover { color: var(--accent2); }
+
+    .join-btn {
+      display: block; width: 100%;
+      font-family: var(--font-display); font-size: 0.8rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      background: var(--accent); color: #fff;
+      border: none; padding: 18px;
+      text-align: center; text-decoration: none;
+      cursor: pointer; transition: background 0.2s, transform 0.2s;
+    }
+    .join-btn:hover { background: var(--accent2); transform: translateY(-1px); }
+
+    /* ─── CAROUSEL ─── */
+    .carousel-section { margin-top: 64px; padding: 0 48px 80px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+    .carousel-wrap {
+      position: relative;
+      aspect-ratio: 16/9;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    #carousel-track { width: 100%; height: 100%; }
+    .carousel-slide {
+      display: none; width: 100%; height: 100%;
+      position: absolute; inset: 0;
+    }
+    .carousel-slide.active { display: block; }
+
+    .carousel-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 48px; height: 48px;
+      background: rgba(14,9,6,0.75);
+      border: 1px solid var(--border);
+      color: var(--text); font-size: 1.2rem;
+      cursor: pointer; z-index: 10;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .carousel-btn:hover { background: var(--accent); border-color: var(--accent); }
+    #carousel-prev { left: 16px; }
+    #carousel-next { right: 16px; }
+
+    .carousel-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0; border-top: 1px solid var(--border);
+    }
+    #carousel-counter {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      color: var(--muted); letter-spacing: 0.1em;
+    }
+    #carousel-dots {
+      display: flex; gap: 8px; align-items: center;
+    }
+    .carousel-dot {
+      width: 24px; height: 3px;
+      background: var(--border);
+      border: none; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .carousel-dot.active { background: var(--accent); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 14px 24px; }
+      .banner-content, .page-body, .carousel-section { padding-left: 24px; padding-right: 24px; }
+      .page-body { grid-template-columns: 1fr; }
+      .banner { height: 320px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html" class="nav-back">← Back to Hub</a>
+    <img class="nav-logo" src="../creator_logo.png" alt="CloudheartTV">
+    <span class="nav-system">Fallout 2d20</span>
+  </nav>
+
+  <div class="banner">
+    <img class="banner-img" src="bannerimage.png" alt="Fallout: Georgia">
+    <div class="banner-overlay"></div>
+    <div class="banner-content">
+      <div class="tag">Active Campaign</div>
+      <h1 class="banner-title">Fallout:<br><span>Georgia</span></h1>
+    </div>
+  </div>
+
+  <div class="page-body">
+    <main>
+      <p class="section-eyebrow">About the Campaign</p>
+      <h2 class="section-title">The Georgia Wasteland</h2>
+      <div class="section-body">
+        <p>Two hundred years after the bombs dropped, the Wastelands of the Southern US, also known as the Dixielands, are a brutal place — red clay of a dying world baked hard under a harsh sun, ruins of Atlanta swallowed by kudzu and radiation, and factions fighting over scraps of the old world.</p>
+        <p>This is a Fallout 2d20 campaign built around surival mechanics, moral quandaries, the factions and worldbuilding of the earlier games, and the question of whether civilization is worth rebuilding. Expect hard choices, dark humor, and a whole lot of rads.</p>
+        <p>Unsurprising for a player who got sucked into their fantasy world, this is also a love letter, but not just to Bethesda, but also Black Isle Studios, Interplay, Micro Forté, and Obsidian Entertainment.</p> 
+		<p>Over the years the setting of Fallout has changed, both as a result of the changing game visions of the studios and the changing game genres from Isometric Turn-Based CRPG to First Person Real-Time RPG and in terms of tone and themes. Having to make a choice for world-building, I chose to focus on the <i>Post</i> portion of the game's early tagline "Fallout: A Post-Nuclear Role Playing Game". This does not mean we do not love ALL the Fallouts, quite the opposite, we are long-term fans here in this community, even playing for donations to raise money for Fallout For Hope with St. Jude</p>
+		<p>Sessions are run live on Foundry VTT and streamed on Twitch. Open seats available — bring a character concept, possibly a few (character death is a very real possibility) and a willingness to roleplay and engage with the themes of the setting and your fellow players at the table.</p>
+      </div>
+    </main>
+
+    <aside class="sidebar">
+      <div class="info-block">
+        <p class="info-label">System</p>
+        <p class="info-value">Fallout 2d20</p>
+      </div>
+      <div class="info-block">
+        <p class="info-label">Setting</p>
+        <p class="info-value">Post-Apocalyptic Georgia</p>
+      </div>
+      <div class="info-block">
+        <p class="info-label">Platform</p>
+        <p class="info-value">FoundryVTT · Twitch</p>
+      </div>
+	  <div class="info-block">
+        <p class="info-label">Sessions</p>
+        <p class="info-value">Saturdays 4pm EST</p>
+      </div>
+      <a href="https://startplaying.games/gm/listings/campaigns/cmji1spfk00l1le04q3niahax/schedule"
+         target="_blank" class="join-btn">
+        ▶ Find a Seat on Start Playing
+      </a>
+    </aside>
+  </div>
+
+  <!-- MEDIA CAROUSEL -->
+  <div class="carousel-section">
+    <p class="section-eyebrow" style="margin-bottom:24px;">Campaign Media</p>
+    <div class="carousel-wrap">
+      <div id="carousel-track"></div>
+      <button class="carousel-btn" id="carousel-prev">&#8592;</button>
+      <button class="carousel-btn" id="carousel-next">&#8594;</button>
+    </div>
+    <div class="carousel-footer">
+      <span id="carousel-counter">— / —</span>
+      <div id="carousel-dots"></div>
+    </div>
+  </div>
+
+  <script src="/campaign-page.js"></script>
+  <script>
+    // Update videoCount and imageCount to match actual files in this folder
+    CampaignPage.init({ campaignKey: 'fog', folder: '.'});
+  </script>
+</body>
+</html>

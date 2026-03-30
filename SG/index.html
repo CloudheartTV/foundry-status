@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Starfield: Genesys — CloudheartTV</title>
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,200;0,400;0,700;1,200&family=JetBrains+Mono:wght@300;400&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #020408;
+      --bg2:       #040810;
+      --surface:   #080d18;
+      --border:    rgba(74, 158, 221, 0.2);
+      --text:      #d8eaf8;
+      --muted:     #5a7a9a;
+      --accent:    #4a9edd;
+      --accent2:   #8acfff;
+      --accent-glow: rgba(74, 158, 221, 0.4);
+      --font-display: 'Exo 2', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --font-body:    'Rajdhani', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Starfield background */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(74,158,221,0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(74,158,221,0.03) 0%, transparent 50%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(2,4,8,0.95);
+      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-back {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      letter-spacing: 0.08em; color: var(--muted);
+      text-decoration: none; display: flex; align-items: center; gap: 8px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--accent2); }
+    .nav-logo { height: 36px; filter: brightness(0.85); }
+    .nav-system {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      color: var(--muted); letter-spacing: 0.15em;
+    }
+
+    /* ─── BANNER ─── */
+    .banner {
+      position: relative; height: 540px; overflow: hidden;
+    }
+    .banner::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background:
+        radial-gradient(ellipse at 60% 40%, rgba(74,158,221,0.15) 0%, transparent 50%),
+        linear-gradient(to bottom, rgba(2,4,8,0.3) 0%, rgba(2,4,8,0.5) 60%, var(--bg) 100%);
+    }
+    .banner-img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(0.45) saturate(1.4);
+    }
+    .banner-content {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      padding: 56px 64px;
+    }
+    .banner-tag {
+      display: inline-block;
+      font-family: var(--font-mono); font-size: 0.58rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      border: 1px solid var(--accent);
+      color: var(--accent); padding: 4px 12px;
+      margin-bottom: 20px;
+    }
+    .banner-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 700; line-height: 1; letter-spacing: -0.01em;
+      color: #fff;
+      text-shadow: 0 0 80px var(--accent-glow);
+    }
+    .banner-title .slash { color: var(--accent); margin: 0 8px; font-weight: 200; }
+
+    /* ─── LAYOUT ─── */
+    .page-body {
+      max-width: 1200px; margin: 0 auto;
+      padding: 56px 64px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 56px;
+      position: relative; z-index: 1;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-mono); font-size: 0.58rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: var(--font-display); font-size: 2rem;
+      font-weight: 700; margin-bottom: 24px;
+      letter-spacing: 0.02em;
+    }
+    .section-body {
+      font-size: 1.05rem; line-height: 1.85;
+      color: var(--muted); font-weight: 300;
+    }
+    .section-body p + p { margin-top: 16px; }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar { display: flex; flex-direction: column; gap: 1px; background: var(--border); }
+    .info-block {
+      padding: 20px 24px;
+      background: var(--surface);
+    }
+    .info-label {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 8px;
+    }
+    .info-value {
+      font-family: var(--font-display); font-size: 0.9rem;
+      font-weight: 500; letter-spacing: 0.03em;
+    }
+
+    .join-btn {
+      display: block; width: 100%;
+      font-family: var(--font-display); font-size: 0.75rem;
+      font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+      background: transparent;
+      color: var(--accent2);
+      border: 1px solid var(--accent);
+      padding: 18px;
+      text-align: center; text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    .join-btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+      box-shadow: 0 0 30px var(--accent-glow);
+    }
+
+    /* ─── CAROUSEL ─── */
+    .carousel-section {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 64px 80px;
+      position: relative; z-index: 1;
+    }
+    .carousel-wrap {
+      position: relative; aspect-ratio: 16/9;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    #carousel-track { width: 100%; height: 100%; }
+    .carousel-slide { display: none; width: 100%; height: 100%; position: absolute; inset: 0; }
+    .carousel-slide.active { display: block; }
+
+    .carousel-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 48px; height: 48px;
+      background: rgba(2,4,8,0.8);
+      border: 1px solid var(--border);
+      color: var(--accent2); font-size: 1.1rem;
+      cursor: pointer; z-index: 10;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .carousel-btn:hover {
+      background: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow);
+      color: var(--bg);
+    }
+    #carousel-prev { left: 16px; }
+    #carousel-next { right: 16px; }
+
+    .carousel-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; border-top: 1px solid var(--border);
+    }
+    #carousel-counter {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      color: var(--muted); letter-spacing: 0.1em;
+    }
+    #carousel-dots { display: flex; gap: 6px; align-items: center; }
+    .carousel-dot {
+      width: 20px; height: 2px;
+      background: var(--border);
+      border: none; cursor: pointer; transition: background 0.2s, box-shadow 0.2s;
+    }
+    .carousel-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+    }
+
+    @media (max-width: 900px) {
+      nav, .page-body, .carousel-section { padding-left: 24px; padding-right: 24px; }
+      .banner-content { padding: 36px 24px; }
+      .page-body { grid-template-columns: 1fr; }
+      .banner { height: 360px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html" class="nav-back">← Hub</a>
+    <img class="nav-logo" src="../creator_logo.png" alt="CloudheartTV">
+    <span class="nav-system">Genesys RPG</span>
+  </nav>
+
+  <div class="banner">
+    <img class="banner-img" src="bannerimage.png" alt="Starfield: Genesys">
+    <div class="banner-content">
+      <div class="banner-tag">PENDING Campaign</div>
+      <h1 class="banner-title">Starfield<span class="slash">/</span>Genesys</h1>
+    </div>
+  </div>
+
+  <div class="page-body">
+    <main>
+      <p class="section-eyebrow">// about_campaign.log</p>
+      <h2 class="section-title">The Settled Systems</h2>
+      <div class="section-body">
+        <p>The Settled Systems stretch across twenty-seven star systems, only nine <i>officially</i> under a formal government — a hundred years of colonization, three major stellar governments, several factions, and one alien mystery, and no shortage of people willing to kill you over it.</p>
+        <p>You play as one of a thousand colonists who signed up, at the behest of a child prodigy in Cryogenics who hasn't solved the 'de-freezing' problem' but she has <i>promised</i> to do so, and you don't have many options, as its 2152 the planet has, at best, 50 years and things are getting down right <i>terrifying</i> on Earth.</p> 
+		<p>You might not be the best of the best, but you were definitely selected for a reason, a small subsection thought to be possibly the only humans who might survive to rebuild.</p>
+		<p>Starfield: Genesys uses the Genesys narrative dice system to capture the cinematic, open-universe feel of Bethesda's Starfield. Every roll can swing the story — success with consequence, failure with drama. The cosmos is large and largely indifferent.</p>
+        <p>Sessions will run live on FoundryVTT and stream on Twitch. All Seats are open — no prior Starfield knowledge required, just a hunger for space exploration.</p>
+      </div>
+    </main>
+
+    <aside class="sidebar">
+      <div class="info-block">
+        <p class="info-label">// system</p>
+        <p class="info-value">Genesys RPG</p>
+      </div>
+      <div class="info-block">
+        <p class="info-label">// setting</p>
+        <p class="info-value">Settled Systems — 2330</p>
+      </div>
+      <div class="info-block">
+        <p class="info-label">// tone</p>
+        <p class="info-value">Exploration · Sci-Fi · Narrative</p>
+      </div>
+      <div class="info-block">
+        <p class="info-label">// platform</p>
+        <p class="info-value">FoundryVTT · Twitch</p>
+      </div>
+      <a href="https://startplaying.games/adventure/cmmtshyhu0034jv04ta2swij0"
+         target="_blank" class="join-btn">
+        [ JOIN_CREW ] Start Playing →
+      </a>
+    </aside>
+  </div>
+
+  <div class="carousel-section">
+    <p class="section-eyebrow" style="margin-bottom:24px;">// media_gallery</p>
+    <div class="carousel-wrap">
+      <div id="carousel-track"></div>
+      <button class="carousel-btn" id="carousel-prev">‹</button>
+      <button class="carousel-btn" id="carousel-next">›</button>
+    </div>
+    <div class="carousel-footer">
+      <span id="carousel-counter">— / —</span>
+      <div id="carousel-dots"></div>
+    </div>
+  </div>
+
+  <script src="/campaign-page.js"></script>
+  <script>
+    CampaignPage.init({ campaignKey: 'sg', folder: '.'});
+  </script>
+</body>
+</html>

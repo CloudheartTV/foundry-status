@@ -3,262 +3,819 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Now Airing - FoundryVTT</title>
+  <title>CloudheartTV — Campaign Hub</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #111118;
+      --surface: #16161f;
+      --border: rgba(255,255,255,0.08);
+      --text: #e8e8f0;
+      --muted: #888899;
+      --accent: #c8a96e;
+      --font-display: 'Cinzel', serif;
+      --font-body: 'Raleway', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: 'Arial', sans-serif;
-      text-align: center;
-      background-color: #ffffff;
-      color: #333333;
-      margin: 0;
-      padding: 0;
+      font-family: var(--font-body);
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    #now-airing {
-      padding-top: 60px;
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.4;
     }
 
-    /* === Base Containers === */
-    .status-container {
-      background-color: #e6e6e6;
-      color: #222222; /* text always dark in light mode */
-      border-radius: 15px;
-      margin: 20px auto;
-      max-width: 600px;
-      padding: 30px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .online {
-      background-color: #e6ffe6;
-      color: #1a321a;
-      box-shadow: 0 0 15px rgba(0, 255, 127, 0.7);
-    }
-
-    .offline {
-      background-color: #ffe6e6;
-      color: #321a1a;
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
-    }
-
-    .status-image {
-      width: 250px;
-      height: 250px;
-      object-fit: contain;
-    }
-
-    .status-text {
-      font-size: 20px;
-      font-weight: bold;
-      margin-top: 15px;
-    }
-
-    /* === Logo Styling === */
-    #logo-wrapper {
-      position: absolute;
-      top: 10px;
-      left: 10px;
+    /* ─── HEADER ─── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0;
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(12px);
       z-index: 100;
     }
 
-    #logo {
-      width: 240px;
-      transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
+    #logo { height: 48px; transition: transform 0.3s; }
+    #logo:hover { transform: scale(1.05); }
+
+    nav { display: flex; gap: 24px; align-items: center; }
+    nav a {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--accent); }
+
+    .portal-btn {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 8px 18px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .portal-btn:hover { background: var(--accent); color: var(--bg); }
+
+    /* ─── HERO ─── */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: 520px;
+      align-items: center;
+      padding: 80px 80px 60px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
     }
 
-    #logo:hover {
-      transform: scale(1.2);
+    .hero::after {
+      content: '';
+      position: absolute; right: -100px; top: -100px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(200,169,110,0.06) 0%, transparent 70%);
+      pointer-events: none;
     }
 
-    /* === Social Links === */
-    #social-links {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 15px;
+    .hero-text { z-index: 1; }
+    .hero-eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
     }
-
-    #social-links a {
-      width: 40px;
-      height: 40px;
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 60%, #e0c8a0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 420px;
+      font-weight: 300;
+    }
+    .hero-cta {
+      margin-top: 36px;
+      display: flex; gap: 16px; flex-wrap: wrap;
+    }
+    .btn-primary {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 14px 28px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
       display: inline-block;
-      transition: transform 0.3s ease-in-out;
+    }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn-secondary {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 14px 28px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s;
+      display: inline-block;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    .hero-avatar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      z-index: 1;
+    }
+    .hero-avatar img {
+      max-height: 400px;
+      max-width: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 40px rgba(200,169,110,0.3));
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
     }
 
-    #social-links a img {
+    /* ─── ABOUT STRIP ─── */
+    .about-strip {
+      padding: 60px 80px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 60px;
+      align-items: start;
+    }
+    .about-label {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .about-heading {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .about-body {
+      font-size: 0.95rem;
+      line-height: 1.9;
+      color: var(--muted);
+      font-weight: 300;
+    }
+    .about-body p + p { margin-top: 16px; }
+    .social-row {
+      display: flex; gap: 20px; margin-top: 28px;
+    }
+    .social-row a {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .social-row a:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .social-row a img {
+      width: 18px; height: 18px;
+      filter: invert(1) brightness(0.7);
+      transition: filter 0.2s;
+    }
+    .social-row a:hover img { filter: invert(1) brightness(1); }
+
+    /* ─── CAMPAIGNS SECTION ─── */
+    .campaigns-section { padding: 80px; }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+    .section-label {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── CAMPAIGN CARDS GRID ─── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .cards-bottom-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      margin-top: 2px;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      background: var(--surface);
+    }
+
+    .card-banner {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease, filter 0.4s ease;
+      filter: brightness(0.6) saturate(0.8);
+    }
+    .card:hover .card-banner {
+      transform: scale(1.06);
+      filter: brightness(0.85) saturate(1.1);
+    }
+
+    .card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+      transition: background 0.3s;
+    }
+    .card:hover .card-overlay {
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.15) 50%, transparent 100%);
+    }
+
+    .card-accent-line {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .card:hover .card-accent-line { transform: scaleX(1); }
+
+    .card-content {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 24px;
+      transform: translateY(8px);
+      transition: transform 0.3s;
+    }
+    .card:hover .card-content { transform: translateY(0); }
+
+    .card-eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 6px;
+    }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #fff;
+    }
+    .card-arrow {
+      position: absolute;
+      top: 24px; right: 24px;
+      width: 36px; height: 36px;
+      border: 1px solid rgba(255,255,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s, border-color 0.3s;
+    }
+    .card:hover .card-arrow { opacity: 1; }
+    .card-arrow svg { width: 14px; height: 14px; }
+
+    .card-fog  .card-accent-line { background: #c45c2a; }
+    .card-fog  .card-arrow       { border-color: #c45c2a; }
+    .card-esg  .card-accent-line { background: #d4a017; }
+    .card-esg  .card-arrow       { border-color: #d4a017; }
+    .card-sg   .card-accent-line { background: #4a9edd; }
+    .card-sg   .card-arrow       { border-color: #4a9edd; }
+    .card-km   .card-accent-line { background: #4a7ab5; }
+    .card-km   .card-arrow       { border-color: #4a7ab5; }
+    .card-tabra .card-accent-line { background: #ff6eb4; }
+    .card-tabra .card-arrow      { border-color: #ff6eb4; }
+
+    /* ─── PORTAL MODAL ─── */
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.active { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 48px;
+      width: min(480px, 90vw);
+      position: relative;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute; top: 20px; right: 20px;
+      background: none; border: none; color: var(--muted);
+      font-size: 1.5rem; cursor: pointer; line-height: 1;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--text); }
+
+    .modal-eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .modal-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    .modal-input-wrap { position: relative; margin-bottom: 16px; }
+    .modal-input {
       width: 100%;
-      height: auto;
-      filter: grayscale(100%);
-      transition: filter 0.3s ease-in-out;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      padding: 14px 48px 14px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+      letter-spacing: 0.1em;
+    }
+    .modal-input:focus { border-color: var(--accent); }
+    .modal-input::placeholder { color: var(--muted); letter-spacing: 0; }
+
+    .modal-toggle {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--muted); cursor: pointer;
+      padding: 4px; transition: color 0.2s;
+    }
+    .modal-toggle:hover { color: var(--text); }
+
+    .modal-submit {
+      width: 100%;
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 16px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .modal-submit:hover { opacity: 0.85; }
+
+    .modal-error {
+      font-size: 0.8rem;
+      color: #e06060;
+      margin-top: 10px;
+      min-height: 20px;
+      letter-spacing: 0.02em;
     }
 
-    #social-links a:hover {
-      transform: scale(1.2);
+    /* Portal content */
+    .portal-content {
+      display: none;
+      padding: 80px;
+      border-top: 1px solid var(--border);
+    }
+    .portal-content.active { display: block; }
+
+    .now-airing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
     }
 
-    #social-links a:hover img {
-      filter: grayscale(0%);
+    .status-card {
+      border: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+    .status-card.online  { border-color: #2a6e3f; background: rgba(42,110,63,0.08); }
+    .status-card.offline { border-color: rgba(255,255,255,0.04); }
+    .status-card img.status-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; margin-bottom: 16px; }
+    .status-indicator {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-display); font-size: 0.6rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+    }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--muted);
+    }
+    .online .status-dot {
+      background: #4cde80;
+      box-shadow: 0 0 8px #4cde80;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+    }
+    .online .status-indicator { color: #4cde80; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 40px 80px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 300;
     }
 
-    /* === Dark Mode === */
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #121212;
-        color: #f0f0f0;
-      }
-
-      .status-container {
-        background-color: #1e1e1e;
-        color: #f0f0f0;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-      }
-
-      .online {
-        background-color: #103820;
-        color: #c9fcd6; /* readable on dark green */
-        box-shadow: 0 0 20px rgba(0, 255, 127, 0.4);
-      }
-
-      .offline {
-        background-color: #381010;
-        color: #f8cccc; /* readable on dark red */
-        box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
-      }
-
-      .invert-on-dark {
-        filter: invert(1) hue-rotate(180deg);
-      }
-
-      #logo:hover {
-        filter: invert(1) hue-rotate(180deg) brightness(1.2);
-      }
-
-      #social-links {
-      filter: invert(1) hue-rotate(180deg) brightness(1.2);
-      }
-
-      a {
-        color: #90caf9;
-      }
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      header { padding: 16px 24px; }
+      nav { display: none; }
+      .hero, .about-strip, .campaigns-section, .portal-content, footer { padding: 40px 24px; }
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-avatar { justify-content: center; margin-top: 32px; }
+      .hero-avatar img { max-height: 260px; }
+      .about-strip { grid-template-columns: 1fr; gap: 24px; }
+      .cards-grid { grid-template-columns: 1fr 1fr; }
     }
-
-    /* === Responsive Mobile Layout === */
-    @media (max-width: 800px) {
-      #logo-wrapper {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        margin: 20px auto 10px auto;
-        top: 0;
-        left: 0;
-      }
-
-      #logo {
-        width: 160px;
-        transform: none !important;
-      }
+    @media (max-width: 600px) {
+      .cards-grid, .cards-bottom-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <!-- Wrapped logo for responsive positioning -->
-  <div id="logo-wrapper">
-    <a href="https://startplaying.games/gm/cloudhearttv" target="_blank">
-      <img id="logo" class="invert-on-dark" src="creator_logo.png" alt="Creator Logo">
-    </a>
-  </div>
 
-  <div id="now-airing">
-    <h1 id="now-airing-header">Now Airing</h1>
-    <div id="active-server-container"><!-- Filled dynamically --></div>
-  </div>
+  <!-- ─── HEADER ─── -->
+  <header>
+    <a href="index.html">
+      <img id="logo" src="creator_logo.png" style="filter: invert(100%);" alt="CloudheartTV">
+    </a>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#campaigns">Campaigns</a>
+      <a href="https://www.twitch.tv/CloudheartTV" target="_blank">Twitch</a>
+      <a href="https://startplaying.games/gm/cloudhearttv" target="_blank">Start Playing</a>
+      <button class="portal-btn" id="portalNavBtn">⬡ Player Portal</button>
+    </nav>
+  </header>
 
-  <div id="social-links">
-    <a href="https://discord.gg/NtXEEJRbH4" target="_blank">
-      <img class="invert-on-dark" src="discord_icon.png" alt="Discord">
-    </a>
-    <a href="https://www.twitch.tv/CloudheartTV" target="_blank">
-      <img class="invert-on-dark" src="twitch_icon.png" alt="Twitch">
-    </a>
-    <a href="https://www.youtube.com/@CloudheartTV" target="_blank">
-      <img class="invert-on-dark" src="youtube_icon.png" alt="YouTube">
-    </a>
-    <a href="https://steamcommunity.com/id/Cloudheart/" target="_blank">
-      <img class="invert-on-dark" src="steam_icon.png" alt="Steam">
-    </a>
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="hero-text">
+      <p class="hero-eyebrow">Tabletop RPG Streaming</p>
+      <h1 class="hero-title">Stories Worth<br>Playing</h1>
+      <p class="hero-sub">Six campaigns. Five worlds. From the wastelands of Atlanta Georgia, USA to Imperial Tamriel — join the tables or watch the streams.</p>
+      <div class="hero-cta">
+        <a href="https://startplaying.games/gm/cloudhearttv" target="_blank" class="btn-primary">Find a Game</a>
+        <a href="#campaigns" class="btn-secondary">View Campaigns</a>
+      </div>
+    </div>
+    <div class="hero-avatar">
+      <img src="PNGTuberCloudheart.png" alt="Cloudheart">
+    </div>
+  </section>
+
+  <!-- ─── ABOUT ─── -->
+  <section class="about-strip" id="about">
+    <div>
+      <p class="about-label">The GM</p>
+      <h2 class="about-heading">Hi, I'm<br>Cloudheart</h2>
+    </div>
+    <div>
+      <div class="about-body">
+        <p>I'm a tabletop RPG game master and live streamer running six simultaneous campaigns across wildly different systems and settings — from post-apocalyptic Georgia to Imperial Tamriel, from a JRPG isekai to the frontiers of space of 2310.</p>
+        <p>All sessions are run live on FoundryVTT, streamed on Twitch, and archived on YouTube. Seats are open — come play, or pull up a chair and watch.</p>
+        <p>As for me? I'm a lot of things. Son, Brother, Friend. I've always been enamored with computers and putting things together. Fantasy and Science Fiction are my go-tos when I am reading, and SNES and PS1 un-voiced text-based RPGs are the reason I learned to read.</p>
+        <p>I'm a fairly open person, and I've had the blessing in life to experience the love of friends, family and the depth and myriad of knowledge, mystery, joy and pain this life has to offer. I think you have to live first if you want to make and say something about life. I find, at the end of the day, though, I was never much concerned with WHO made my media save for learning about a new perspective from them to view the world.</p>
+        <p>No, what's more important to me is that I create something that actually speaks to you. Like a random name on the back of a good game box or in the scrolling list of credits, let me fade to the back and tell me if you enjoyed what was made.</p>
+        <p>Ultimately, I thank you all — first to my family and friends who helped me learn to live and see things differently, and enriched my life and enabled me to pursue this work.</p>
+        <p>And thank you, players and viewers, for existing and wanting to experience these creations, and who honestly give me a reason to create and make the end result so much better than I could have alone.</p>
+      </div>
+      <div class="social-row">
+        <a href="https://discord.gg/PM93XNFh7W" target="_blank"><img src="discord_icon.png" alt="Discord"></a>
+        <a href="https://www.twitch.tv/CloudheartTV" target="_blank"><img src="twitch_icon.png" alt="Twitch"></a>
+        <a href="https://www.youtube.com/@CloudheartTV" target="_blank"><img src="youtube_icon.png" alt="YouTube"></a>
+        <a href="https://steamcommunity.com/id/Cloudheart/" target="_blank"><img src="steam_icon.png" alt="Steam"></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CAMPAIGNS ─── -->
+  <section class="campaigns-section" id="campaigns">
+    <div class="section-header">
+      <span class="section-label">Active</span>
+      <h2 class="section-title">Campaigns</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="cards-grid">
+      <a href="FoG/" class="card card-fog">
+        <img class="card-banner" src="FoG/bannerimage.png" alt="Fallout: Georgia" onerror="this.style.display='none'">
+        <div class="card-overlay"></div>
+        <div class="card-accent-line"></div>
+        <div class="card-content">
+          <p class="card-eyebrow">Fallout 2d20</p>
+          <h3 class="card-title">Fallout: Georgia</h3>
+        </div>
+        <div class="card-arrow">
+          <svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </div>
+      </a>
+
+      <a href="ESG/" class="card card-esg">
+        <img class="card-banner" src="ESG/bannerimage.png" alt="Elder Scrolls: GAOL" onerror="this.style.display='none'">
+        <div class="card-overlay"></div>
+        <div class="card-accent-line"></div>
+        <div class="card-content">
+          <p class="card-eyebrow">UESRPG 3e</p>
+          <h3 class="card-title">The Elder Scrolls: GAOL</h3>
+        </div>
+        <div class="card-arrow">
+          <svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </div>
+      </a>
+
+      <a href="SG/" class="card card-sg">
+        <img class="card-banner" src="SG/bannerimage.png" alt="Starfield: Genesys" onerror="this.style.display='none'">
+        <div class="card-overlay"></div>
+        <div class="card-accent-line"></div>
+        <div class="card-content">
+          <p class="card-eyebrow">Genesys RPG</p>
+          <h3 class="card-title">Starfield: Genesys</h3>
+        </div>
+        <div class="card-arrow">
+          <svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </div>
+      </a>
+    </div>
+
+    <div class="cards-bottom-row">
+      <a href="KM/" class="card card-km">
+        <img class="card-banner" src="KM/bannerimage.png" alt="Kingmaker: Misfits" onerror="this.style.display='none'">
+        <div class="card-overlay"></div>
+        <div class="card-accent-line"></div>
+        <div class="card-content">
+          <p class="card-eyebrow">Pathfinder 2e</p>
+          <h3 class="card-title">Kingmaker: Misfits</h3>
+        </div>
+        <div class="card-arrow">
+          <svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </div>
+      </a>
+
+      <a href="TABRA/" class="card card-tabra">
+        <img class="card-banner" src="TABRA/bannerimage.png" alt="TABRA" onerror="this.style.display='none'">
+        <div class="card-overlay"></div>
+        <div class="card-accent-line"></div>
+        <div class="card-content">
+          <p class="card-eyebrow">Fabula Ultima</p>
+          <h3 class="card-title">TABRA: The Tale of the Meta-Gamers</h3>
+        </div>
+        <div class="card-arrow">
+          <svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ─── PLAYER PORTAL (locked) ─── -->
+  <section class="portal-content" id="playerPortal">
+    <div class="section-header">
+      <span class="section-label">Stream Crew</span>
+      <h2 class="section-title">Player Portal</h2>
+      <div class="section-line"></div>
+    </div>
+    <p style="color:var(--muted); font-size:0.9rem; max-width:560px; line-height:1.8;">Welcome, crew. The active server status and session links are below. The portal password rotates — check your crew Discord for the latest.</p>
+    <div class="now-airing-grid" id="portalServerGrid"></div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <p class="footer-copy">© CloudheartTV — All campaigns streamed live on Twitch</p>
+    <div class="social-row">
+      <a href="https://discord.gg/PM93XNFh7W" target="_blank"><img src="discord_icon.png" alt="Discord"></a>
+      <a href="https://www.twitch.tv/CloudheartTV" target="_blank"><img src="twitch_icon.png" alt="Twitch"></a>
+      <a href="https://www.youtube.com/@CloudheartTV" target="_blank"><img src="youtube_icon.png" alt="YouTube"></a>
+    </div>
+  </footer>
+
+  <!-- ─── PLAYER PORTAL MODAL ─── -->
+  <div class="modal-backdrop" id="portalModal">
+    <div class="modal">
+      <button class="modal-close" id="portalClose">×</button>
+      <p class="modal-eyebrow">Stream Crew Only</p>
+      <h2 class="modal-title">Player Portal</h2>
+      <p class="modal-desc">Enter the crew password to access live server status and session connection links.</p>
+      <div class="modal-input-wrap">
+        <input class="modal-input" id="portalPassword" type="password" placeholder="Enter crew password…" autocomplete="off">
+        <button class="modal-toggle" id="togglePw" title="Show/hide password">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+      <button class="modal-submit" id="portalSubmit">Enter Portal</button>
+      <p class="modal-error" id="portalError"></p>
+    </div>
   </div>
 
   <script>
+    // ─── PASSWORD CONFIG ─────────────────────────────────────────────────────
+    // To rotate: change this string, commit, share the new password with crew.
+    const PORTAL_PASSWORD = "streamcrew2025";
+    // ─────────────────────────────────────────────────────────────────────────
+
     const servers = [
-      { key: 'fallout', label: 'Fallout: Georgia' },
-      { key: 'kingmaker', label: 'Kingmaker' },
-      { key: 'powderkids', label: 'Powderkids' },
-      { key: 'tabra', label: 'TABRA' },
-      { key: 'elder-scrolls', label: 'Elder Scrolls: Gaol' }
+      { key: 'fallout',       label: 'Fallout: Georgia',    img: 'online_fallout.png'       },
+      { key: 'kingmaker',     label: 'Kingmaker: Misfits',  img: 'online_kingmaker.png'     },
+      { key: 'starfield',     label: 'Starfield: Genesys',  img: 'online_starfield.png'     },
+      { key: 'tabra',         label: 'TABRA',               img: 'online_tabra.png'         },
+      { key: 'elder-scrolls', label: 'Elder Scrolls: GAOL', img: 'online_elder-scrolls.png' },
     ];
 
-    async function checkServerStatus() {
-      const apiURL = "https://cloudheartfoundry.duckdns.org/api/status";
-      const serverURL = "https://cloudheartfoundry.duckdns.org/";
-      const container = document.getElementById("active-server-container");
-      const header = document.getElementById("now-airing-header");
+    const modal          = document.getElementById('portalModal');
+    const portalNavBtn   = document.getElementById('portalNavBtn');
+    const portalClose    = document.getElementById('portalClose');
+    const portalSubmit   = document.getElementById('portalSubmit');
+    const portalError    = document.getElementById('portalError');
+    const portalPassword = document.getElementById('portalPassword');
+    const portalSection  = document.getElementById('playerPortal');
+    const togglePw       = document.getElementById('togglePw');
 
-      // clear previous content so we don't append repeatedly on re-check
-      container.innerHTML = '';
+    if (sessionStorage.getItem('portalUnlocked') === '1') {
+      portalSection.classList.add('active');
+      loadServerStatus();
+    }
 
-      let worldName = await getFoundryWorld(apiURL);
-      worldName = (worldName || "").toLowerCase();
-
-      const match = servers.find(server => worldName.includes(server.key));
-
-      if (match) {
-        const div = document.createElement("div");
-        div.className = 'status-container online';
-        div.innerHTML = `
-          <a href="${serverURL}" target="_blank">
-            <!-- status-image intentionally DOES NOT have invert-on-dark -->
-            <img class="status-image" src="online_${match.key}.png" alt="${match.label} Server">
-          </a>
-          <p class="status-text">${match.label} Server Online! Click to Join.</p>
-        `;
-        container.appendChild(div);
+    portalNavBtn.addEventListener('click', () => {
+      if (sessionStorage.getItem('portalUnlocked') === '1') {
+        portalSection.scrollIntoView({ behavior: 'smooth' });
       } else {
-        // Show fallback: All Servers Offline 
-        header.innerText = "No Active Server"; 
-        const div = document.createElement("div"); 
-        div.className = 'status-container offline'; 
-        div.innerHTML = `
-          <!-- offline image also DOES NOT have invert-on-dark -->
-          <img class="status-image" src="AllServersOffline.png" alt="All Servers Offline">
-          <p class="status-text">All servers are currently offline.</p>
-        `;
-        container.appendChild(div);
+        modal.classList.add('active');
+        setTimeout(() => portalPassword.focus(), 100);
       }
-    }
+    });
 
-    async function getFoundryWorld(url) {
+    portalClose.addEventListener('click', () => {
+      modal.classList.remove('active');
+      portalError.textContent = '';
+      portalPassword.value = '';
+    });
+
+    modal.addEventListener('click', e => { if (e.target === modal) portalClose.click(); });
+
+    togglePw.addEventListener('click', () => {
+      portalPassword.type = portalPassword.type === 'password' ? 'text' : 'password';
+    });
+
+    portalPassword.addEventListener('keydown', e => {
+      if (e.key === 'Enter') portalSubmit.click();
+    });
+
+    portalSubmit.addEventListener('click', () => {
+      if (portalPassword.value === PORTAL_PASSWORD) {
+        sessionStorage.setItem('portalUnlocked', '1');
+        modal.classList.remove('active');
+        portalSection.classList.add('active');
+        portalSection.scrollIntoView({ behavior: 'smooth' });
+        loadServerStatus();
+      } else {
+        portalError.textContent = 'Incorrect password. Check your crew Discord.';
+        portalPassword.value = '';
+        portalPassword.focus();
+      }
+    });
+
+    // ─── SERVER STATUS ────────────────────────────────────────────────────────
+    async function loadServerStatus() {
+      const grid = document.getElementById('portalServerGrid');
+      if (grid.childElementCount > 0) return; // already loaded
+
+      let worldName = '';
       try {
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: { 'Accept': 'application/json' }
-        });
-        if (!response.ok) throw new Error("Foundry API unreachable");
-        const jsonData = await response.json();
-        return jsonData.world ?? "";
-      } catch (error) {
-        console.error("Error fetching Foundry API:", error);
-        return "";
+        const r = await fetch('https://cloudheartfoundry.duckdns.org/api/status', { headers: { Accept: 'application/json' } });
+        if (r.ok) {
+          const j = await r.json();
+          worldName = (j.world || '').toLowerCase();
+        }
+        // non-ok response: worldName stays '' → all offline
+      } catch (e) {
+        // network error / CORS / server down: worldName stays '' → all offline
       }
-    }
 
-    checkServerStatus();
+      servers.forEach(s => {
+        // Empty worldName must never match — guards against '' matching every includes()
+        const isOnline = worldName.length > 0 && worldName.includes(s.key);
+        const card = document.createElement('div');
+        card.className = `status-card ${isOnline ? 'online' : 'offline'}`;
+        card.innerHTML = `
+          <img class="status-img" src="${s.img}" alt="${s.label}" onerror="this.style.display='none'">
+          <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span>${isOnline ? 'ONLINE' : 'OFFLINE'}</span>
+          </div>
+          <p style="margin-top:10px; font-family:var(--font-display); font-size:0.85rem;">${s.label}</p>
+          ${isOnline ? `<a href="https://cloudheartfoundry.duckdns.org/" target="_blank" class="btn-primary" style="margin-top:16px; display:inline-block; font-size:0.65rem;">Connect &#8594;</a>` : ''}
+        `;
+        grid.appendChild(card);
+      });
+    }
   </script>
 </body>
 </html>
-
-
-
