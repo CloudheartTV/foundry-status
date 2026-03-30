@@ -1,0 +1,109 @@
+/* nav-shared.css — unified navigation styles for all campaign pages */
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 32px;
+  border-bottom: 1px solid var(--nav-border, rgba(255,255,255,0.12));
+  background: var(--nav-bg, rgba(8,8,12,0.96));
+  backdrop-filter: blur(14px);
+  position: sticky; top: 0; z-index: 200;
+  gap: 16px;
+}
+
+.nav-left {
+  display: flex; align-items: center; gap: 20px;
+  flex-shrink: 0;
+}
+
+.nav-logo-link { display: flex; align-items: center; }
+.nav-logo {
+  height: 30px;
+  filter: var(--nav-logo-filter, invert(1) brightness(0.85));
+  transition: opacity 0.2s;
+}
+.nav-logo:hover { opacity: 0.75; }
+
+.nav-back {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--nav-muted, rgba(255,255,255,0.45));
+  text-decoration: none;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.nav-back:hover { color: var(--nav-accent, rgba(255,255,255,0.9)); }
+
+.nav-center {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-system-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--nav-muted, rgba(255,255,255,0.35));
+}
+
+.nav-right {
+  display: flex; align-items: center; gap: 6px;
+  flex-shrink: 0;
+}
+
+/* All nav action links/buttons share this base */
+.nav-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--nav-muted, rgba(255,255,255,0.5));
+  background: none;
+  border: 1px solid transparent;
+  padding: 6px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.nav-link svg { flex-shrink: 0; }
+.nav-link:hover {
+  color: var(--nav-accent, #fff);
+  border-color: var(--nav-accent-border, rgba(255,255,255,0.2));
+}
+
+/* YouTube — subtle red tint on hover */
+.nav-yt:hover    { color: #ff4444; border-color: rgba(255,68,68,0.4); }
+
+/* Twitch — purple tint on hover */
+.nav-twitch:hover { color: #a970ff; border-color: rgba(169,112,255,0.4); }
+
+/* SPG — accent tint */
+.nav-spg:hover { color: var(--accent, #c8a96e); border-color: var(--accent, rgba(200,169,110,0.4)); }
+
+/* Portal — matches hub style */
+.nav-portal {
+  border-color: var(--accent, rgba(200,169,110,0.5));
+  color: var(--accent, rgba(200,169,110,0.8));
+}
+.nav-portal:hover {
+  background: var(--accent, rgba(200,169,110,0.1));
+  color: var(--accent, #c8a96e);
+}
+
+/* Hide text labels on small screens, keep icons */
+@media (max-width: 860px) {
+  nav { padding: 10px 16px; }
+  .nav-link span { display: none; }
+  .nav-link { padding: 6px 8px; }
+  .nav-system-tag { display: none; }
+  .nav-back { font-size: 0.6rem; }
+}
+
+@media (max-width: 560px) {
+  .nav-back span { display: none; }
+  .nav-spg { display: none; }
+}

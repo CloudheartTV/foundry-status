@@ -7,6 +7,7 @@
   <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IM+Fell+English:ital@0;1&family=Bebas+Neue&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nav-shared.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -28,6 +29,14 @@
       --font-body:    'Libre Baskerville', serif;
       --font-punk:    'Bebas Neue', sans-serif;
       --font-fraktur: 'UnifrakturMaguntia', cursive;
+      /* Nav overrides */
+      --nav-bg:           rgba(26,54,25,0.98);
+      --nav-border:       rgba(248,219,26,0.25);
+      --nav-muted:        rgba(230,216,176,0.55);
+      --nav-accent:       #f8db1a;
+      --nav-accent-border: rgba(248,219,26,0.4);
+      --nav-logo-filter:  brightness(10);
+      --font-mono:        'Libre Baskerville', serif;
     }
 
     html { scroll-behavior: smooth; }
@@ -472,7 +481,7 @@
     }
   </style>
 </head>
-<body>
+<body data-system="Pathfinder 2e">
 
   <!-- ─── NAV ─── -->
   <nav>
@@ -502,13 +511,13 @@
     <main class="main-col">
       <h2 class="section-heading">The Stolen Lands</h2>
       <div class="body-text">
-        <p>Nobody expected this particular band of wanderers, contracted mercenaries, and barely-functional adventurers to end up founding a nation. <i>They</i> certainly didn't. Welcome to the Stolen Lands, where the politics are treacherous, the wildlife is murderous, and the people you're supposed to be leading have <i>alot</i> of questions and <i>expect</i> answers.</p>
-        <p>Kingmaker: Misfits adapts the beloved Pathfinder adventure path with its full kingdom-building layer, faction intrigue, and a cast of characters whose heroism is largely accidental and tweaks character and motivations of the major allied and enemy NPCs to fit a new vision for the overarching campaign. Running Pathfinder 2e with all the tactical weight and strategic depth the system offers.</p>
+        <p>Nobody expected this particular band of wanderers, misfits, and barely-functional adventurers to end up founding a nation. They certainly didn't. Welcome to the Stolen Lands, where the politics are treacherous, the wildlife is murderous, and the people you're supposed to be leading have questions.</p>
+        <p>Kingmaker: Misfits adapts the beloved Pathfinder adventure path with a full kingdom-building layer, faction intrigue, and a cast of characters whose heroism is largely accidental. Running Pathfinder 2e with all the tactical weight and strategic depth the system offers.</p>
       </div>
 
       <h3 class="sub-heading">About the Campaign</h3>
       <div class="body-text">
-        <p>The Stolen Lands have long been considered untameable — a wild expanse between the River Kingdoms and Brevoy, home to bandits, fey, and things that don't appear on any map. You've been chartered to change that. <i>Whether</i> you succed or <i>how</i> is another question entirely.</p>
+        <p>The Stolen Lands have long been considered untameable — a wild expanse between the River Kingdoms and Brevoy, home to bandits, fey, and things that don't appear on any map. You've been chartered to change that. Whether you wanted to be is another question entirely.</p>
         <p>Every session is run live on FoundryVTT with full Pathfinder 2e tactical maps, token automation, and kingdom management tracking. Streamed on Twitch, archived on YouTube. Open seats available — come claim your hex.</p>
       </div>
 
@@ -519,15 +528,16 @@
 
       <h3 class="sub-heading">What to Expect</h3>
       <div class="body-text">
-        <p>Our current table for Pathfinder 2e enjoys combat and the three-action economy and enjoys goofing off in equal measure.</p>
-		<p>To that effect, we are mostly memeing with the boys in this campaign, though we do take the RP seriously when it comes up.</p> 
-		<p>Political intrigue between Brevoy factions, River Kingdom warlords, and the other mystical entities at work that the players are still discovering. Kingdom events will at times occur between sessions or will be a dedicated session as as sort of downtime, slice-of-life episode for the heroes.</p>
-		<p>All by A GM who has read the adventure path, ignored half of it, and made up the rest.</p>
+        <p>Tactical Pathfinder 2e combat with three-action economy and full condition tracking. Political intrigue between Brevoy factions, River Kingdom warlords, and the fey courts of the First World. Kingdom events between sessions. A GM who has read the adventure path, ignored half of it, and made up the rest.</p>
       </div>
 
       <a href="https://startplaying.games/adventure/cmg2dc66t00lhl204947y3ci1"
          target="_blank" class="join-btn">
         ✦ Claim Your Seat on Start Playing ✦
+      </a>
+      <a href="https://youtube.com/playlist?list=PLwNg5WiwRCv3i7SM7tpU6FgTUK_skEEC5&si=pqikqJjP9TyMkkEq"
+         target="_blank" class="join-btn" style="background:var(--green-light);border-color:var(--gold-dark);margin-top:10px;">
+        ▶ Watch the Playlist
       </a>
     </main>
 
@@ -551,11 +561,11 @@
           </div>
           <div class="sidebar-stat">
             <span class="sidebar-stat-label">Platform</span>
-            <span class="sidebar-stat-value">FoundryVTT + Twitch + Discord</span>
+            <span class="sidebar-stat-value">FoundryVTT + Twitch</span>
           </div>
           <div class="sidebar-stat">
             <span class="sidebar-stat-label">Sessions</span>
-            <span class="sidebar-stat-value">Sundays 6pm EST</span>
+            <span class="sidebar-stat-value">Live — check Discord for schedule</span>
           </div>
         </div>
       </div>
@@ -593,9 +603,14 @@
     <span class="page-num">KM</span>
   </div>
 
-  <script src="../campaign-page.js"></script>
+  <script src="/campaign-page.js"></script>
   <script>
-    CampaignPage.init({ campaignKey: 'km', folder: '.' });
+    CampaignPage.init({
+      campaignKey: 'km',
+      folder: '.',
+      backLabel: '← Hub',
+      youtubeUrl: 'https://youtube.com/playlist?list=PLwNg5WiwRCv3i7SM7tpU6FgTUK_skEEC5&si=pqikqJjP9TyMkkEq'
+    });
   </script>
 </body>
 </html>

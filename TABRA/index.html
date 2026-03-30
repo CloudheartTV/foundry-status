@@ -4,15 +4,15 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TABRA: The Tale of the Meta-Gamers — CloudheartTV</title>
-  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,700;0,800;0,900;1,400&family=Space+Mono:wght@400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nav-shared.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg:        #ffffff;
-      --bg2:       #f8f8f8;
       --surface:   #f2f2f2;
       --border:    rgba(0,0,0,0.1);
       --border-strong: rgba(0,0,0,0.2);
@@ -28,231 +28,99 @@
       --font-display: 'Nunito', sans-serif;
       --font-mono:    'Space Mono', monospace;
       --font-jp:      'Noto Sans JP', sans-serif;
+      /* Nav overrides — dark bar on light page */
+      --nav-bg:           rgba(10,10,10,0.97);
+      --nav-border:       rgba(0,0,0,0.4);
+      --nav-muted:        rgba(200,200,200,0.6);
+      --nav-accent:       #ffb3d9;
+      --nav-accent-border: rgba(255,179,217,0.4);
+      --nav-logo-filter:  invert(1) brightness(0.9);
     }
 
     html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font-display);
-      background-color: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+    body { font-family: var(--font-display); background-color: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
-    /* Rainbow top stripe */
     body::before {
-      content: '';
-      position: fixed; top: 0; left: 0; right: 0;
-      height: 4px;
-      background: var(--rainbow);
-      z-index: 9999;
-    }
-
-    /* ─── NAV ─── */
-    nav {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 48px;
-      border-bottom: 2px solid var(--border-strong);
-      background: rgba(255,255,255,0.97);
-      backdrop-filter: blur(8px);
-      position: sticky; top: 4px; z-index: 100;
-    }
-    .nav-back {
-      font-family: var(--font-mono); font-size: 0.65rem;
-      letter-spacing: 0.05em; color: var(--muted);
-      text-decoration: none; display: flex; align-items: center; gap: 8px;
-      transition: color 0.2s;
-    }
-    .nav-back:hover { color: #c9b3ff; }
-    .nav-logo { height: 36px; filter: invert(1) brightness(0); }
-    .nav-system {
-      font-family: var(--font-mono); font-size: 0.6rem;
-      color: var(--muted); letter-spacing: 0.1em;
+      content: ''; position: fixed; top: 0; left: 0; right: 0;
+      height: 4px; background: var(--rainbow); z-index: 9999;
     }
 
     /* ─── BANNER ─── */
-    .banner {
-      position: relative; height: 480px; overflow: hidden;
-      border-bottom: 2px solid var(--border-strong);
-    }
+    .banner { position: relative; height: 480px; overflow: hidden; border-bottom: 2px solid var(--border-strong); }
     .banner::before {
-      content: '';
-      position: absolute; inset: 0; z-index: 1;
-      background: linear-gradient(
-        to bottom,
-        rgba(255,255,255,0) 30%,
-        rgba(255,255,255,0.6) 70%,
-        var(--bg) 100%
-      );
+      content: ''; position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to bottom, rgba(255,255,255,0) 30%, rgba(255,255,255,0.6) 70%, var(--bg) 100%);
     }
-    .banner-img {
-      width: 100%; height: 100%; object-fit: cover;
-      filter: brightness(0.75) saturate(0.7);
-    }
-    .banner-content {
-      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
-      padding: 40px 64px;
-    }
+    .banner-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.75) saturate(0.7); }
+    .banner-content { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; padding: 40px 64px; }
     .banner-tag {
-      display: inline-block;
-      font-family: var(--font-mono); font-size: 0.6rem;
+      display: inline-block; font-family: var(--font-mono); font-size: 0.6rem;
       letter-spacing: 0.15em; text-transform: uppercase;
-      border: 2px solid var(--text);
-      color: var(--text); padding: 4px 12px;
-      margin-bottom: 16px;
-      background: rgba(255,255,255,0.9);
+      border: 2px solid var(--text); color: var(--text); padding: 4px 12px;
+      margin-bottom: 16px; background: rgba(255,255,255,0.9);
     }
-    .banner-title {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 5vw, 4.2rem);
-      font-weight: 900; line-height: 1.05;
-      color: var(--text);
-    }
-    .banner-title .tab {
-      background: var(--text); color: var(--bg);
-      display: inline; padding: 2px 8px;
-    }
-    .banner-subtitle {
-      font-family: var(--font-jp); font-size: 0.85rem;
-      color: var(--muted); margin-top: 8px; letter-spacing: 0.05em;
-    }
+    .banner-title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 4.2rem); font-weight: 900; line-height: 1.05; color: var(--text); }
+    .banner-title .tab { background: var(--text); color: var(--bg); display: inline; padding: 2px 8px; }
+    .banner-subtitle { font-family: var(--font-jp); font-size: 0.85rem; color: var(--muted); margin-top: 8px; letter-spacing: 0.05em; }
 
-    /* Rainbow line */
-    .rainbow-rule {
-      height: 3px;
-      background: var(--rainbow);
-      margin: 0;
-    }
+    .rainbow-rule { height: 3px; background: var(--rainbow); margin: 0; }
 
     /* ─── LAYOUT ─── */
-    .page-body {
-      max-width: 1200px; margin: 0 auto;
-      padding: 56px 64px;
-      display: grid;
-      grid-template-columns: 1fr 360px;
-      gap: 56px;
-    }
-
-    .section-eyebrow {
-      font-family: var(--font-mono); font-size: 0.58rem;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 12px;
-    }
-    .section-title {
-      font-family: var(--font-display); font-size: 2.2rem;
-      font-weight: 900; margin-bottom: 24px; color: var(--text);
-    }
-    .section-body {
-      font-size: 1rem; line-height: 1.9; color: var(--muted);
-    }
+    .page-body { max-width: 1200px; margin: 0 auto; padding: 56px 64px; display: grid; grid-template-columns: 1fr 360px; gap: 56px; }
+    .section-eyebrow { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .section-title { font-family: var(--font-display); font-size: 2.2rem; font-weight: 900; margin-bottom: 24px; color: var(--text); }
+    .section-body { font-size: 1rem; line-height: 1.9; color: var(--muted); }
     .section-body p + p { margin-top: 16px; }
 
-    /* Highlight box */
     .system-alert {
-      background: var(--surface);
-      border-left: 4px solid;
-      border-image: var(--rainbow) 1;
-      padding: 16px 20px; margin-top: 24px;
-      font-family: var(--font-mono); font-size: 0.75rem;
-      line-height: 1.7; color: var(--muted);
+      background: var(--surface); border-left: 4px solid; border-image: var(--rainbow) 1;
+      padding: 16px 20px; margin-top: 24px; font-family: var(--font-mono); font-size: 0.75rem; line-height: 1.7; color: var(--muted);
     }
     .system-alert strong { color: var(--text); font-weight: 700; }
 
     /* ─── SIDEBAR ─── */
     .sidebar { display: flex; flex-direction: column; gap: 12px; }
-    .info-block {
-      border: 2px solid var(--border-strong);
-      padding: 16px 20px;
-      background: var(--bg);
-      position: relative; overflow: hidden;
-    }
-    .info-block::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0;
-      height: 3px; background: var(--rainbow);
-    }
-    .info-label {
-      font-family: var(--font-mono); font-size: 0.55rem;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 6px;
-    }
-    .info-value {
-      font-family: var(--font-display); font-size: 0.9rem;
-      font-weight: 800; color: var(--text);
-    }
+    .info-block { border: 2px solid var(--border-strong); padding: 16px 20px; background: var(--bg); position: relative; overflow: hidden; }
+    .info-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--rainbow); }
+    .info-label { font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .info-value { font-family: var(--font-display); font-size: 0.9rem; font-weight: 800; color: var(--text); }
 
+    .btn-row { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
     .join-btn {
-      display: block; width: 100%;
-      font-family: var(--font-display); font-size: 0.85rem;
-      font-weight: 900;
-      background: var(--text);
-      color: var(--bg);
-      border: none;
-      padding: 18px;
-      text-align: center; text-decoration: none;
-      cursor: pointer; position: relative; overflow: hidden;
-      transition: transform 0.2s;
+      display: block; width: 100%; font-family: var(--font-display); font-size: 0.85rem; font-weight: 900;
+      background: var(--text); color: var(--bg); border: none; padding: 18px;
+      text-align: center; text-decoration: none; cursor: pointer; position: relative; overflow: hidden; transition: transform 0.2s;
     }
-    .join-btn::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: var(--rainbow); opacity: 0;
-      transition: opacity 0.3s;
-    }
+    .join-btn::before { content: ''; position: absolute; inset: 0; background: var(--rainbow); opacity: 0; transition: opacity 0.3s; }
     .join-btn:hover { transform: translateY(-2px); }
     .join-btn:hover::before { opacity: 0.3; }
     .join-btn span { position: relative; z-index: 1; }
+    .yt-btn {
+      display: block; width: 100%; font-family: var(--font-display); font-size: 0.85rem; font-weight: 700;
+      background: transparent; color: var(--text); border: 2px solid var(--border-strong); padding: 16px;
+      text-align: center; text-decoration: none; cursor: pointer; transition: border-color 0.2s;
+    }
+    .yt-btn:hover { border-color: var(--pastel-pink); }
 
     /* ─── CAROUSEL ─── */
-    .carousel-section {
-      max-width: 1200px; margin: 0 auto;
-      padding: 0 64px 80px;
-    }
-    .carousel-wrap {
-      position: relative; aspect-ratio: 16/9;
-      background: var(--surface);
-      border: 2px solid var(--border-strong);
-      overflow: hidden;
-    }
-    /* Rainbow border on hover */
-    .carousel-wrap:hover {
-      outline: 3px solid transparent;
-      outline-offset: 0;
-    }
+    .carousel-section { max-width: 1200px; margin: 0 auto; padding: 0 64px 80px; }
+    .carousel-wrap { position: relative; aspect-ratio: 16/9; background: var(--surface); border: 2px solid var(--border-strong); overflow: hidden; }
     #carousel-track { width: 100%; height: 100%; }
     .carousel-slide { display: none; width: 100%; height: 100%; position: absolute; inset: 0; }
     .carousel-slide.active { display: block; }
-
     .carousel-btn {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      width: 48px; height: 48px;
-      background: rgba(255,255,255,0.95);
-      border: 2px solid var(--border-strong);
-      color: var(--text); font-size: 1.1rem;
-      cursor: pointer; z-index: 10;
+      position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px;
+      background: rgba(255,255,255,0.95); border: 2px solid var(--border-strong);
+      color: var(--text); font-size: 1.1rem; cursor: pointer; z-index: 10;
       display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-mono); font-weight: 700;
-      transition: background 0.2s, transform 0.2s;
+      font-family: var(--font-mono); font-weight: 700; transition: background 0.2s, transform 0.2s;
     }
     .carousel-btn:hover { background: var(--text); color: var(--bg); transform: translateY(-50%) scale(1.05); }
-    #carousel-prev { left: 16px; }
-    #carousel-next { right: 16px; }
-
-    .carousel-footer {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 0; border-top: 2px solid var(--border-strong);
-    }
-    #carousel-counter {
-      font-family: var(--font-mono); font-size: 0.65rem;
-      color: var(--muted);
-    }
+    #carousel-prev { left: 16px; } #carousel-next { right: 16px; }
+    .carousel-footer { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-top: 2px solid var(--border-strong); }
+    #carousel-counter { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); }
     #carousel-dots { display: flex; gap: 8px; align-items: center; }
-    .carousel-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--border-strong);
-      border: none; cursor: pointer; transition: all 0.2s;
-    }
-    /* Each dot gets a pastel color */
+    .carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border-strong); border: none; cursor: pointer; transition: all 0.2s; }
     .carousel-dot:nth-child(6n+1).active { background: var(--pastel-pink); }
     .carousel-dot:nth-child(6n+2).active { background: var(--pastel-purple); }
     .carousel-dot:nth-child(6n+3).active { background: var(--pastel-blue); }
@@ -269,21 +137,15 @@
     }
   </style>
 </head>
-<body>
+<body data-system="Fabula Ultima">
 
-  <nav>
-    <a href="../index.html" class="nav-back">← Back to Hub</a>
-    <img class="nav-logo" src="../creator_logo.png" alt="CloudheartTV">
-    <span class="nav-system">Fabula Ultima</span>
-  </nav>
+  <nav><!-- injected by campaign-page.js --></nav>
 
   <div class="banner">
     <img class="banner-img" src="bannerimage.png" alt="TABRA">
     <div class="banner-content">
       <div class="banner-tag">Active Campaign</div>
-      <h1 class="banner-title">
-        <span class="tab">TABRA</span>
-      </h1>
+      <h1 class="banner-title"><span class="tab">TABRA</span></h1>
       <p class="banner-subtitle">The Tale of the Meta-Gamers — 異世界RPG物語</p>
     </div>
   </div>
@@ -295,15 +157,14 @@
       <p class="section-eyebrow">// about_campaign</p>
       <h2 class="section-title">The Program<br>Has Begun.</h2>
       <div class="section-body">
-        <p>Several people wake up in a JRPG. They know it's a JRPG. They know the tropes. They've played these games.</p> 
-		<p>What they don't know is whether any of that knowledge is going to help them — and whether the system they're using and the entities that support it will help them when push comes to shove.</p>
-        <p>TABRA is an isekai tabletop campaign built in Fabula Ultima, leaning fully into the visual novel/JRPG/Isekai format. Theatre Inserts, stylized combat, narrator-voice storytelling.</p> 
-		<p>The Second Life Program Members have been given a whole new life on a new world as a second chance. Juniper is helping, and hoping they don't break everythiing.</p> 
-		
-		<p>TABRA: The Tale of the Meta-Gamers is a heartfelt take on what can often be a watered-down wish-fulfillment fantasy trope. What <i>if</i> those people in that video game fantasy world weren't JUST NPCs, but real people? What <i>if</i> the coolest thing you learned on TABRA wasn't magic, but how to be a better person?</p>
-		<p>At it's core TABRA deals with characters who lived a deeply flawed life, died, and <i>realized</i> that, trying to fix it with what may be their only second chance, but they're still the same old person, so that's easier said than done.</p>
-		<p>Inspiration has been taken from every JRPG from the whole <i>Final Fantasy</i> series, <i>Fire Emblem</i>, the <i>'Tales of'</i> series, <i>Persona</i>, and some comedy JRPGs like <i>Mother</i> to the Isekai Visual Novels, Manga and Anime that drew from them as well, like <i>Konosuba</i>, <i>Rising of the Shield Hero</i>, <i>The Faraway Paladin</i>, and <i>Grimgar of Ash and Fantasy.</i></p>
-	  </div>
+        <p>Several people wake up in a JRPG. They know it's a JRPG. They know the tropes. They've played these games.</p>
+        <p>What they don't know is whether any of that knowledge is going to help them — and whether the system they're using and the entities that support it will help them when push comes to shove.</p>
+        <p>TABRA is an isekai tabletop campaign built in Fabula Ultima, leaning fully into the visual novel/JRPG/Isekai format. Theatre Inserts, stylized combat, narrator-voice storytelling.</p>
+        <p>The Second Life Program Members have been given a whole new life on a new world as a second chance. Juniper is helping, and hoping they don't break everything.</p>
+        <p>TABRA: The Tale of the Meta-Gamers is a heartfelt take on what can often be a watered-down wish-fulfillment fantasy trope. What <em>if</em> those people in that video game fantasy world weren't JUST NPCs, but real people? What <em>if</em> the coolest thing you learned on TABRA wasn't magic, but how to be a better person?</p>
+        <p>At its core TABRA deals with characters who lived a deeply flawed life, died, and <em>realized</em> that — trying to fix it with what may be their only second chance, but they're still the same old person, so that's easier said than done.</p>
+        <p>Inspiration has been taken from every JRPG from the whole <em>Final Fantasy</em> series, <em>Fire Emblem</em>, the <em>'Tales of'</em> series, <em>Persona</em>, and some comedy JRPGs like <em>Mother</em> — to the Isekai Visual Novels, Manga and Anime that drew from them, like <em>Konosuba</em>, <em>Rising of the Shield Hero</em>, <em>The Faraway Paladin</em>, and <em>Grimgar of Ash and Fantasy</em>.</p>
+      </div>
       <div class="system-alert">
         <strong>SYSTEM INTERFACE : JUNIPER</strong><br>
         > Program Status: ACTIVE<br>
@@ -314,30 +175,15 @@
     </main>
 
     <aside class="sidebar">
-      <div class="info-block">
-        <p class="info-label">System</p>
-        <p class="info-value">Fabula Ultima</p>
+      <div class="info-block"><p class="info-label">System</p><p class="info-value">Fabula Ultima</p></div>
+      <div class="info-block"><p class="info-label">Genre</p><p class="info-value">Isekai · JRPG · Visual Novel</p></div>
+      <div class="info-block"><p class="info-label">Tone</p><p class="info-value">Comedic · Meta · Dramatic</p></div>
+      <div class="info-block"><p class="info-label">Platform</p><p class="info-value">FoundryVTT · Twitch · Discord</p></div>
+      <div class="info-block"><p class="info-label">Sessions</p><p class="info-value">Tuesdays 6:30pm EST</p></div>
+      <div class="btn-row">
+        <a href="https://startplaying.games/adventure/cmavookfd0003gx69yxg3qy07" target="_blank" class="join-btn"><span>Enter the Program →</span></a>
+        <a href="https://youtube.com/playlist?list=PLwNg5WiwRCv1lZvccF5Qyqz7sBROaLkV0&si=1yBsylPtVUj_o6Wx" target="_blank" class="yt-btn">▶ Watch the Playlist</a>
       </div>
-      <div class="info-block">
-        <p class="info-label">Genre</p>
-        <p class="info-value">Isekai · JRPG · Visual Novel</p>
-      </div>
-      <div class="info-block">
-        <p class="info-label">Tone</p>
-        <p class="info-value">Comedic · Meta · Dramatic</p>
-      </div>
-      <div class="info-block">
-        <p class="info-label">Platform</p>
-        <p class="info-value">FoundryVTT · Twitch · Discord</p>
-      </div>
-	  <div class="info-block">
-        <p class="info-label">Sessions</p>
-        <p class="info-value">Tuesdays 6:30pm EST</p>
-      </div>
-      <a href="https://startplaying.games/adventure/cmavookfd0003gx69yxg3qy07"
-         target="_blank" class="join-btn">
-        <span>Enter the Program →</span>
-      </a>
     </aside>
   </div>
 
@@ -356,7 +202,12 @@
 
   <script src="/campaign-page.js"></script>
   <script>
-    CampaignPage.init({ campaignKey: 'tabra', folder: '.' });
+    CampaignPage.init({
+      campaignKey: 'tabra',
+      folder: '.',
+      backLabel: '← Hub',
+      youtubeUrl: 'https://youtube.com/playlist?list=PLwNg5WiwRCv1lZvccF5Qyqz7sBROaLkV0&si=1yBsylPtVUj_o6Wx'
+    });
   </script>
 </body>
 </html>
