@@ -39,10 +39,10 @@ window.CampaignPage = {
 
     existing.innerHTML = `
       <div class="nav-left">
-        <a href="/index.html" class="nav-logo-link">
-          <img class="nav-logo" src="/creator_logo.png" alt="CloudheartTV">
+        <a href="../index.html" class="nav-logo-link">
+          <img class="nav-logo" src="../creator_logo.png" alt="CloudheartTV">
         </a>
-        <a href="/index.html" class="nav-back">${backLabel}</a>
+        <a href="../index.html" class="nav-back">${backLabel}</a>
       </div>
       <div class="nav-center">
         <span class="nav-system-tag" id="nav-system-tag"></span>
@@ -76,7 +76,7 @@ window.CampaignPage = {
     const portalBtn = document.getElementById('nav-portal-btn');
     if (portalBtn) {
       portalBtn.addEventListener('click', () => {
-        window.location.href = '/index.html#portal';
+        window.location.href = '../index.html#portal';
       });
     }
   },
