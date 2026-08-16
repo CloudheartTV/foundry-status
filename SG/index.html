@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Starfield: Genesys — CloudheartTV</title>
+  <title>Starfield: Relics — CloudheartTV</title>
   <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,200;0,400;0,700;1,200&family=JetBrains+Mono:wght@300;400&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
@@ -24,12 +24,12 @@
       --font-mono:    'JetBrains Mono', monospace;
       --font-body:    'Rajdhani', sans-serif;
       /* Nav overrides */
-      --nav-bg:           rgba(2,4,8,0.97);
-      --nav-border:       rgba(74,158,221,0.15);
-      --nav-muted:        rgba(90,122,154,0.8);
-      --nav-accent:       #8acfff;
+      --nav-bg:            rgba(2,4,8,0.97);
+      --nav-border:        rgba(74,158,221,0.15);
+      --nav-muted:         rgba(90,122,154,0.8);
+      --nav-accent:        #8acfff;
       --nav-accent-border: rgba(74,158,221,0.4);
-      --nav-logo-filter:  invert(1) brightness(0.85);
+      --nav-logo-filter:   invert(1) brightness(0.85);
     }
 
     html { scroll-behavior: smooth; }
@@ -73,7 +73,11 @@
       display: grid; grid-template-columns: 1fr 360px; gap: 56px;
       position: relative; z-index: 1;
     }
-    .section-eyebrow { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .section-eyebrow {
+      font-family: var(--font-mono); font-size: 0.58rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 12px;
+    }
     .section-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; margin-bottom: 24px; letter-spacing: 0.02em; }
     .section-body { font-size: 1.05rem; line-height: 1.85; color: var(--muted); font-weight: 300; }
     .section-body p + p { margin-top: 16px; }
@@ -85,14 +89,69 @@
     .info-value { font-family: var(--font-display); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.03em; }
 
     .btn-row { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-    .join-btn {
-      display: block; width: 100%; font-family: var(--font-display); font-size: 0.75rem;
+    .primary-btn {
+      display: block; width: 100%;
+      font-family: var(--font-display); font-size: 0.75rem;
       font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
-      background: transparent; color: var(--accent2); border: 1px solid var(--accent); padding: 18px;
+      background: transparent; color: var(--accent2);
+      border: 1px solid var(--accent); padding: 16px;
       text-align: center; text-decoration: none; cursor: pointer;
       transition: background 0.2s, color 0.2s, box-shadow 0.2s;
     }
-    .join-btn:hover { background: var(--accent); color: var(--bg); box-shadow: 0 0 30px var(--accent-glow); }
+    .primary-btn:hover { background: var(--accent); color: var(--bg); box-shadow: 0 0 30px var(--accent-glow); }
+    .secondary-btn {
+      display: block; width: 100%;
+      font-family: var(--font-display); font-size: 0.75rem;
+      font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+      background: transparent; color: var(--muted);
+      border: 1px solid rgba(74,158,221,0.15); padding: 14px;
+      text-align: center; text-decoration: none; cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .secondary-btn:hover { border-color: var(--accent); color: var(--accent2); }
+
+    /* ─── CORPS REGISTRY PROMO BLOCK ─── */
+    .registry-promo {
+      position: relative; z-index: 1;
+      max-width: 1200px; margin: 0 auto 48px;
+      padding: 0 64px;
+    }
+    .registry-card {
+      border: 1px solid var(--accent);
+      background: var(--surface);
+      padding: 28px 32px;
+      display: flex; align-items: center; justify-content: space-between; gap: 32px;
+      flex-wrap: wrap;
+    }
+    .registry-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at left center, rgba(74,158,221,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .registry-label {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 8px;
+    }
+    .registry-title {
+      font-family: var(--font-display); font-size: 1.3rem; font-weight: 700;
+      color: var(--text); margin-bottom: 8px;
+    }
+    .registry-desc {
+      font-size: 0.85rem; color: var(--muted); line-height: 1.7; max-width: 560px;
+    }
+    .registry-btn {
+      flex-shrink: 0;
+      font-family: var(--font-mono); font-size: 0.65rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      background: var(--accent); color: var(--bg);
+      border: none; padding: 14px 24px;
+      text-decoration: none; white-space: nowrap;
+      transition: opacity 0.2s, box-shadow 0.2s;
+      display: inline-block;
+    }
+    .registry-btn:hover { opacity: 0.85; box-shadow: 0 0 20px var(--accent-glow); }
 
     /* ─── CAROUSEL ─── */
     .carousel-section { max-width: 1200px; margin: 0 auto; padding: 0 64px 80px; position: relative; z-index: 1; }
@@ -115,22 +174,23 @@
     .carousel-dot.active { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
 
     @media (max-width: 900px) {
-      nav, .page-body, .carousel-section { padding-left: 24px; padding-right: 24px; }
+      .page-body, .carousel-section, .registry-promo { padding-left: 24px; padding-right: 24px; }
       .banner-content { padding: 36px 24px; }
       .page-body { grid-template-columns: 1fr; }
       .banner { height: 360px; }
+      .registry-card { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
-<body data-system="Genesys RPG">
+<body data-system="The Expanse RPG">
 
   <nav><!-- injected by campaign-page.js --></nav>
 
   <div class="banner">
-    <img class="banner-img" src="bannerimage.png" alt="Starfield: Genesys">
+    <img class="banner-img" src="bannerimage.png" alt="Starfield: Relics">
     <div class="banner-content">
       <div class="banner-tag">Pending Campaign</div>
-      <h1 class="banner-title">Starfield<span class="slash">/</span>Genesys</h1>
+      <h1 class="banner-title">Starfield<span class="slash">/</span>Relics</h1>
     </div>
   </div>
 
@@ -142,21 +202,34 @@
         <p>The Settled Systems stretch across twenty-seven star systems, only nine <em>officially</em> under a formal government — a hundred years of colonization, three major stellar governments, several factions, and one alien mystery, and no shortage of people willing to kill you over it.</p>
         <p>You play as one of a thousand colonists who signed up at the behest of a child prodigy in Cryogenics who hasn't solved the 'de-freezing problem' but has <em>promised</em> to do so — and you don't have many options, as it's 2152, the planet has at best 50 years, and things are getting downright <em>terrifying</em> on Earth.</p>
         <p>You might not be the best of the best, but you were definitely selected for a reason — a small subsection thought to be possibly the only humans who might survive to rebuild.</p>
-        <p>Starfield: Genesys uses the Genesys narrative dice system to capture the cinematic, open-universe feel of Bethesda's Starfield. Every roll can swing the story — success with consequence, failure with drama. The cosmos is large and largely indifferent.</p>
+        <p>Starfield: Relics uses The Expanse RPG system to capture the hard science fiction tone of the Settled Systems — gritty, grounded, and politically charged. Every roll carries weight. The cosmos is large and largely indifferent.</p>
         <p>Sessions will run live on FoundryVTT and stream on Twitch. All seats are open — no prior Starfield knowledge required, just a hunger for space exploration.</p>
       </div>
     </main>
 
     <aside class="sidebar">
-      <div class="info-block"><p class="info-label">// system</p><p class="info-value">Genesys RPG</p></div>
+      <div class="info-block"><p class="info-label">// system</p><p class="info-value">The Expanse RPG</p></div>
       <div class="info-block"><p class="info-label">// setting</p><p class="info-value">Settled Systems — 2310</p></div>
-      <div class="info-block"><p class="info-label">// tone</p><p class="info-value">Exploration · Sci-Fi · Narrative</p></div>
+      <div class="info-block"><p class="info-label">// tone</p><p class="info-value">Exploration · Hard Sci-Fi · Political</p></div>
       <div class="info-block"><p class="info-label">// platform</p><p class="info-value">FoundryVTT · Twitch</p></div>
       <div class="info-block"><p class="info-label">// status</p><p class="info-value">Pending Launch — seats open</p></div>
       <div class="btn-row">
-        <a href="https://startplaying.games/adventure/cmmtshyhu0034jv04ta2swij0" target="_blank" class="join-btn">[ JOIN_CREW ] Start Playing →</a>
+        <a href="corps/index.html" class="primary-btn">[ ACCESS ] Corporate Registry →</a>
+        <a href="https://discord.gg/PM93XNFh7W" target="_blank" class="secondary-btn">Join Discord for Updates</a>
       </div>
     </aside>
+  </div>
+
+  <!-- CORPS REGISTRY PROMO -->
+  <div class="registry-promo">
+    <div class="registry-card" style="position:relative;overflow:hidden;">
+      <div>
+        <p class="registry-label">// campaign_resource</p>
+        <h3 class="registry-title">Corporate Registry — 2310</h3>
+        <p class="registry-desc">The independent research report on every major corporation operating in the Settled Systems as of March 1st, 2310. Food conglomerates, mining giants, staryards, tech firms, and the political alignments that bind them.</p>
+      </div>
+      <a href="corps/index.html" class="registry-btn">Open Registry ↗</a>
+    </div>
   </div>
 
   <div class="carousel-section">
@@ -175,7 +248,7 @@
   <script src="../campaign-page.js"></script>
   <script>
     CampaignPage.init({
-      campaignKey: 'sg',
+      campaignKey: 'starfield',
       folder: '.',
       backLabel: '← Hub'
       // youtubeUrl omitted — playlist not yet available

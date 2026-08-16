@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Corporate Registry — 2310 · Starfield: Relics</title>
+<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+<style>
+/* ── SHARED NAV OVERRIDE ── */
+#site-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 24px;
+  background: #060810;
+  border-bottom: 1px solid #1e2330;
+  position: sticky; top: 0; z-index: 500;
+  gap: 12px;
+}
+#site-nav .nav-logo {
+  height: 26px;
+  filter: invert(1) brightness(0.7);
+  flex-shrink: 0;
+}
+#site-nav .nav-back {
+  font-family: 'Courier New', monospace; font-size: 10px;
+  letter-spacing: 0.08em; color: #4a9edd;
+  text-decoration: none; display: flex; align-items: center; gap: 6px;
+  transition: color 0.2s; flex-shrink: 0;
+}
+#site-nav .nav-back:hover { color: #8acfff; }
+#site-nav .nav-center {
+  flex: 1; text-align: center;
+  font-family: 'Courier New', monospace; font-size: 10px;
+  letter-spacing: 0.15em; color: #3a4a5a; text-transform: uppercase;
+}
+#site-nav .nav-right {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+#site-nav .nav-ext {
+  font-family: 'Courier New', monospace; font-size: 10px;
+  letter-spacing: 0.08em; color: #3a4a5a;
+  text-decoration: none; padding: 4px 8px;
+  border: 1px solid #1e2330; border-radius: 3px;
+  transition: color 0.2s, border-color 0.2s;
+}
+#site-nav .nav-ext:hover { color: #4a9edd; border-color: #4a9edd; }
+</style>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#0a0c10;color:#c8d0e0;font-family:'Segoe UI','Inter',Arial,sans-serif;font-size:13px;min-height:100vh;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:#111318;}
+::-webkit-scrollbar-thumb{background:#2a3045;border-radius:3px;}
+button{font-family:inherit;cursor:pointer;}
+input{font-family:inherit;}
+a{color:inherit;text-decoration:none;}
+#header{background:#111318;border-bottom:1px solid #1e2330;padding:16px 24px 12px;}
+#header-title{font-family:'Courier New',monospace;font-size:18px;font-weight:700;color:#4af0a0;letter-spacing:0.06em;}
+#header-sub{color:#6a738a;font-size:11px;font-family:'Courier New',monospace;margin-top:2px;}
+#tab-bar{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
+#content{padding:22px 24px 40px;}
+#footer{margin:32px 0 0;padding:12px 0 0;border-top:1px solid #1e2330;color:#6a738a;font-size:9px;font-family:'Courier New',monospace;}
+.tab-btn{background:transparent;color:#6a738a;border:1px solid #1e2330;border-radius:4px;padding:5px 11px;font-size:10px;font-family:'Courier New',monospace;font-weight:400;letter-spacing:0.03em;transition:all 0.15s;}
+.tab-btn:hover{color:#c8d0e0;border-color:#3a4055;}
+.tab-btn.active{font-weight:700;}
+.sh{font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid #1e2330;color:#4af0a0;}
+.stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.stat-card{background:#111318;border-radius:7px;padding:11px 15px;min-width:120px;}
+.stat-label{color:#6a738a;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;}
+.stat-value{font-family:'Courier New',monospace;font-size:19px;font-weight:700;}
+.stat-sub{color:#6a738a;font-size:9px;margin-top:2px;}
+.pill{display:inline-block;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:600;white-space:nowrap;}
+table{width:100%;border-collapse:collapse;}
+th{padding:7px 10px;text-align:left;color:#6a738a;font-weight:600;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1e2330;}
+td{padding:7px 10px;border-bottom:1px solid #1e2330;vertical-align:top;font-size:12px;}
+tr.clickable{cursor:pointer;}
+tr.clickable:hover td{background:#1a1d28;}
+tr.even td{background:#111318;}
+tr.odd td{background:#0a0c10;}
+tr.selected td{background:#1e2330;}
+.detail{background:#111318;border-radius:8px;padding:16px 20px;margin-bottom:14px;}
+.detail-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.detail-name{font-size:15px;font-weight:700;flex:1;}
+.detail-meta{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:10px;}
+.detail-meta-item .key{color:#6a738a;font-size:9px;text-transform:uppercase;letter-spacing:0.08em;}
+.detail-meta-item .val{color:#c8d0e0;font-size:11px;margin-top:2px;}
+.detail-section-label{color:#6a738a;font-size:9px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;}
+.detail-text{color:#c8d0e0;font-size:11px;line-height:1.75;margin-bottom:10px;}
+.detail-note{border-top:1px solid #1e2330;padding-top:9px;margin-top:2px;color:#f0a04a;font-size:11px;line-height:1.75;}
+.detail-subs{margin-top:8px;display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
+.detail-subs-label{color:#6a738a;font-size:10px;}
+.note-box{background:#111318;border-radius:7px;padding:10px 14px;margin-top:10px;}
+.note-box .note-title{font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px;}
+.note-box .note-body{color:#6a738a;font-size:11px;line-height:1.75;}
+.filter-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.filter-bar input{background:#111318;border:1px solid #1e2330;border-radius:4px;padding:6px 10px;color:#c8d0e0;font-size:12px;flex:1;min-width:200px;outline:none;}
+.filter-bar input:focus{border-color:#4af0a0;}
+.filter-btn{background:transparent;color:#6a738a;border:1px solid #1e2330;border-radius:4px;padding:5px 10px;font-size:10px;}
+.filter-btn.active{border-color:#f0a04a;color:#f0a04a;background:#f0a04a22;}
+.corp-btn-grid{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.corp-btn{background:transparent;border:1px solid #1e2330;border-radius:4px;padding:4px 9px;font-size:10px;font-family:'Courier New',monospace;color:#6a738a;}
+.corp-btn:hover{border-color:#3a4055;color:#c8d0e0;}
+.corp-btn.active{font-weight:700;}
+.bar-track{flex:1;background:#1e2330;border-radius:2px;height:8px;}
+.bar-fill{height:8px;border-radius:2px;}
+.align-row{margin-bottom:12px;}
+.align-header{display:flex;justify-content:space-between;margin-bottom:3px;}
+.align-name{font-size:11px;}
+.align-count{font-size:11px;font-family:'Courier New',monospace;}
+.geo-corps{font-size:10px;color:#6a738a;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+@media(max-width:700px){.two-col{grid-template-columns:1fr;}}
+.status-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;display:inline-block;}
+.dying{color:#e05050;background:#e0505022;border:1px solid #e0505055;}
+.defunct{color:#808080;background:#80808022;border:1px solid #80808055;}
+.active-badge{color:#4af0a0;background:#4af0a022;border:1px solid #4af0a055;}
+</style>
+</head>
+<body>
+
+<nav id="site-nav">
+  <a href="../../index.html">
+    <img class="nav-logo" src="../../creator_logo.png" alt="CloudheartTV">
+  </a>
+  <a href="../index.html" class="nav-back">← Starfield: Relics</a>
+  <div class="nav-center">Starfield: Relics — Campaign Resource</div>
+  <div class="nav-right">
+    <a href="https://www.twitch.tv/CloudheartTV" target="_blank" class="nav-ext">Twitch</a>
+    <a href="https://discord.gg/PM93XNFh7W" target="_blank" class="nav-ext">Discord</a>
+    <a href="../../index.html" class="nav-ext">Hub</a>
+  </div>
+</nav>
+
+<div id="header">
+  <div id="header-title">CORPORATE REGISTRY</div>
+  <div id="header-sub">INDEPENDENT RESEARCH — MARCH 1ST REPORT, 2310 CE</div>
+  <div id="tab-bar">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="food">Food &amp; Beverage</button>
+    <button class="tab-btn" data-tab="tech">Tech / Research</button>
+    <button class="tab-btn" data-tab="mining">Mining</button>
+    <button class="tab-btn" data-tab="staryards">Staryards</button>
+    <button class="tab-btn" data-tab="parts">Part Manufacturers</button>
+    <button class="tab-btn" data-tab="all">All Corps</button>
+    <button class="tab-btn" data-tab="geo">Political Map</button>
+  </div>
+</div>
+
+<div id="content"></div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+
+const FOOD = [
+  {name:"Advanced Nutrition",color:"#50d060",sector:"Food",hq:"Multiple agrarian worlds, UC Space (admin: Jemison)",founded:"2166",alignment:"UC",employees:"~2.1M",
+   history:"The great consolidation of Earth's food industrial complex — Kraft Heinz, Kellanova, Cargill, and Nestlé merged during the evacuation era into Advanced Nutrition. Born of necessity: evacuating hundreds of millions required food that functioned in zero-gravity, indefinite storage, and minimal preparation environments.",
+   products:"50-calorie formfactor tins (the iconic AN tins), meal packs, milk-carton drink packs covering water to orange juice to alcohol variants. Sold in every UC settlement. The tins stack perfectly and are the most efficient caloric delivery system ever engineered.",
+   note:"'Eating tin' is working-class slang for poverty dining. Advanced Nutrition has spent considerable marketing budget trying to rebrand their products as 'precision nutrition.' So far unsuccessfully.",
+   subs:["AN Tins","PrecisionPak","VitaDrink","Cargill Agricultural (legacy)"]},
+  {name:"Boom Pop!",color:"#e04080",sector:"Food / Beverage",hq:"Multiple — localized production on every settled planet",founded:"2148",alignment:"Neutral",employees:"~3.4M",
+   history:"PepsiCo and Coca-Cola Corporation — two companies in mortal competition for two centuries — merged during the evacuation. Their key insight: logistics, not product, was the competitive moat in a multi-system civilization. Established localized production on every settled planet rather than centralized manufacturing.",
+   products:"Full beverage portfolio across every category. Boom Pop! is the only company with genuine everywhere presence. The logistics network they've built is considered one of the modern wonders of the Settled Systems.",
+   note:"Quaker Oats separated to combine with General Mills as Centauri Mills. Gamesa, Sabritas, Frito-Lay and Barq's merged separately on Akila as Colina Snacks. Original Pepsi and Coke formulations survive as premium heritage lines at significant markup.",
+   subs:["Boom Classic","Pop Zero","AquaBurst","Heritage Pepsi","Heritage Coke","Centauri Mills (spin-off)"]},
+  {name:"Colina Snacks Co.",color:"#f06020",sector:"Food / Snacks",hq:"Akila City, Cheyenne System",founded:"2151",alignment:"Freestar",employees:"~480K",
+   history:"Born from the merger of Gamesa, Sabritas, Frito-Lay and Barq's. All four companies had deep roots in Mexican and American snack culture. The new entity chose Akila during the Freestar founding years. Named 'Colina' — Spanish for hill — referencing Akila City's distinctive topography.",
+   products:"Chips, crackers, corn-based snack products, root beer variants. The full Sabritas flavor range adapted for frontier worlds. Their 'Polvo Chips' line is the bestselling snack in Freestar space.",
+   note:"There is an ongoing legal dispute about the Cheetos formula that has been running for 150 years. Neither party will discuss it publicly.",
+   subs:["Sabritas (heritage)","Polvo Chips","Barq's Root Beer","Colina Crackers"]},
+  {name:"Chandra Vineyards",color:"#b060d0",sector:"Food / Luxury",hq:"Leonis III, Leonis System",founded:"2242",alignment:"Independent",employees:"~12K",
+   history:"A project of the French royal diaspora — the Bourbon line's surviving branch, which made it to New Atlantis on a diplomatic ship and has been trying to reclaim cultural relevance ever since. Chandra Vineyards is their attempt to transplant French viticulture to Leonis III. The actual workers are third-generation settlers who find the whole project faintly absurd.",
+   products:"Estate wines, sparkling wines, table wines. The first bottles won't be ready for another decade. Currently selling bottled water from Leonis III springs at luxury prices while the vineyard matures.",
+   note:"The workforce on Leonis III regards the 'royal' Chandra family with affectionate contempt. They visit twice a year from New Atlantis apartments, taste water, make pronouncements about the terroir, and leave. The actual viticulturists are the reason anything grows at all. There will likely be a succession dispute whenever the Chandra family decides to arrive en force.",
+   subs:["Chandra Estate","Leonis Springs Water"]},
+  {name:"CAN-uck!",color:"#e08030",sector:"Food",hq:"Copernicus III, Copernicus System",founded:"2172",alignment:"Independent",employees:"~890K",
+   history:"Canada's food industry consolidated during evacuation and chose a remarkable path: rather than merge with American or European giants, the combined entity claimed an entire system. Copernicus III was developed with extraordinary care for its existing ecosystems — human settlement deliberately designed around natural habitats rather than replacing them.",
+   products:"Genuine Earth-origin animal products (beef, poultry, pork, fish) and vegetables through careful genetic preservation. Their 'Real Beef' label is one of the most trusted marks in the Settled Systems. Maple products, dairy, preserved meats.",
+   note:"Copernicus III has the highest labor standards of any corporate-controlled world in the Settled Systems. This is partly genuine values and partly brilliant marketing. The rumor that it's genuinely the loveliest place to work in any corporation is, as far as anyone can tell, simply true.",
+   subs:["Real Beef","CAN-uck! Dairy","Maple Standard","Copernicus Fresh"]},
+  {name:"Erdebrau",color:"#c08820",sector:"Beverage / Beer",hq:"Jemison, Alpha Centauri (rural agrarian region)",founded:"2164",alignment:"Neutral",employees:"~220K",
+   history:"German brewing heritage consolidated from Anheuser-Busch InBev's German brands, Paulaner, and the Weihenstephan monastic brewing tradition — dating to 1040 CE, now continued on Jemison. Founding brewmaster Gerhardt Kellner insisted on headquarters near agricultural land, a tradition maintained to this day.",
+   products:"Full lager and wheat beer range. The Weihenstephan heritage line is their premium product. The 'Erdepils' is the most widely distributed beer in UC space.",
+   note:"Erdebrau's insistence on natural fermentation puts them at a pricing disadvantage. They consider this a point of honor. Their master brewers' guild is one of the oldest continuous professional organizations in the Settled Systems.",
+   subs:["Weihenstephan Heritage","Erdepils","Kellner Wheat","Dunkel Reserve"]},
+  {name:"Filburn Agriculture",color:"#a06020",sector:"Food / Beer",hq:"Akila City, Cheyenne System",founded:"2169",alignment:"Freestar",employees:"~340K",
+   history:"The original grassroots Freestar food company, founded by frontier settlers who arrived in Cheyenne with agricultural tools and a beer recipe. Named after the landmark Wickard v. Filburn legal precedent — a statement about frontier communities' right to grow and sell their own food without corporate interference.",
+   products:"Codos Crater Beer (flagship), Solomon's Reserve (premium ale named for Solomon Coe), grain and legume agricultural production, frontier-sourced vegetables.",
+   note:"Filburn is the Freestar Collective's cultural food company. They've refused acquisition offers from Boom Pop!, Advanced Nutrition, and the Paradiso Group. The Solomon's Reserve label features Coe's face and the product has achieved a very high degree of cultural penetration in frontier communities.",
+   subs:["Codos Crater Beer","Solomon's Reserve","Filburn Grain Co."]},
+  {name:"Chunks",color:"#d04040",sector:"Food / Fast Food",hq:"Jemison, Alpha Centauri (Cubic Food Company HQ)",founded:"2115",alignment:"Neutral",employees:"~15.9M (incl. franchise)",
+   history:"Founded in 2115 by Fred Blombart on the philosophy that people don't care what they eat as long as it's tasty and filling. Originally the Cubic Food Company, producing 3D food printers and proprietary flavor-and-protein cartridge systems. Chunks are perfectly cubic, individually wrapped, stackable to near-infinite density, requiring no refrigeration.",
+   products:"The Chunk blisterpack range (hundreds of flavor variants). The Cubic Food Company printer systems. Flavor-and-protein cartridges. Licensed restaurant locations. Chunks Logo appears on every package.",
+   note:"Blombart (still alive at 195 years old with Reliant Medical assistance) is often called a 'food menace to the galaxy.' He responds to all criticism with a statement reading only 'Chunks tastes good.' They had a secret presence on Va'ruun'kai 2234-2239 through third-party merchants before discovery forced closure. Blombart considers this his greatest business achievement.",
+   subs:["Cubic Food Company","Chunks Classic","Chunks Spicy","Chunks Sweet","Blombart's Original"]},
+  {name:"Oishii Foods",color:"#e060a0",sector:"Food / Japanese",hq:"Neon (Volii Alpha) + Akila Island Chain, Cheyenne",founded:"2218",alignment:"Neutral",employees:"~180K",
+   history:"Founded by the Nakamura family collective who arrived in Neon's early years and saw that Japanese food culture had no organized presence in the Settled Systems. Built from preserved seed stocks and recipes of Japanese food manufacturing traditions. Dual headquarters reflects the two largest Japanese diaspora communities.",
+   products:"Pre-packaged Udon, Ramen, Soba, and Miso products. Fresh noodle production for restaurants. Dashi stock concentrates. The 'Oishii Midnight Ramen' pack has a cult following in Neon's 3am market.",
+   note:"Oishii has a close informal relationship with Shinigami Manufacturing and our other contacts — their island chain campus on Akila is adjacent to Oishii's production facility. There is an ongoing joke that the two should merge into 'the best-fed weapons manufacturer in the galaxy.'",
+   subs:["Oishii Ramen","Oishii Soba","Kyoto Miso","Midnight Series (Neon)"]},
+  {name:"Fullfood Architecture",color:"#40c0a0",sector:"Food / Xenobiology",hq:"Thren (moon of Montara, Cheyenne) — quarantine facility",founded:"2255",alignment:"Independent",employees:"~8K (heavily vetted)",
+   history:"The first company to systematically study domestication and consumption of alien life forms. Founded by xenobiologist Dr. Amara Osei-Bonsu and food scientist Petra Lindqvist. Headquartered on airless Thren specifically to prevent outbreak — every organism is behind multiple containment layers.",
+   products:"Certified alien protein products (4 species currently approved), xenobiological flavor supplements, domesticated alien livestock programs. Their 'First Harvest' tasting menu in Neon is the most expensive meal in the Settled Systems.",
+   note:"Each alien species approval takes 8-12 years. 23 species are currently in various safety evaluation stages. Their critics argue they're playing with ecological fire. Their supporters argue widespread proliferation of the same 12 Earth domesticated species on 30 planets is the least ecologically responsible option.",
+   subs:["First Harvest (restaurant)","Xeno Protein","Thren Research Labs"]},
+  {name:"Terrabrew Coffee",color:"#8b5513",sector:"Beverage / Coffee",hq:"Gagarin, Alpha Centauri + equatorial Jemison farms",founded:"2198",alignment:"UC",employees:"~310K",
+   history:"Starbucks, Lavazza, Illy, and the Brazilian coffee cooperative merged during evacuation into Terrabrew. A bizarre consequence of the Narion War's logistics disruption caused coffee and tea to bifurcate across faction lines — coffee ended up exclusively in UC space. Terrabrew is the result: a complete monopoly on coffee.",
+   products:"Full coffee range from whole bean to capsule to instant. Terrabrew locations in every major UC city. Their Gagarin Dark Roast is considered the finest coffee in the Settled Systems.",
+   note:"The tea/coffee bifurcation is one of the Narion War's most confusing and enduring cultural outcomes; provided we can broker an end to this embargo, we have much to gain. UC citizens in Akila City are baffled by the absence of coffee. Small independent coffee farms exist near Ixyll II and Xiang settlements but are difficult to supply from, as there is a lack of scale and experience.",
+   subs:["Terrabrew Café","Gagarin Dark Roast","Heritage Starbucks","Bean Direct"]},
+  {name:"Tranquilitea",color:"#50b060",sector:"Beverage / Tea",hq:"Neon, Volii Alpha (Ryujin Tower subsidiary)",founded:"2203",alignment:"Freestar / Ryujin",employees:"~240K",
+   history:"Founded the same year Earth lost its atmosphere — a coincidence the company leaned into as 'born from the need for calm in catastrophe.' A Ryujin Industries subsidiary since 2289. Controls tea cultivation in Freestar space. To Ryujin's chagrin, their biggest seller in Akila City is sweet iced tea.",
+   products:"Full tea range: green, black, oolong, white, herbal. Premium ceremonial matcha. And reluctantly, sweet tea in large bottles for the Akila City market.",
+   note:"Tranquilitea's marketing is all serenity and precision — Japanese tea ceremony aesthetics. The sweet tea line is sold in plain packaging that Ryujin executives prefer not to look at. It outsells everything else on Akila by a significant margin.",
+   subs:["Tranquilitea Premium","Ceremonial Matcha","Akila Sweet Tea (reluctant)","Londinion Afternoon"]},
+  {name:"Xenofresh Fisheries",color:"#2080d0",sector:"Food / Fisheries",hq:"Neon, Volii Alpha",founded:"2187",alignment:"Neutral",employees:"~95K",
+   history:"Founded specifically to acquire Chasmbass Oil, the valuable lubricant derived from the Chasmbass fish of Volii Alpha. The fishing operation was the means to an oil end. Their motto 'Waste Not, Want Not' reflects what happened next: they had an enormous surplus of fish flesh and no plan for it.",
+   products:"Chasmbass Oil (primary product, industrial lubricant and fuel additive), Chasmbass fillets and prepared dishes, proprietary seafood-adjacent processed food sold to other corporations.",
+   note:"Xenofresh literally built Neon's initial platform infrastructure. We all know what this platform is REALLY used for. Their oil HAS been used in everything from starship maintenance to pharmaceutical processing, but let's be serious. The fish tastes, by most accounts, exactly like tilapia. Their marketing department considers this an upside.",
+   subs:["Chasmbass Oil","Xenofresh Foods","Neon Platform Operations"]},
+  {name:"Red Harvest",color:"#c02020",sector:"Food / GMO Agriculture",hq:"New Atlantis, Jemison",founded:"2208",alignment:"UC",employees:"~560K",
+   history:"Founded with UC government agricultural research funding. Rather than adapting planets to Earth plants, Red Harvest adapts Earth plants to alien worlds via aggressive genetic modification. Their GMO grain and legume programs feed approximately 40% of the UC's population.",
+   products:"Modified grain crops (wheat, rice, maize variants), legume products, Harvest label bread and grain foods, GMO-derived alcohol products.",
+   note:"Red Harvest presents as a wholesome agricultural company with warm branding — amber waves of grain, family farm imagery. Their GMO patents mean any farmer planting their seed is in a permanent licensing relationship with the company. The UC government holds an undisclosed equity stake. This is publicly known, or at least accessible, but not advertised.",
+   subs:["Harvest Grain","Harvest Bread","Harvest Select (premium)","Red Harvest Brewing"]},
+];
+
+const TECH = [
+  {name:"Galactic Banking Consortium",color:"#006600",sector:"Cryptography / Financial / Economic Underpinning",hq:"Decentralized",founded:"2117",alignment:"Neutral",employees:"~5.9M",
+   history:"Founded in 2117 by Maisie Galashan, in conjunction with three other scientists (Elspeth Fletcher, Zainab Farooqi, and simply 'Xolani') on an all women's commune off the coast of Scotland — 24-years-old when they built the foundation for what became the backbone of Quantum Computing modern cryptography and cryptocurrency. Meant by the group to be a 'realization of the ideals rather than greed' of the concept of de-centralized cryptocurrency. Following the global unification of 2141, it was selected as the most stable, secure, and well researched basis for a unified human currency. In spite of social pressures, the group kept to their ideals, even naming their corporation 'GalBank' well ahead of true Space Capable vessels existence, though we have reason to believe this was a joke regarding the all-female origin of the corporation. To date, it is a highly apolitical financial corporation (the corporate culture established by its founder). They swear an inability to affect the nature or direction or future of the currency as a virtue and success of its secure design.",
+   products:"The universally accepted CredStick, Banking Institutions, Public Branches, Personal Identification Archives, ATMs, and financial services across the Galaxy.",
+   note:"We have attempted across multiple vectors, MANY times to approach GalBank but, true to its ideals and product, we have found no success. Standing orders are actually to back GalBank's Cryptographic security, not as a service provider [they'd never accept us anyways], but on principle that profit is meaningless in their collapse, reducing our holdings to mere physical capital.",
+   subs:[]},
+  {name:"Infinity LTD",color:"#8040c0",sector:"Software / Startup",hq:"New Atlantis, Jemison",founded:"2309",alignment:"UC",employees:"~40",
+   history:"Founded in 2309 by Soren Valdez — a 26-year-old former Ryujin Industries intern who left after the Taiyo acquisition with three colleagues and a pitch deck. Currently promises 'revolutionary applications for the connected galaxy.' Nobody is entirely sure what they actually build.",
+   products:"Currently: a contacts management application and an unfinished scheduling tool. Rumored: something involving grav drive navigation that may or may not be legally distinct from Fenris Navigation Systems' existing patents.",
+   note:"While I am usually the first to recommend ruthless retaliation, this 'Infinity LTD' is already the tech startup joke of 2310 New Atlantis. Their office is above a noodle restaurant in the Well. Soren Valdez has given three separate interviews claiming they will 'change everything' in the next six months. It has now been 14 months. Reliant Medical has nonetheless expressed a quiet interest in their medical scheduling prototype.",
+   subs:[]},
+  {name:"Muybridge Pharmaceuticals",color:"#c060d0",sector:"Pharmaceuticals",hq:"Montara Luna research station, Cheyenne System",founded:"2231",alignment:"Freestar",employees:"~32K",
+   history:"Named for Eadweard Muybridge, the Victorian photographer whose motion studies became the foundation of cinema. Founded by Dr. Celeste Beaumont-Tureaud from a Creole heritage collective of physicians and chemists, predominantly descended from Louisiana and Caribbean medical traditions. Chosen Montara Luna for research isolation and proximity to Fullfood Architecture's xenobiological research.",
+   products:"Pain management, psychoactive therapeutic compounds, xenobiological pharmaceutical extracts from Fullfood Architecture's research pipeline. Their alien compound pharmacology research is 10 years ahead of anything Reliant Medical has published.",
+   note:"Muybridge's Creole identity is worn openly — internal company culture, naming conventions for compounds, and charitable programs all connect to Louisiana Creole and Caribbean diaspora communities in Freestar space. Primary pharmaceutical competitor to Reliant Medical in Freestar territory, at a fraction of the scale.",
+   subs:["Beaumont Therapeutics","Tureaud Research Labs","Muybridge Compounding"]},
+  {name:"TRItek Research Company",color:"#40a0c0",sector:"Robotics / Arms",hq:"Undisclosed deep space station (registered: Narion System)",founded:"2267",alignment:"Non-Settled Systems",employees:"~4K (known)",
+   history:"A robotics research firm operating deliberately outside Settled Systems regulatory frameworks. Founded by three former UC Xenowarfare Division roboticists who concluded the UC's military robotics program was constrained by political considerations preventing 'necessary research.' Name is a deliberate three-body reference — three founders, three priorities: research, manufacture, arms dealing.",
+   products:"Advanced robotics systems (autonomous combat, exploration, and mining variants), robotics arms exports to any buyer regardless of faction, research contracts for classified projects.",
+   note:"TRItek exists in the regulatory gap between UC jurisdiction and open space. The UC Xenowarfare Division has a standing interest in their output and occasional frustration at the same output appearing in Crimson Fleet vessels. The three founders have never been publicly named.",
+   subs:["TRItek Combat Systems","TRItek Exploration Bots","TRItek Research Division"]},
+  {name:"Minerology Inc.",color:"#60c0a0",sector:"Non-Profit / Research",hq:"New Atlantis (Constellation affiliate) + mobile research vessels",founded:"2278",alignment:"Neutral",employees:"~1,200",
+   history:"Founded by Aldous Livingstone, a British geologist who argued that humanity's rapid expansion into dozens of star systems had outpaced its understanding of the geology of those systems. Reorganized as a non-profit with Constellation's blessing and funding. Funds itself through selective mineral rights consulting while pursuing pure research.",
+   products:"Non-profit research output. Geological surveys. Xenogeological phenomenon cataloguing. Occasionally very valuable mineral identification that funds further research.",
+   note:"Sir Malcolm Livingstone, Aldous' descendant, is one of the most respected independent scientists in the Settled Systems, at least due to propaganda campaigns regarding Constellation from UC space. His campaign to have non-terrestrial geological formations legally protected as 'natural heritage sites' — the xenogeological equivalent of national parks — has been slowly gaining traction in the UC Senate. Mining corporations dislike him intensely.",
+   subs:["Livingstone Survey Division","Xenogeology Quarterly (publication)"]},
+  {name:"Trident Luxury Lines",color:"#d0b030",sector:"Transport / Luxury",hq:"Cheyenne System (corporate registry — irony noted)",founded:"2168",alignment:"Wealthy Elite",employees:"~85K",
+   history:"Founded by a consortium of Earth's surviving billionaire class who, having purchased evacuation berths while billions died, decided the next logical step was building luxury cruise ships for the interstellar wealthy. Headquartered in Cheyenne — Freestar territory — in what the founders considered a clever tax arrangement. The Freestar Collective considers it an insult they're powerless to remove.",
+   products:"Massive luxury interstellar cruise vessels. End destination primarily Paradiso. The ships are small cities featuring casinos, fine dining, and zero-gravity spas.",
+   note:"The common folk of the Settled Systems detest Trident Luxury Lines on historical principle. That the company is registered in Freestar space makes this worse. That the Freestar government cannot expel them without violating their own property rights principles makes it a philosophical trap the Collective has never escaped. We could possibly incite an incident given the heightened insecurity of the Colony War and attempt a buyout, but it's iffy.",
+   subs:["Trident Grand (flagship fleet)","Trident Stellar Express","Paradiso Shuttle Service"]},
+  {name:"Paradiso Group",color:"#20a0a0",sector:"Hospitality / Resort",hq:"Paradiso, Porrima System (second planet)",founded:"2199",alignment:"Wealthy Elite",employees:"~120K",
+   history:"In 2199 — a consortium of surviving billionaires claimed Paradiso, the second planet of the Porrima system, and began building a resort. The planet is one of the most beautiful in the Settled Systems: tropical, stable, with remarkable wildlife and perfect atmospheric conditions. They built a luxury resort on it.",
+   products:"The Paradiso Resort — the most exclusive destination in the Settled Systems. Private island packages, wildlife safari experiences, zero-mortality adventure tourism. Berths sell years in advance.",
+   note:"The political symbolism of Paradiso's founding year — 2199, the year of the Last Gasp departure — is not lost on anyone. The security apparatus protecting the planet is extraordinary. Trident and Paradiso are effectively one ecosystem.",
+   subs:["Paradiso Resort","Porrima Wildlife Tours","Paradiso Private Islands"]},
+  {name:"Reliant Medical",color:"#e05050",sector:"Healthcare / Biotech / Defense",hq:"Multiple — primary research: classified moonbase facilities",founded:"2044 (pre-Incident)",alignment:"Trans-Stellar",employees:"~8.2M (known)",
+   history:"Founded before the Incident of 2057 as a medical research and hospital management company. The Incident accelerated their research into human biological resilience dramatically. By 2120 they had viable clone trooper technology. Their business model: provide high-quality healthcare at reduced cost, legally acquire genetic material as part of treatment, use that material to produce clone soldiers sold to any government that needs them. The product is you.",
+   products:"Healthcare services across all settled systems. Pharmaceutical manufacturing. Clone soldier production (officially: 'biological defense assets'). Gene therapy using alien DNA. Long-term lifespan extension treatments.",
+   note:"The clone soldier program is the most dangerous open secret in the Settled Systems. Every patient who receives or has received Reliant Medical treatment signed a genetic material consent form most people do not read. Their alien DNA gene therapy research is 20 years ahead of anything published. They have influence positions in every major government. We've been trying to obtain their production numbers for 30 years. Hard figures alone would end Reliant Medical as a competitor and implicate every government that used clone troops — VERY useful leverage, or a potential target on our backs, and so we need our own assurances.",
+   subs:["Reliant Clinics","Reliant Pharmaceutical","Defense Bio-Assets Division (classified)","GeneTherapy Plus"]},
+];
+
+const MINING = [
+  {name:"Arc Might Processing",color:"#c08040",sector:"Mining / Processing",hq:"Gagarin Landing, Gagarin, Alpha Centauri",founded:"2189",alignment:"UC",employees:"~420K",
+   history:"Founded by the Okafor-Whitfield partnership — Nigerian engineer Emeka Okafor and Scottish mining executive Angus Whitfield. Their innovation: the orbital processing platform. Rather than shipping raw ore to a planet, process it in orbit and deliver refined material directly. Gagarin chosen for proximity to Sol and its position as a transit hub.",
+   products:"Refined metals for ship construction, habitat construction, and electronics. Rare earth mineral processing. Atmospheric mineral extraction. Processes material for Deimos Staryards, Xiang Corporation, and most major ship part manufacturers.",
+   note:"Arc Might has the least glamorous name recognition of any company at their market size. Nobody thinks about them until nothing is being built. The Okafor-Whitfield families still control 60% of equity — never publicly traded. Emeka Okafor's granddaughter currently serves as CEO.",
+   subs:["Arc Orbital Processing","Arc Rare Earth","Arc Atmospheric Extraction"]},
+  {name:"Argos Extractors",color:"#a06030",sector:"Mining Equipment / Support",hq:"Argos Starstation, Narion System",founded:"2220",alignment:"Independent",employees:"~95K",
+   history:"Founded by independent miners who had been exploited by large mining corporations and decided to build a company that served independent operators rather than competing with them. Argos Starstation is both headquarters and the largest independent mining support hub in the Settled Systems — where prospectors can equip, repair, and sell ore without going through corporate intermediaries.",
+   products:"Mining equipment for independent operators: laser drills, asteroid scoops, manipulator arms, survey beacons, ore processing modules. Ship-mounted mining systems. Outpost construction kits.",
+   note:"Argos has a complicated relationship with the UC — their business model depends on independent miners having rights the UC occasionally finds inconvenient. Their legal team is surprisingly robust for a mining equipment company. The Crimson Fleet buys from Argos, which Argos officially neither confirms nor denies.",
+   subs:["Argos Equipment","Argos Survey Services","Narion Mining Exchange"]},
+  {name:"Consolidated Mining",color:"#907030",sector:"Mining",hq:"Barnard System Starstation",founded:"2215",alignment:"UC Adjacent",employees:"~180K",
+   history:"Founded five years before Argos as the large-scale corporate answer to the independent mining boom. Where Argos serves independents, Consolidated competes with them — acquiring mineral rights at scale, deploying industrial extraction operations, and selling refined ore to manufacturers at volume pricing. The two companies' rivalry is the defining competition in the mining industry.",
+   products:"Large-scale industrial mineral extraction and processing. Asteroid strip mining. Deep core planetary extraction. Ore sales to manufacturers at volume pricing.",
+   note:"Consolidated Mining's legal department operates specifically to protect mineral rights claims that sometimes conflict with independent claims. The Barnard System is their territory and they defend it with institutional aggression. Argos miners give the Barnard System a wide berth.",
+   subs:["Consolidated Deep Core","Consolidated Asteroid Ops","Barnard Mineral Exchange"]},
+  {name:"Six Sisters Mining",color:"#806030",sector:"Mining / Fracking",hq:"New Atlantis (UC) + Akila City (FC) — dual registered",founded:"2185",alignment:"Dual Monitored",employees:"~310K",
+   history:"Named for the six founding families who built fracking control infrastructure on habitable worlds with petrochemical deposits. The loss of Earth from industrial mismanagement created a regulatory environment where both the UC and Freestar monitor fracking with genuine vigilance — a rare case where civilizational trauma produced responsible governance. Six Sisters operates under some of the most rigorous environmental oversight in the Settled Systems.",
+   products:"Fracking Control Center construction, petrochemical extraction, deep planetary drilling. Their engineering is genuinely excellent — the safety record is the best in the industry.",
+   note:"Six Sisters pays exceptionally well because the work is hazardous and regulations are demanding. What is NOT public knowledge: the rise of new materials science is making petrochemicals obsolete faster than they can adapt, and at least one founding family has authorized a corporate espionage operation targeting Xiang Corporation's materials science division and Red Harvest's agricultural polymer research. This will only become a problem provided record of such ~awful corporate behavior~ does not end up in the hands of either governmental body.",
+   subs:["Six Sisters Fracking Ops","Deep Drill Construction","Petrochemical Processing Co."]},
+];
+
+// ── STARYARDS ────────────────────────────────────────────────────────────────
+
+const STARYARDS = [
+  {name:"Deimos Staryards Inc.",color:"#4a8ef0",sector:"Staryard",hq:"Deimos Orbital / Cydonia, Mars",founded:"2089",alignment:"UC",status:"active",employees:"~680K",
+   history:"Founded by Theron Mace and the Deimos Industrial Consortium as an orbital fabrication platform above Mars' moon, initially constructing habitat modules for the Mars expansion. Pivoted to full starship construction when grav drive technology made orbital shipbuilding economically viable. Became the UC's primary military shipbuilder after the Narion War and has held that position ever since.",
+   products:"Armored transports, UC military vessels, bulkhead-heavy freighters. Full in-house hab, cockpit, landing gear, and structural modules. Military styling dominates — angular, dense, built to absorb punishment. Named ship classes include the Abyss Trekker, Renegade, Privateer, and the base hull of the UC Vigilance class.",
+   note:"Officially UC-exclusive on military contracts but civilian models are available. The Cydonia engineering facility is where grav drive integration was perfected for mass-production vessels. Considered the most historically significant active shipyard in the Settled Systems.",
+   subs:["Deimos Military Division","Deimos Commercial","Cydonia Engineering Works"]},
+  {name:"HopeTech",color:"#c06030",sector:"Staryard",hq:"Hopetown, Polvo, Valo System",founded:"2198",alignment:"Freestar",status:"active",employees:"~310K",
+   history:"Founded by Enid Hopewell, a Freestar Collective logistics coordinator who saw that the colony era's bottleneck was not military ships but supply chain vessels. Built the first HopeTech facility on Polvo from salvaged Nova Galactic components, deliberately choosing a Freestar frontier world to signal independence from UC industrial dominance. HopeTech grew by solving the problem nobody glamorous wanted to solve: getting food, parts, and people between systems affordably.",
+   products:"Utility and logistics vessels — 'space trucks' is accurate and Enid embraced it. Modular habs, large cargo capacity, robust but unglamorous. Dockers, landing gear, structural components. Known ship lines include the Wanderwell, Strongbox, Drifter, and the base Frontier hull used by many Freestar Rangers.",
+   note:"Spiritually the Freestar Collective's shipyard but explicitly independent. The phrase 'it's a HopeTech' is frontier shorthand for a ship that runs forever and never looks good doing it. Enid Hopewell's grandchildren currently run the board. Acquisition approaches have been firmly declined.",
+   subs:["HopeTech Cargo Division","HopeTech Components","Polvo Assembly Works"]},
+  {name:"Nova Galactic",color:"#888888",sector:"Staryard",hq:"Nova Galactic Staryard, Luna Orbit (CLOSED)",founded:"2118",alignment:"Defunct",status:"defunct",employees:"N/A — liquidated 2295",
+   history:"The first civilian spaceflight corporation of true global scale, founded as a joint venture between the European Space Agency's commercial division, JAXA's private spinoff Galactic Horizon, and American aerospace giant Meridian Launch Systems. Partnered with NASA in 2138 to co-develop the grav drive prototype. At their peak, Nova Galactic employed over 4 million people across 11 facilities. Went bankrupt in 2295 when newer manufacturers outcompeted them on every metric after 177 years of dominance.",
+   products:"The original complete ship manufacturer. Full hulls, habs, landing gear, cockpits. Produced the NG Grav Drive series — the first commercial grav drives in history — and exclusively used Reladyne sublight engines. Their parts are everywhere because they were THE manufacturer for three generations. Known hulls: Nova Scout, Wanderer, Discovery-class, Legacy-class freighter, and the famous ECS Constant generation ship.",
+   note:"Revered as vintage by enthusiasts and cursed by mechanics. The NG Grav Drive is a historical artifact that still works. Nova Galactic components turn up on derelicts, Crimson Fleet vessels, frontier independents, and lovingly maintained civilian ships alike. Their Luna Orbital shipyard is a protected historical site. The IP was purchased by a holding company whose majority stakeholder has never been publicly identified.",
+   subs:["NG Grav Drive (legacy)","Nova Scout (legacy hull)","ECS Constant (historical)"]},
+  {name:"Eklund Staryards",color:"#d0a060",sector:"Staryard",hq:"Londinion, Toliman II, Toliman System",founded:"2201",alignment:"Independent",status:"active",employees:"~28K",
+   history:"Founded by Björn Eklund, a Swedish industrial designer who believed the evacuation era's utilitarian shipbuilding had 'forgotten that humans need beauty to survive.' Relocated from Earth's Kockums shipbuilding tradition in Malmö to Toliman II, where the British Monarchy's descendants had established Londinion. Björn's granddaughter Issa Eklund currently serves as chief design officer — unmarried, running the company her grandfather built, and making it clear to all potential suitors that the company comes first.",
+   products:"Luxury interiors, premium cockpit modules, high-grade hab configurations. Ships that look like moving architecture. Current lines include the Crescendo, Meridian Executive, Solaris Yacht, and Diplomat-class. Sold to the wealthy of New Atlantis, corporate executives, and diplomatic vessels.",
+   note:"The Stroud-Eklund merger that industry analysts keep predicting has not happened. Issa has shown no interest in Walter Stroud's overtures, professional or otherwise. Both parties deny there have been any. The company has a significant event coming that hasn't happened yet — one that will affect Londinion itself.",
+   subs:["Eklund Luxury Hulls","Eklund Interior Systems","Londinion Design Studio"]},
+  {name:"Taiyo Astroneering",color:"#e060c0",sector:"Staryard",hq:"Neon, Volii Alpha (now Ryujin Tower)",founded:"2261",alignment:"Ryujin / Independent",status:"active — Ryujin subsidiary Jan 2310",employees:"~195K",
+   history:"Founded by Kenji Nakamura and Priya Osei as an instrumentation and precision engineering firm that applied spacecraft engineering to the problem of 'living well in space.' Originally specialized in cockpit ergonomics and sensor arrays before expanding into full ship modules. Their philosophy: a ship should feel like an extension of the pilot's body. Acquired by Ryujin Industries in January 2310. The ink is barely dry.",
+   products:"State-of-the-art cockpits, premium habs, precision landing gear. Every component engineered to tolerances tighter than competitors. Known ship lines include the Kepler R, Kepler S, Wanderstar, and Astraia. Considered by many the perfect marriage of instrumentation, form, and function.",
+   note:"The acquisition is controversial internally. Taiyo's independent engineering culture and Ryujin's corporate structure are already clashing. Several senior engineers submitted resignation notices within the first two weeks. The question of whether Ryujin can retain what made Taiyo worth acquiring — without destroying it in the process — remains open.",
+   subs:["Taiyo Precision Engineering","Taiyo Cockpit Systems","Taiyo Hull Division"]},
+  {name:"Vanguard Craftworks",color:"#604040",sector:"Staryard",hq:"Gagarin Landing, Gagarin, Alpha Centauri",founded:"2185",alignment:"UC (failing)",status:"dying",employees:"~18K",
+   history:"Started as a UC veteran cooperative — pilots who survived the Narion War pooling their hazard pay to build ships they wished they'd had. Made genuinely innovative mid-weight patrol vessels in the 2200s. Now being squeezed out between Deimos's military contracts above and Taiyo's civilian premium market below. Projected closure 2318.",
+   products:"Mid-weight patrol vessels, armed courier ships. Solid engineering, zero glamour, losing market share rapidly. The Sentinel-class patrol and Courier Mk.III remain in service on UC frontier worlds.",
+   note:"The Colony War is their last real opportunity and they know it. UC has been slow-walking their military contracts. The founders' children are trying to pivot to security escort vessels for independent operators, with mixed results.",
+   subs:["Vanguard Patrol Division","Vanguard Courier Works"]},
+  {name:"Cascadia Shipworks",color:"#604040",sector:"Staryard",hq:"Narion System (orbital facility)",founded:"2220",alignment:"Independent (failing)",status:"dying",employees:"~12K",
+   history:"Founded in the aftermath of the Narion War specifically to build reconstruction ships — habitat delivery vessels, survey scouts, agricultural platform ships — for the systems damaged in the conflict. Had a 30-year golden era as the Settled Systems rebuilt. That era is over. Projected closure 2325.",
+   products:"Habitat transport vessels, survey scouts, agricultural platforms. Excellent for what they do. The problem is the reconstruction era is done and there aren't enough new colony waves to sustain demand.",
+   note:"Considering a merger with HopeTech but Enid Hopewell's grandchildren are resistant to diluting the brand. Likely to be absorbed or liquidated within 20 years. The Colony War may give them a brief reprieve if humanitarian shipping contracts materialize.",
+   subs:["Cascadia Habitat Division","Cascadia Survey Works"]},
+  {name:"Meridian Heavy Industries",color:"#604040",sector:"Staryard",hq:"Deimos Orbital (rented space)",founded:"2165",alignment:"UC (contract dispute)",status:"dying",employees:"~8K",
+   history:"Once a significant UC military shipbuilder that handled overflow contracts when Deimos couldn't meet demand during the Narion War. Never developed the civilian market. When UC consolidated all military contracts with Deimos after the Narion War ended, Meridian lost 80% of their revenue overnight. Now surviving on a single Colony War resupply contract. Projected bankruptcy 2312.",
+   products:"Large military transports, troop carriers, supply barges. The Warhorse Transport and Bulwark Supply Barge remain in service. Competent but redundant given Deimos's capacity.",
+   note:"Their lawyers are in active dispute with UC procurement over non-payment on three vessels. The company will not survive if the Colony War ends quickly. If it doesn't, Deimos will simply absorb their remaining contracts. There is no path where Meridian Heavy Industries exists in 2320.",
+   subs:["Meridian Heavy Transport","Meridian Supply Barges"]},
+];
+
+// ── PART MANUFACTURERS ────────────────────────────────────────────────────────
+
+const PARTS = [
+  {name:"Amun Dunn",color:"#d08020",sector:"Parts — Engines",hq:"Jemison, Alpha Centauri",founded:"2178",alignment:"Neutral",status:"active",employees:"~340K",
+   history:"The Amun Corporation (Egyptian engineering firm, named for the hidden god) merged with the Dunn Propulsion Company (British sublight engineering, founded by Veronica Dunn) in 2178. Both companies had independently improved on the theoretical Demon-Core Engine blueprint demonstrated in 2141. Their merger created the dominant sublight engine manufacturer of the 23rd century and remains one of the top three today.",
+   products:"Amun series engines (standard), Dunn series (efficiency-optimized), Amun Dunn X series (high-performance). All based on Demon-Core Engine improvements. In direct competition with Reladyne and Panoptes for sublight engine market share. The X series is the current performance benchmark.",
+   note:"The Demon-Core Engine blueprint — demonstrated 2141 from earlier theoretical work — is the sublight drive of the 24th century. Amun Dunn, Reladyne, and Panoptes all trace their engine lines to different interpretations of that original document. The X series outperforms Reladyne's White Dwarf line at full burn but consumes He-3 at a higher rate.",
+   subs:["Amun Engine Series","Dunn Engine Series","Amun Dunn X Series"]},
+  {name:"Dogstar R&D",color:"#4a8ef0",sector:"Parts — Reactors / Shields / Fuel",hq:"Wolf System Research Platform",founded:"2209",alignment:"UC (military contract)",status:"active",employees:"~18K",
+   history:"Named for Sirius, the 'Dog Star,' the brightest point visible from the Wolf system's research stations. Founded as a pure UC military research division following the Narion War, when it became clear that commercial reactor and shield tech was a generation behind military needs. The Wolf system was deliberately chosen — both of its planets and all moons are uninhabitable and hazardous, making it an ideal isolated research environment where accidents affect no civilian population.",
+   products:"Toroidal reactors, Inertial reactors, He-3 fuel tank designs, and shield generators. Their shield tech is considered the most advanced in the Settled Systems but rarely reaches the civilian market in full specification. Degraded civilian versions are licensed to Sextant and Nautilus.",
+   note:"Technically a private company with an exclusive UC military contract. The full military shield specs are classified. Their He-3 tank designs are the basis for the Nautilus Titan series, though Dogstar receives no royalty — the licensing was a wartime concession they've never renegotiated successfully.",
+   subs:["Dogstar Reactor Division","Dogstar Shield Research","Dogstar Fuel Systems"]},
+  {name:"Horizon Defense",color:"#8080ff",sector:"Parts — Weapons",hq:"Gagarin Landing, Gagarin, Alpha Centauri",founded:"2152",alignment:"UC",status:"active",employees:"~290K",
+   history:"Emerged from the merger of Williams Ballistics (Cardiff, Wales) and Aerospace Defense Systems (Bristol) during the evacuation era. Relocated to Gagarin — Alpha Centauri's closest planet to Sol, chosen for sentimental proximity to home — in 2161. Technically UC-aligned but old enough that Freestar vessels and Crimson Fleet ships run Horizon weapons without anyone raising an eyebrow.",
+   products:"Marauder Railgun, Disruptor Beam, Dragon Pulse Laser, Mauler Autocannon. Full spectrum ballistic and energy weapons for ship-to-ship combat. The Mauler Autocannon is the workhorse of mid-weight ship combat — reliable, cheap, found everywhere. The Dragon Pulse Laser is their prestige product.",
+   note:"Welsh and proud of it — the Gagarin facility has a Saint David's Day tradition that has run unbroken since 2161. Their weapons appear on everything from UC Navy frigates to derelict pirate vessels. When a weapon outlives the company that sells it, it becomes infrastructure. Horizon Defense is infrastructure.",
+   subs:["Marauder Ballistics","Horizon Energy Weapons","Horizon Defense Turrets"]},
+  {name:"Light Scythe Technologies Inc.",color:"#e0a020",sector:"Parts — Weapons (Energy)",hq:"Montara Luna, Cheyenne System",founded:"2195",alignment:"Freestar",status:"active",employees:"~180K",
+   history:"Founded by Alejandro Vega Ruiz and a collective of engineers from Mexico's aerospace sector who had been developing directed energy weapons for the UC military before the politics of the evacuation made that relationship untenable. Deliberately chose Freestar space — specifically Montara Luna in Cheyenne — as their headquarters as a statement of political independence that has never wavered.",
+   products:"Atlatl Missile Launcher series (named for the ancient Mesoamerican throwing weapon), Blaze Laser series, Firebolt / Fulminator / Spark suppressor series, Scord laser turret series. Energy weapon specialists with a preference for heat and light over kinetic impact.",
+   note:"Light Scythe has never taken a UC military contract by explicit company policy. They consider it a matter of identity and a founding principle. This hasn't stopped their weapons from appearing on UC vessels purchased through civilian markets. The Freestar Rangers consider the Atlatl series standard equipment.",
+   subs:["Atlatl Ordnance","Blaze Laser Division","Scord Turret Systems"]},
+  {name:"Nautilus Shielding",color:"#40d0a0",sector:"Parts — Shields / Fuel Tanks",hq:"Independent Station, Narion System",founded:"2180",alignment:"Independent",status:"active",employees:"~160K",
+   history:"Founded by the Papadimitriou family from Athens specifically as a reaction against the UC-aligned monopolization of military shield tech. Named for the nautilus shell — nature's perfect pressure vessel. Deliberately headquartered outside both UC and Freestar controlled space, supplying civilians and corporations without political entanglement. This neutrality is both principled and profitable.",
+   products:"Titan He-3 tank series, Bastille / Tower / Fortress shield generator series. The Fortress series is the premium civilian shield — not military grade, but the best a civilian can legally purchase. Found everywhere because they sell to everyone.",
+   note:"One of the genuinely neutral companies. They have a quiet side business supplying both sides of every conflict through intermediaries — not officially, but the financial records would make interesting reading. The Papadimitriou family's neutrality is a commercial position as much as a moral one.",
+   subs:["Titan Fuel Systems","Bastille Shield Division","Fortress Premium Series"]},
+  {name:"Protectorate Systems",color:"#e0a020",sector:"Parts — Shields / Cargo",hq:"Akila City, Cheyenne System",founded:"2148",alignment:"Freestar",status:"active",employees:"~210K",
+   history:"Born from the unlikely merger of Texas Instruments' defense division, two Georgia-based aerospace firms, and a South Carolina shield engineering company. The Texas Instruments DNA shows in their obsession with miniaturization — Protectorate shields pack more protection per cubic meter than any competitor. Chose Freestar space for the same reasons Light Scythe did. Now the oldest continuous tech company in the Freestar Collective.",
+   products:"Marduk / Odin / Osiris shield generator series, Caravel / Galleon shielded cargo hold series. Old enough that Protectorate cargo holds predate the Freestar Collective itself — you find them on UC freighters, Crimson Fleet vessels, and everything in between.",
+   note:"The Texas Instruments lineage is a company in-joke that never gets old — 'we went from calculators to warship shields.' The Galleon series cargo holds are the most copied design in the Settled Systems, to Protectorate's ongoing legal frustration.",
+   subs:["Marduk Shield Division","Protectorate Cargo Systems","Osiris Premium Series"]},
+  {name:"Reladyne",color:"#f0d040",sector:"Parts — Engines / Grav Drives",hq:"Jemison, Alpha Centauri",founded:"2061",alignment:"Neutral",status:"active",employees:"~890K",
+   history:"The oldest surviving tech company in the Settled Systems — technically predating the Incident of 2057 in its earlier corporate form. Florida-based from the Kennedy Space Center era. They supplied the original Demon-Core Engine theoretical framework and were THE fuel system supplier for Nova Galactic's entire product line. Their R-1000 Alpha Grav Drive was the first commercial alternative to the NG Grav Drive. The White Dwarf engine line is their oldest continuous product, the earlier commercial name before 'Demon-Core' terminology became standard.",
+   products:"White Dwarf engine series (oldest commercial sublight), R-1000 Alpha Grav Drive series, various legacy systems still running on ships a century old. Nova Galactic ships exclusively used Reladyne sublight engines throughout Nova Galactic's entire existence.",
+   note:"Reladyne is what happens when a company outlives its dominant market position and just keeps going anyway. Their newest products are mid-tier. Their oldest products are everywhere. They have more installed base than any manufacturer except Nova Galactic (defunct). 'If it still runs, it's probably Reladyne' is a common expression throughout the Settled Systems.",
+   subs:["White Dwarf Engines","R-1000 Grav Drive Series","Reladyne Legacy Parts"]},
+  {name:"Panoptes",color:"#d060a0",sector:"Parts — Engines",hq:"Akila City (secondary campus), Cheyenne System",founded:"2175",alignment:"Neutral",status:"active",employees:"~420K",
+   history:"The merger of Fincantieri (Italy's dominant shipbuilding firm), Arianespace (France's space launch authority commercial division), and a Swiss precision engineering firm into what became Panoptes. Named for the all-seeing giant of Greek myth — reflecting their engineers' philosophy that a properly designed engine should 'see' and adapt to all conditions. Second headquarters on Akila chosen to access Freestar markets without political alignment.",
+   products:"Ares engine series (standard), Hercules series (heavy duty), Poseidon series (deep space endurance). All represent independent improvements on the Demon-Core Engine blueprint. The Poseidon series is the preferred engine for long-haul deep space runs — extraordinarily fuel-efficient at the cost of raw speed.",
+   note:"Many fleets run this line of engines - the deep space endurance characteristics match many people's operational profile perfectly. The Hercules series is the preferred choice for heavy freight operators across both UC and Freestar space.",
+   subs:["Ares Engine Division","Hercules Heavy Series","Poseidon Deep Space"]},
+  {name:"Sextant Shield Systems",color:"#a0c0ff",sector:"Parts — Shields",hq:"Londinion, Toliman II, Toliman System",founded:"2199",alignment:"Independent",status:"active",employees:"~145K",
+   history:"Emerged from a hostile takeover of IONTAS — an Irish shield engineering firm that Aisling Ó Ceallaigh had seeded with technology before her cryogenic departure in 2153. Sextant's founder, William Cavendish-Rhys, a British industrialist whose family's connection to the remnant British Monarchy gave him Londinion access, used IONTAS patents to leapfrog competitors. There is ongoing legal and moral debate about whether the post-Ceallaigh IONTAS patents belonged to the company or to her. Not that it matters, considering that family is long dead.",
+   products:"Deflector / Warden / Assurance shield generator series. The Assurance series is their premium civilian product. Shielded cargo hold variants available. Considered mid-to-high tier — above Protectorate's older lines, below Dogstar's military specifications.",
+   note:"The Cavendish-Rhys family's closeness to the British royal line in Londinion gives Sextant unusual political protection. Their headquarters being in Londinion — the same city as Eklund Staryards — means a coming event affects both simultaneously. Whether either company survives that event in their current form is an open question.",
+   subs:["Deflector Series","Warden Tactical Shields","Assurance Premium"]},
+  {name:"Shinigami Manufacturing",color:"#ff6080",sector:"Parts — Weapons",hq:"Ixyll II, Ixyll System (primary); Akila Island Chain; Jemison",founded:"2155",alignment:"Independent (armed neutrality)",status:"active",employees:"~310K",
+   history:"Born from the merger of Hitachi's nuclear engineering division, Saab Defense Systems' weapons branch, and a consortium of Japanese electronics firms. Named 'Shinigami' — death god — as both dark humor and a statement of product intent. First HQ on Akila in an island chain, specifically chosen to evoke the Japanese archipelago for the founders' generation. Second campus on Jemison followed. Third and most secure location established on Ixyll II, outside any settled systems jurisdiction, for primary R&D security.",
+   products:"Reza Laser, Dangan Cannon, Tsukisasu Missile Launcher, Jishaku Railgun, Supaku Suppressor, Tatsu Super Suppressor. Every major weapons category covered. Every faction's ships carry Shinigami weapons.",
+   note:"Explicitly refuses all official military contracts with any faction while profiting enormously from every war. 'We sell to individuals, not governments' is their public position and they have never broken it. The Ixyll II facility is where their most advanced research happens, outside any government's reach. Oishii Foods is their closest neighbor on the Akila island chain. The joke about a merger never stops being funny at Shinigami company events.",
+   subs:["Reza Energy Weapons","Dangan Ballistics","Tsukisasu Ordnance","Tatsu Suppressor Division"]},
+  {name:"Slayton Aerospace",color:"#80a0e0",sector:"Parts — Grav Drives / Engines",hq:"Londinion, Toliman II + Jemison (dual HQ)",founded:"2188",alignment:"Independent",status:"active",employees:"~380K",
+   history:"Named for Mercury astronaut Deke Slayton — the first American grounded by a heart condition who eventually flew in space anyway — by founder Dr. Patricia Slayton (no direct relation), as a statement that grav drive technology was too important to leave to Nova Galactic and Reladyne's duopoly. The SGD series broke Nova Galactic's grav drive dominance in the 2200s and directly accelerated their eventual collapse. HQ deliberately split between Londinion and Jemison to avoid political alignment.",
+   products:"SGD 1100 / 2100 / 2200 / 3300 grav drive series, SAE-5110 to SAL-6330 sublight engine series. The SGD series are now the standard mid-tier grav drive. The SAL-6330 is considered the best pure sublight engine currently in production.",
+   note:"The dual headquarters creates an interesting legal situation. One of these campuses will need to rapidly absorb the other's operations. Slayton has contingency plans but has not disclosed which campus is considered primary for continuity purposes.",
+   subs:["SGD Grav Drive Series","SAE/SAL Engine Division","Slayton R&D"]},
+  {name:"Xiang",color:"#f04040",sector:"Parts — Reactors / Electronics",hq:"Xiang City, Jemison (opposite hemisphere from New Atlantis)",founded:"2099",alignment:"UC (compliant — involuntary)",status:"active",employees:"~2.1M",
+   history:"One of the oldest surviving corporations, Xiang emerged from the consolidation of Chinese state aerospace firms in the 2090s and built their own settlement on Jemison — Xiang City sits on the opposite hemisphere from New Atlantis, a deliberate statement. UC authority was resisted for decades. A negotiated settlement gave Xiang four positions in upper MAST administration in exchange for compliance. They consider this a humiliation they have not forgotten and do not intend to forget.",
+   products:"Tokamax X reactor series, Ion Beam H reactor series, Pinch 5Z / 6Z / 7Z reactor series. Broad consumer electronics across the Settled Systems — their brand is visible on virtually every ship's interior systems regardless of what's on the hull. 'Runs on Xiang' is common shorthand for any well-powered system.",
+   note:"The MAST positions are real political leverage and everyone knows it. The four Xiang administrators in MAST have been notably unhelpful on every procurement decision that benefits Deimos Staryards. We could exploit this sentiment to gain market share by offering assistance. Their materials science division is the target of at least one known corporate espionage operation — Six Sisters Mining. Perhaps putting in a friendly word might open the door?",
+   subs:["Tokamax Reactor Division","Ion Beam Systems","Xiang Consumer Electronics","Pinch Industrial Series"]},
+  {name:"Aldebaran Systems",color:"#604040",sector:"Parts — Grav Drives (DYING)",hq:"Volii Alpha (Neon), Freestar Space",founded:"2210",alignment:"Independent (failing)",status:"dying",employees:"~12K",
+   history:"Founded by Korean engineers who had worked on the Reladyne R-1000 program before starting their own grav drive venture. The Aldebaran Star Drive series was competitive in the 2240s-2270s but Slayton's SGD series and Reladyne's improvements have squeezed them out of all new-build contracts. Now surviving on maintenance contracts for older ships running their drives. Projected market exit 2320.",
+   products:"Star Drive AD-1 through AD-4 series (increasingly obsolete). Maintenance parts and retrofit kits for existing installations.",
+   note:"Neon headquarters reflects how the company ended up — they arrived with ambitions and stayed because they couldn't afford to leave. Their best engineers have been quietly recruited by Slayton over the past decade. What remains is an extremely knowledgeable maintenance company that doesn't know it's a maintenance company yet.",
+   subs:["Aldebaran Star Drive","Aldebaran Maintenance Services"]},
+  {name:"Coronis Engineering",color:"#604040",sector:"Parts — Reactors (DYING)",hq:"Narion System Station",founded:"2195",alignment:"Independent (acquisition target)",status:"dying",employees:"~9K",
+   history:"Brazilian-origin reactor engineering firm that had a decade of success with their Helix reactor series in the 2230s-2250s. Xiang's dominance in the reactor market and the Serpent's Crusade's disruption of their primary Narion system supply chains have left them technically solvent but practically stagnant. Xiang has made three acquisition offers. Projected absorption 2315.",
+   products:"Helix reactor series (outdated), Spiral fuel coupling systems. Their Helix Mk.III remains in service on a large number of older civilian vessels.",
+   note:"Xiang has made three acquisition offers. Coronis has refused all three. The fourth offer is expected any month. The founders' families believe Xiang will simply wait them out. They are correct.",
+   subs:["Helix Reactor Series","Spiral Fuel Systems"]},
+  {name:"Vela Weapons",color:"#604040",sector:"Parts — Weapons (DYING)",hq:"Freestar Frontier, Cheyenne",founded:"2230",alignment:"Freestar (failing)",status:"dying",employees:"~4K",
+   history:"Founded in the aftermath of the Serpent's Crusade by Argentine engineers who saw a market for affordable ship weapons in a post-Crusade Freestar rebuilding its militia forces. The market they anticipated never fully materialized at the scale needed to sustain the company. Projected closure 2315.",
+   products:"Vela Pulse series (laser), Bola Missile series. Cheap. Works. No prestige.",
+   note:"The 'no prestige' problem is fatal in the Freestar market, where pilots care deeply about their ship's character. Vela weapons work fine. Nobody puts them on a ship they love. The company has been unable to solve this problem despite three rebrand attempts.",
+   subs:["Vela Pulse Division","Bola Ordnance"]},
+  {name:"Fenris Navigation Systems",color:"#604040",sector:"Parts — Navigation (DYING)",hq:"Jemison, Alpha Centauri",founded:"2200",alignment:"Independent (being absorbed)",status:"dying",employees:"~3K",
+   history:"Norwegian-Swedish navigation and sensor engineering firm that pioneered modern gravitational anomaly detection systems — the technology that makes safe grav jumps possible. Taiyo Astroneering had been quietly absorbing their engineering talent for 10 years before the Ryujin acquisition. With Taiyo now a Ryujin subsidiary, Fenris's remaining IP will almost certainly become Ryujin's within the fiscal year. Projected dissolution 2311.",
+   products:"Fenris Nav Array, Gravitational Anomaly Detector series. Critical but invisible technology built into the navigation systems of most modern vessels.",
+   note:"Nobody talks about Fenris because their products work perfectly and are invisible inside the ship's systems. They're being eaten quietly and most people in the Settled Systems don't know the company exists. The Infinity LTD rumor about grav drive navigation software may in fact be based on leaked Fenris IP obtained through Taiyo's recruitment pipeline.",
+   subs:["Fenris Nav Array","Gravitational Anomaly Detection"]},
+];
+
+const ALL = [...FOOD,...TECH,...MINING];
+const ALL_SHIP = [...STARYARDS,...PARTS];
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+
+function pill(text, color) {
+  return `<span class="pill" style="background:${color}22;color:${color};border:1px solid ${color}55">${esc(text)}</span>`;
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function alignColor(a) {
+  if(!a) return '#6a738a';
+  if(a.includes('UC')) return '#4a8ef0';
+  if(a.includes('Freestar')||a.includes('FC')) return '#e0a020';
+  if(a.includes('Trans')||a.includes('All')) return '#e05050';
+  if(a.includes('Elite')||a.includes('Wealthy')) return '#d0b030';
+  if(a.includes('Non-Settled')) return '#3a4055';
+  if(a.includes('Ryujin')) return '#e060c0';
+  if(a.includes('Defunct')||a.includes('defunct')) return '#808080';
+  return '#60b0c0';
+}
+
+function statusBadge(s) {
+  if(!s) return '';
+  if(s.includes('dying')) return `<span class="status-badge dying">DECLINING</span>`;
+  if(s.includes('defunct')) return `<span class="status-badge defunct">DEFUNCT</span>`;
+  return `<span class="status-badge active-badge">ACTIVE</span>`;
+}
+
+// ── DETAIL PANEL ─────────────────────────────────────────────────────────────
+
+function renderDetail(corp) {
+  if(!corp) return '';
+  const c = corp.color || '#4af0a0';
+  const ac = alignColor(corp.alignment);
+  return `
+  <div class="detail" style="border-color:${c}44">
+    <div class="detail-header">
+      <div class="detail-name" style="color:${c}">${esc(corp.name)}</div>
+      ${pill(corp.sector, c)}
+      ${pill(corp.alignment||'Independent', ac)}
+      ${corp.status ? statusBadge(corp.status) : ''}
+    </div>
+    <div class="detail-meta">
+      <div class="detail-meta-item"><div class="key">HQ</div><div class="val">${esc(corp.hq)}</div></div>
+      <div class="detail-meta-item"><div class="key">Founded</div><div class="val">${esc(corp.founded)}</div></div>
+      <div class="detail-meta-item"><div class="key">Alignment</div><div class="val">${esc(corp.alignment||'Independent')}</div></div>
+      ${corp.employees?`<div class="detail-meta-item"><div class="key">Est. Employees</div><div class="val">${esc(corp.employees)}</div></div>`:''}
+    </div>
+    ${corp.history?`<div class="detail-section-label">Corporate History</div><div class="detail-text">${esc(corp.history)}</div>`:''}
+    ${corp.products?`<div class="detail-section-label">Products / Services</div><div class="detail-text">${esc(corp.products)}</div>`:''}
+    ${corp.note?`<div class="detail-note">${esc(corp.note)}</div>`:''}
+    ${corp.subs&&corp.subs.length?`<div class="detail-subs"><span class="detail-subs-label">Subsidiaries / Product Lines:</span> ${corp.subs.map(s=>pill(s,c)).join(' ')}</div>`:''}
+  </div>`;
+}
+
+// ── CORP LIST ─────────────────────────────────────────────────────────────────
+
+function renderCorpList(corps, color, containerId, showStatus) {
+  const btnId = containerId + '-btns';
+  const detailId = containerId + '-detail';
+  const tableId = containerId + '-table';
+
+  let btns = corps.map((c,i) =>
+    `<button class="corp-btn" data-idx="${i}" data-container="${containerId}" style="color:${c.color||color}">${esc(c.name)}</button>`
+  ).join('');
+
+  let rows = corps.map((c,i) => `
+    <tr class="clickable ${i%2===0?'even':'odd'}" data-idx="${i}" data-container="${containerId}">
+      <td style="color:${c.color||color}">${esc(c.name)}</td>
+      <td>${pill(c.sector, c.color||color)}</td>
+      ${showStatus ? `<td>${statusBadge(c.status||'active')}</td>` : ''}
+      <td style="color:#6a738a;font-size:10px">${esc(c.hq)}</td>
+      <td style="font-family:'Courier New',monospace;font-size:11px">${esc(c.founded)}</td>
+      <td style="color:#6a738a;font-size:10px">${esc(c.employees||'—')}</td>
+    </tr>`).join('');
+
+  const statusCol = showStatus ? '<th>Status</th>' : '';
+  return `
+    <div class="corp-btn-grid" id="${btnId}">${btns}</div>
+    <div id="${detailId}"></div>
+    <table>
+      <thead><tr><th>Company</th><th>Sector</th>${statusCol}<th>HQ</th><th>Founded</th><th>Employees</th></tr></thead>
+      <tbody id="${tableId}">${rows}</tbody>
+    </table>`;
+}
+
+// ── PAGES ─────────────────────────────────────────────────────────────────────
+
+function pageOverview() {
+  const ucCount = ALL.filter(c=>c.alignment&&c.alignment.includes('UC')).length;
+  const fcCount = ALL.filter(c=>c.alignment&&(c.alignment.includes('Freestar')||c.alignment.includes('FC'))).length;
+  const neuCount = ALL.filter(c=>c.alignment&&(c.alignment.includes('Neutral')||c.alignment.includes('Trans'))).length;
+  const indCount = ALL.filter(c=>c.alignment&&(c.alignment.includes('Independent')||c.alignment.includes('Elite'))).length;
+  const total = ALL.length;
+
+  const alignBars = [
+    {label:'UC Aligned', count:ucCount, color:'#4a8ef0'},
+    {label:'FC / Freestar Aligned', count:fcCount, color:'#e0a020'},
+    {label:'Neutral / Trans-Stellar', count:neuCount, color:'#60b0c0'},
+    {label:'Independent / Elite', count:indCount, color:'#d0b030'},
+  ].map(({label,count,color}) => `
+    <div class="align-row">
+      <div class="align-header">
+        <span class="align-name" style="color:${color}">${label}</span>
+        <span class="align-count" style="color:#6a738a">${count} corps</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="background:${color};width:${Math.round(count/total*100)}%"></div></div>
+    </div>`).join('');
+
+  const sectorBars = [
+    {label:'Food & Beverage', count:FOOD.length, color:'#60c860'},
+    {label:'Tech / Research / Med', count:TECH.length, color:'#c060d0'},
+    {label:'Mining / Extraction', count:MINING.length, color:'#c08040'},
+    {label:'Staryards', count:STARYARDS.length, color:'#4a8ef0'},
+    {label:'Part Manufacturers', count:PARTS.length, color:'#d08020'},
+  ].map(({label,count,color}) => `
+    <div class="align-row">
+      <div class="align-header">
+        <span class="align-name" style="color:${color}">${label}</span>
+        <span class="align-count" style="color:#6a738a">${count} corps</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="background:${color};width:${Math.round(count/(total+STARYARDS.length+PARTS.length)*100)}%"></div></div>
+    </div>`).join('');
+
+  return `
+    <div class="sh">Corporate Registry — Settled Systems 2310</div>
+    <div class="stat-row">
+      <div class="stat-card" style="border:1px solid #4af0a044">
+        <div class="stat-label">Total Entries</div>
+        <div class="stat-value" style="color:#4af0a0">${total + STARYARDS.length + PARTS.length}</div>
+        <div class="stat-sub">All sectors</div>
+      </div>
+      <div class="stat-card" style="border:1px solid #60c86044">
+        <div class="stat-label">Food &amp; Beverage</div>
+        <div class="stat-value" style="color:#60c860">${FOOD.length}</div>
+      </div>
+      <div class="stat-card" style="border:1px solid #c060d044">
+        <div class="stat-label">Tech / Research / Med</div>
+        <div class="stat-value" style="color:#c060d0">${TECH.length}</div>
+      </div>
+      <div class="stat-card" style="border:1px solid #c0804044">
+        <div class="stat-label">Mining</div>
+        <div class="stat-value" style="color:#c08040">${MINING.length}</div>
+      </div>
+      <div class="stat-card" style="border:1px solid #4a8ef044">
+        <div class="stat-label">Staryards</div>
+        <div class="stat-value" style="color:#4a8ef0">${STARYARDS.length}</div>
+      </div>
+      <div class="stat-card" style="border:1px solid #d0802044">
+        <div class="stat-label">Part Manufacturers</div>
+        <div class="stat-value" style="color:#d08020">${PARTS.length}</div>
+      </div>
+      <div class="stat-card" style="border:1px solid #d0404044">
+        <div class="stat-label">Largest Employer</div>
+        <div class="stat-value" style="color:#d04040;font-size:14px">Chunks</div>
+        <div class="stat-sub">~15.9M incl. franchise</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="sh">By Sector (all entries)</div>
+        ${sectorBars}
+      </div>
+      <div>
+        <div class="sh">Non-Shipbuilding — Political Alignment</div>
+        ${alignBars}
+      </div>
+    </div>
+    <div class="note-box" style="border:1px solid #4af0a044">
+      <div class="note-title" style="color:#4af0a0">Corporate Structure of the Settled Systems</div>
+      <div class="note-body">The galactic corporate landscape of 2310 was forged in four crucibles: Post-Incident Reconstruction (2057–2100s), evacuation era consolidations (2140–2200), post-Narion War reconstruction (2216–2240), and the Serpent's Crusade's economic disruption (2240–2263). What emerged is a mixed economy where faction-aligned corporations sit alongside genuinely neutral multi-system entities, a small number of elite-controlled luxury monopolies, and — most dangerously — Reliant Medical, which has positioned itself as indispensable to every faction simultaneously.</div>
+    </div>`;
+}
+
+function pageGeo() {
+  const rows = [
+    {r:'UC Core (New Atlantis / Jemison)', c:'Advanced Nutrition, Reladyne, Xiang, Red Harvest, Terrabrew, Arc Might, Infinity LTD', col:'#4a8ef0'},
+    {r:'UC Frontier / Gagarin', c:'Horizon Defense, Dogstar R&D, Terrabrew farms, Arc Might Processing, Vanguard Craftworks', col:'#4a8ef0'},
+    {r:'FC Core (Akila City / Cheyenne)', c:'Colina Snacks, Filburn Agriculture, Protectorate Systems, Light Scythe, Panoptes, Shinigami (island campus), HopeTech, Muybridge Pharma', col:'#e0a020'},
+    {r:'FC Neon / Volii', c:'Xenofresh, Taiyo/Ryujin, Tranquilitea, Oishii Foods', col:'#e0a020'},
+    {r:'Toliman System (Londinion)', c:'Eklund Staryards, Sextant Shield Systems, Slayton Aerospace (dual HQ), Chandra Vineyards (indirect)', col:'#8080c0'},
+    {r:'Independent Claimed Systems', c:'CAN-uck! (Copernicus III), Chandra Vineyards (Leonis III), Fullfood Architecture (Thren/Montara), Nautilus Shielding (Narion Station)', col:'#60b0c0'},
+    {r:'Narion System', c:'Argos Extractors, Cascadia Shipworks (dying), Coronis Engineering (dying), Nautilus Shielding (HQ station)', col:'#6a738a'},
+    {r:'Porrima System', c:'Paradiso Group', col:'#d0b030'},
+    {r:'Wolf System', c:'Dogstar R&D (primary research platform)', col:'#4a8ef0'},
+    {r:'Ixyll System (external)', c:'Shinigami Manufacturing (primary secure HQ)', col:'#ff6080'},
+    {r:'Cheyenne / Porrima (wealthy enclave)', c:'Trident Luxury Lines (registered Cheyenne), Paradiso Group', col:'#d0b030'},
+    {r:'Mars / Deimos Orbital', c:'Deimos Staryards Inc. (primary shipyard)', col:'#4a8ef0'},
+    {r:'Trans-Stellar (all systems)', c:'GalBank, Reliant Medical, Boom Pop!, Chunks, Trident (operations)', col:'#e05050'},
+    {r:'Six Sisters (dual compliance)', c:'New Atlantis + Akila City dual-registered', col:'#806030'},
+  ];
+  return `
+    <div class="sh" style="color:#60b0c0">Corporate Geographic Distribution — 2310</div>
+    <div class="note-box" style="border:1px solid #60b0c044;margin-bottom:16px">
+      <div class="note-title" style="color:#60b0c0">Why Location Matters</div>
+      <div class="note-body">In a multi-system civilization at war, where you're registered also happens to be political statement, a legal shield, and sometimes a survival strategy. Wolf System = UC military research satellite. Ixyll System = outside everyone's jurisdiction. Paradiso = protected by wealth itself. Reliant Medical is registered in every system simultaneously, which is its own kind of power.</div>
+    </div>
+    <table>
+      <thead><tr><th>Region / System</th><th>Major Corporate Presence</th></tr></thead>
+      <tbody>
+        ${rows.map((r,i)=>`
+        <tr class="${i%2===0?'even':'odd'}">
+          <td style="color:${r.col};font-size:12px">${esc(r.r)}</td>
+          <td class="geo-corps">${esc(r.c)}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+function pageAll() {
+  return `
+    <div class="sh" style="color:#f0a04a">Full Corporate Registry — All Sectors</div>
+    <div class="filter-bar">
+      <input type="text" id="search-input" placeholder="Search by name or HQ...">
+      ${['All','Food','Tech','Mining','Staryard','Parts','Pharma','Luxury','Weapons','Dying'].map(s=>`<button class="filter-btn${s==='All'?' active':''}" data-filter="${s}">${s}</button>`).join('')}
+    </div>
+    <div id="all-detail"></div>
+    <table>
+      <thead><tr><th>Company</th><th>Sector</th><th>Status</th><th>Alignment</th><th>HQ</th><th>Founded</th></tr></thead>
+      <tbody id="all-tbody"></tbody>
+    </table>`;
+}
+
+// ── RENDER & STATE ────────────────────────────────────────────────────────────
+
+let currentTab = 'overview';
+let selectedCorp = {};
+let allFilter = 'All';
+let allSearch = '';
+let allSel = null;
+
+const ALL_COMBINED = [...FOOD,...TECH,...MINING,...STARYARDS,...PARTS];
+
+function renderAllRows() {
+  const tbody = document.getElementById('all-tbody');
+  if(!tbody) return;
+  const filtered = ALL_COMBINED.filter(c => {
+    const matchSearch = !allSearch ||
+      c.name.toLowerCase().includes(allSearch.toLowerCase()) ||
+      c.hq.toLowerCase().includes(allSearch.toLowerCase());
+    let matchFilter = true;
+    if(allFilter !== 'All') {
+      if(allFilter === 'Dying') matchFilter = c.status && c.status.includes('dying');
+      else matchFilter = c.sector.toLowerCase().includes(allFilter.toLowerCase()) ||
+        (c.alignment&&c.alignment.toLowerCase().includes(allFilter.toLowerCase()));
+    }
+    return matchSearch && matchFilter;
+  });
+  tbody.innerHTML = filtered.map((c,i) => {
+    const ac = alignColor(c.alignment);
+    return `<tr class="clickable ${i%2===0?'even':'odd'}${allSel===i?' selected':''}" data-all-idx="${i}">
+      <td style="color:${c.color||'#4af0a0'}">${esc(c.name)}</td>
+      <td>${pill(c.sector, c.color||'#4af0a0')}</td>
+      <td>${statusBadge(c.status||'active')}</td>
+      <td>${pill((c.alignment||'Ind.').split(' ')[0], ac)}</td>
+      <td style="color:#6a738a;font-size:10px">${esc(c.hq)}</td>
+      <td style="font-family:'Courier New',monospace;font-size:11px">${esc(c.founded)}</td>
+    </tr>`;
+  }).join('');
+  tbody.querySelectorAll('tr[data-all-idx]').forEach(row => {
+    row.addEventListener('click', () => {
+      const rawIdx = parseInt(row.dataset.allIdx);
+      const filtered2 = ALL_COMBINED.filter(c => {
+        const ms = !allSearch || c.name.toLowerCase().includes(allSearch.toLowerCase()) || c.hq.toLowerCase().includes(allSearch.toLowerCase());
+        let mf = true;
+        if(allFilter !== 'All') {
+          if(allFilter === 'Dying') mf = c.status && c.status.includes('dying');
+          else mf = c.sector.toLowerCase().includes(allFilter.toLowerCase()) || (c.alignment&&c.alignment.toLowerCase().includes(allFilter.toLowerCase()));
+        }
+        return ms&&mf;
+      });
+      const corp = filtered2[rawIdx];
+      const detailEl = document.getElementById('all-detail');
+      if(allSel===rawIdx){allSel=null;if(detailEl)detailEl.innerHTML='';}
+      else{allSel=rawIdx;if(detailEl)detailEl.innerHTML=renderDetail(corp);}
+      renderAllRows();
+    });
+  });
+}
+
+function attachAllEvents() {
+  const input = document.getElementById('search-input');
+  if(input) {
+    input.value = allSearch;
+    input.addEventListener('input', e => { allSearch=e.target.value; allSel=null; const d=document.getElementById('all-detail');if(d)d.innerHTML=''; renderAllRows(); });
+  }
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      allFilter = btn.dataset.filter;
+      allSel = null;
+      const d=document.getElementById('all-detail');if(d)d.innerHTML='';
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      renderAllRows();
+    });
+  });
+}
+
+function attachCorpListEvents(corps, containerId) {
+  const btnGrid = document.getElementById(containerId+'-btns');
+  const detailEl = document.getElementById(containerId+'-detail');
+  const tbody = document.getElementById(containerId+'-table');
+  if(!btnGrid||!detailEl||!tbody) return;
+
+  function select(idx) {
+    const corp = corps[idx];
+    const prev = selectedCorp[containerId];
+    if(prev===idx){ selectedCorp[containerId]=null; detailEl.innerHTML=''; }
+    else { selectedCorp[containerId]=idx; detailEl.innerHTML=renderDetail(corp); }
+    btnGrid.querySelectorAll('.corp-btn').forEach((b,i) => {
+      b.classList.toggle('active', selectedCorp[containerId]===i);
+      if(selectedCorp[containerId]===i){
+        b.style.background=(corps[i].color||'#4af0a0')+'33';
+        b.style.borderColor=corps[i].color||'#4af0a0';
+      } else {
+        b.style.background='transparent';
+        b.style.borderColor='#1e2330';
+        b.style.color=corps[i].color||'#6a738a';
+      }
+    });
+    tbody.querySelectorAll('tr').forEach((r,i) => {
+      r.classList.toggle('selected', selectedCorp[containerId]===i);
+    });
+  }
+
+  btnGrid.querySelectorAll('.corp-btn').forEach((btn,i) => {
+    btn.addEventListener('click', ()=>select(i));
+  });
+  tbody.querySelectorAll('tr[data-idx]').forEach(row => {
+    row.addEventListener('click', ()=>select(parseInt(row.dataset.idx)));
+  });
+}
+
+function setTab(tab) {
+  currentTab = tab;
+  const tabColors = {
+    overview:'#4af0a0', food:'#60c860', tech:'#c060d0',
+    mining:'#c08040', staryards:'#4a8ef0', parts:'#d08020',
+    all:'#f0a04a', geo:'#60b0c0'
+  };
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    const isActive = btn.dataset.tab === tab;
+    const col = tabColors[tab]||'#4af0a0';
+    btn.classList.toggle('active', isActive);
+    if(isActive){btn.style.background=col;btn.style.color='#0a0c10';btn.style.borderColor=col;}
+    else{btn.style.background='transparent';btn.style.color='#6a738a';btn.style.borderColor='#1e2330';}
+  });
+
+  const content = document.getElementById('content');
+  let html = '';
+  if(tab==='overview') html = pageOverview();
+  else if(tab==='food') html = `<div class="sh" style="color:#60c860">Food &amp; Beverage Corporations — 2310</div>` + renderCorpList(FOOD,'#60c860','food',false);
+  else if(tab==='tech') html = `<div class="sh" style="color:#c060d0">Technology, Research &amp; Medical Corporations — 2310</div>` + renderCorpList(TECH,'#c060d0','tech',false);
+  else if(tab==='mining') html = `<div class="sh" style="color:#c08040">Mining &amp; Extraction Corporations — 2310</div>` + renderCorpList(MINING,'#c08040','mining',false);
+  else if(tab==='staryards') html = `<div class="sh" style="color:#4a8ef0">Staryard Companies — 2310</div>` + renderCorpList(STARYARDS,'#4a8ef0','staryards',true);
+  else if(tab==='parts') html = `<div class="sh" style="color:#d08020">Ship Part Manufacturers — 2310</div>` + renderCorpList(PARTS,'#d08020','parts',true);
+  else if(tab==='all') html = pageAll();
+  else if(tab==='geo') html = pageGeo();
+
+  html += `<div id="footer">CLASSIFICATION: TROPOSPHERE MULTIVERSE PROJECT — CLOUDHEARTV CAMPAIGN DOCUMENT — STARFIELD: RELICS</div>`;
+  content.innerHTML = html;
+
+  if(tab==='food') attachCorpListEvents(FOOD,'food');
+  else if(tab==='tech') attachCorpListEvents(TECH,'tech');
+  else if(tab==='mining') attachCorpListEvents(MINING,'mining');
+  else if(tab==='staryards') attachCorpListEvents(STARYARDS,'staryards');
+  else if(tab==='parts') attachCorpListEvents(PARTS,'parts');
+  else if(tab==='all') { attachAllEvents(); renderAllRows(); }
+}
+
+document.getElementById('tab-bar').addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn');
+  if(btn) setTab(btn.dataset.tab);
+});
+
+setTab('overview');
+</script>
+</body>
+</html>
