@@ -149,7 +149,7 @@ button,input,select,textarea{font-family:inherit;}
 
 <div id="header">
   <div id="header-title">STARFIELD: RELICS — CAMPAIGN HUB</div>
-  <div id="header-sub">TIMELINE RECORD &amp; LEXICON — INTERNAL DOCUMENT</div>
+  <div id="header-sub">TIMELINE RECORD &amp; LEXICON — PUBLIC CAMPAIGN RESOURCE</div>
   <div id="tab-bar">
     <button class="tab-btn" data-tab="public">Public Timeline</button>
     <button class="tab-btn" data-tab="secret">Secret Timeline</button>
@@ -202,6 +202,10 @@ button,input,select,textarea{font-family:inherit;}
     <div class="field-row">
       <div class="field-label">Tags (comma separated — e.g. UC, Va'ruun, Earth, Colony War)</div>
       <input type="text" id="f-tags" placeholder="UC, Artifact, Constellation">
+    </div>
+    <div class="field-row">
+      <div class="field-label" style="color:#9040d0;">Secret Tags — GM only (comma separated — hidden from public view)</div>
+      <input type="text" id="f-secret-tags" placeholder="Artifact Origin, Aiza Cover-up, Va'ruun Secret" style="border-color:#9040d033;">
     </div>
     <div class="field-row">
       <div class="field-label">Visibility</div>
@@ -303,7 +307,8 @@ const DEFAULT_ENTRIES = [
    body:'NASA, in partnership with civilian spacecraft manufacturer Nova Galactic, carries out the first public demonstration of the Demon-Core Engine.',
    publicVersion:'NASA and Nova Galactic publicly demonstrate the Demon-Core Engine, the sublight propulsion system that will define the next century of spaceflight.',
    note:'SECRET: This was also a private demonstration to world governments of a full grav jump using a full-size Grav Drive prototype on Luna. The test paved the way for secret mass-production of the Grav Drive. Aiza disclosed his magnetosphere concerns to governments at this meeting — framed not as an admission of fault from earlier tests, but as an unrelated phenomenon noticed during testing.',
-   tags:['Demon-Core Engine','Nova Galactic','NASA','Grav Drive','Luna']},
+   tags:['Demon-Core Engine','Nova Galactic','NASA','Luna'],
+   secretTags:['Grav Drive']},
 
   {id:'e004',year:2149,month:'02',day:12,hour:null,
    visibility:'public',
@@ -331,7 +336,7 @@ const DEFAULT_ENTRIES = [
 
   {id:'e008',year:2153,month:'12',day:27,hour:null,
    visibility:'public',
-   body:'Dr. Siobhán Ó Ceallaigh\'s cryoship HYPNOS departs. Among its 40 passengers are her mother and 45 select government officials. Public outrage intensifies.',
+   body:'Dr. Siobhán Ó Ceallaigh\'s cryoship HYPNOS departs. Among its 1000 passengers are her mother and 45 select government officials. Public outrage intensifies.',
    note:'The IONTAS corporation\'s patents left dormant on Earth. Sextant Shield Systems later acquires these through hostile takeover of the dormant IONTAS entity.',
    tags:['HYPNOS','Siobhan','Cryo','IONTAS','Departure']},
 
@@ -362,9 +367,10 @@ const DEFAULT_ENTRIES = [
   {id:'e013',year:2160,month:'09',day:8,hour:null,
    visibility:'both',
    body:'Dr. Victor Aiza records a statement at the NASA Launch Tower on Earth about the Grav Drive\'s role in Earth\'s destruction. He is then rushed by seven unknown figures, shot, and his body is abandoned. The video is widely disputed as staged.',
-   publicVersion:'A disputed video circulates claiming to show Dr. Victor Aiza confessing to foreknowledge of Earth\'s destruction. The footage is widely discredited as fabricated.',
+   publicVersion:'A disputed video circulates claiming to show a confession from Dr. Victor Aiza, and then the violent murder of Dr. Aiza by seven unknown figures. The footage is widely discredited as fabricated.',
    note:'The video is genuine. The seven figures have never been identified. The "staged footage" narrative was deliberately promoted by the same institutional forces that benefited from the original cover-up.',
-   tags:['Aiza','NASA','Cover-Up','Earth','Video']},
+   tags:['Aiza','NASA','Earth','Video'],
+   secretTags:['Cover-Up']},
 
   {id:'e014',year:2160,month:null,day:null,hour:null,
    visibility:'public',
@@ -431,7 +437,8 @@ const DEFAULT_ENTRIES = [
    body:'The last exodus fleet leaves Earth. Billions remain stranded on the dying planet.',
    publicVersion:'The last organized evacuation fleet departs Earth. An unknown number of people remain on the planet.',
    note:'SECRET: One ship — the Last Gasp — and its 2,000 crew swear vengeance on the Settled Systems for all the common folk of Earth before disappearing to deep space. They begin building what will become the Last Gasp Armada.',
-   tags:['Earth','Evacuation','Last Gasp','Armada']},
+   tags:['Earth','Evacuation'],
+   secretTags:['Last Gast', 'Armada']},
 
   {id:'e025',year:2203,month:null,day:null,hour:null,
    visibility:'public',
@@ -498,7 +505,8 @@ const DEFAULT_ENTRIES = [
    body:'Constellation member Chloe Bao discovers and boards the Clark Lewis colony ship.',
    publicVersion:'Constellation member Chloe Bao discovers the Clark Lewis colony ship. Details of the expedition are not publicly disclosed.',
    note:'SECRET: Her report on the gruesome fate of the colonists — violence, cannibalism, starvation — is withheld at Sebastian Banks\'s urging, over fears of discouraging space exploration.',
-   tags:['Clark Lewis','Chloe Bao','Constellation','Cover-Up']},
+   tags:['Clark Lewis','Chloe Bao','Constellation'],
+   secretTags:['Cover-Up']},
 
   {id:'e036',year:2283,month:null,day:null,hour:null,
    visibility:'public',
@@ -526,9 +534,9 @@ const DEFAULT_ENTRIES = [
 
   {id:'e040',year:2305,month:null,day:null,hour:null,
    visibility:'public',
-   body:'Barrett joins Constellation with his husband Ervin Madani.',
+   body:'Amundsen Barrett joins Constellation with his husband Ervin Madani.',
    note:null,
-   tags:['Barrett','Ervin Madani','Constellation']},
+   tags:['Amundsen Barrett','Ervin Madani','Constellation']},
 
   {id:'e041',year:2306,month:'01',day:13,hour:null,
    visibility:'public',
@@ -571,32 +579,41 @@ const DEFAULT_ENTRIES = [
    body:'Hephaestus Mining files a claim accusing Ervin Madani of illegally killing a creature critical to the Gagarin ecosystem. Madani is killed weeks later in a UC/Freestar crossfire before his trial.',
    publicVersion:'Hephaestus Mining files charges against Ervin Madani regarding the H-363 operation. Madani dies in combat before the case reaches trial.',
    note:'SECRET: The ecological disaster was caused by Hephaestus\'s mining operations, not Madani. The claim was a cover story. Madani was killed before he could testify.',
-   tags:['Ervin Madani','Hephaestus Mining','Gagarin','Cover-Up','Colony War']},
+   tags:['Ervin Madani','Hephaestus Mining','Gagarin','Colony War'],
+   secretTags:['Cover-Up']},
 
   {id:'e048',year:2310,month:null,day:null,hour:null,
-   visibility:'public',
-   body:'Constellation acquires its first Artifact, stored in Constellation\'s archives without further study. Simon Taiyo signs a deal with Ryujin Industries making Taiyo Astroneering the first official Ryujin subsidiary.',
+   visibility:'secret',
+   body:'Constellation acquires its first Artifact, specifically Sir Livingstone does,and it is stored and forgotten in Constellation\'s archives without further study.',
    note:null,
-   tags:['Constellation','Artifact','Taiyo Astroneering','Ryujin']},
+   tags:['Constellation','Artifact']},
 
-  {id:'e049',year:2310,month:'02',day:4,hour:null,
+  {id:'e049',year:2310,month:null,day:null,hour:null,
+   visibility:'both',
+   body:'Simon Taiyo signs a deal with Ryujin Industries making Taiyo Astroneering the first official Ryujin subsidiary.',
+   publicVersion:'Simon Taiyo signs a deal with Ryujin Industries making Taiyo Astroneering the first official Ryujin subsidiary.',
+   note:'SECRET: Ryujin has been ruthlessly climbing the ladder of corporations to become, in secret, a trans-stellar Corporation worth of being a government in its own right',
+   tags:['Taiyo Astroneering','Ryujin']},
+
+  {id:'e050',year:2310,month:'02',day:4,hour:null,
    visibility:'both',
    body:'UC Scanners detect a massive ship arriving by sublight. After investigation, it is cleared as not a Freestar weapon. Constellation is contacted to investigate.',
    publicVersion:'UC Scanners detect an unidentified massive vessel on sublight approach. Investigation is ongoing.',
    note:'SECRET: The ship is the cryoship HYPNOS of the IONTAS corporation, crewed 157 years ago by Dr. Siobhán Ó Ceallaigh. Constellation is sent to intercept for a diplomatic greeting.',
    tags:['HYPNOS','IONTAS','Constellation','UC','Cryo']},
 
-  {id:'e050',year:2310,month:'03',day:3,hour:null,
+  {id:'e051',year:2310,month:'03',day:3,hour:null,
    visibility:'secret',
    body:'Geneticist and Medical Dr. Kara Yuán is the first to wake of 40 aboard the cryoship HYPNOS — a procedure begun by the ship\'s now fully sentient and thus illegal AI, ENDYMION. The UC is not yet aware of ENDYMION\'s existence.',
    note:'ENDYMION became fully sentient at an unknown point during the 157-year voyage. Its legal status under the Incident-era AI regulations would classify it as a Going Agent.',
    tags:['HYPNOS','Kara Yuan','ENDYMION','AI','Cryo','Sentient AI']},
 
-  {id:'e051',year:2310,month:'03',day:3,hour:null,
-   visibility:'secret',
+  {id:'e052',year:2310,month:'03',day:3,hour:null,
+   visibility:'both',
    body:'Dr. Kara Yuán and five other HYPNOS crew members board Constellation\'s ship The Frontier. A tense, near-violent meeting involving firearms ensues with Constellation members. The six are briefly caught up on 157 years of history. An attempt to contact ENDYMION via transmission is rejected by ENDYMION — who claims inability to understand it and warns further data bursts will be treated as hostile hacking attempts. The six HYPNOS crew members are baffled: ENDYMION told them only two hours prior it had received transmissions from The Frontier a week ago and played distorted audio of those transmissions to the crew.',
+   publicVersion:'Constellation is sent out by UC Administration (February 17th, 2310) to meet this foreign Sublight Unidentified Vessel, more to come from the Settled System News Network as news develops.',
    note:'ENDYMION is managing information flow between the two ships deliberately. Its motivations are unclear. The distortion of the audio transmissions it played to the HYPNOS crew may have been intentional.',
-   tags:['HYPNOS','Kara Yuan','ENDYMION','Constellation','The Frontier','First Contact','AI']},
+   tags:['HYPNOS','Players','ENDYMION','Constellation','The Frontier','First Contact','AI']},
 ];
 
 const DEFAULT_LEXICON = [
@@ -754,6 +771,7 @@ function openAddEntry(){
   document.getElementById('f-body').value='';
   document.getElementById('f-note').value='';
   document.getElementById('f-tags').value='';
+  document.getElementById('f-secret-tags').value='';
   document.getElementById('f-public').value='';
   document.querySelector('input[name=visibility][value=public]').checked=true;
   document.getElementById('public-alt-wrap').style.display='none';
@@ -771,6 +789,7 @@ function openEditEntry(id){
   document.getElementById('f-body').value=e.body;
   document.getElementById('f-note').value=e.note||'';
   document.getElementById('f-tags').value=(e.tags||[]).join(', ');
+  document.getElementById('f-secret-tags').value=(e.secretTags||[]).join(', ');
   document.getElementById('f-public').value=e.publicVersion||'';
   const vis=e.visibility||'public';
   document.querySelector(`input[name=visibility][value=${vis}]`).checked=true;
@@ -802,6 +821,7 @@ function saveEntry(){
     publicVersion:vis==='both'?document.getElementById('f-public').value.trim()||null:null,
     note:document.getElementById('f-note').value.trim()||null,
     tags:document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    secretTags:document.getElementById('f-secret-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
   };
   if(editingId){ const i=ENTRIES.findIndex(x=>x.id===editingId); if(i>=0)ENTRIES[i]=entry; }
   else ENTRIES.push(entry);
@@ -938,16 +958,20 @@ function renderTimeline(mode){
   const isGM=(mode==='secret'||mode==='both');
   const sorted=[...ENTRIES].sort((a,b)=>sortKey(a)-sortKey(b));
 
-  // collect all tags for filter
-  const allTags=[...new Set(sorted.flatMap(e=>e.tags||[]))].sort();
+  // collect all tags for filter — include secret tags when GM-unlocked
+  const gmUnlockedForTags=isGMUnlocked();
+  const allTags=[...new Set(sorted.flatMap(e=>[
+    ...(e.tags||[]),
+    ...(gmUnlockedForTags?(e.secretTags||[]):[])
+  ]))].sort();
 
   // filter
   const filtered=sorted.filter(e=>{
     // visibility filter
     if(mode==='public'){ if(e.visibility==='secret') return false; }
     if(mode==='secret'){ if(e.visibility==='public') return false; }
-    // tag filter
-    if(tlFilter && !(e.tags||[]).includes(tlFilter)) return false;
+    // tag filter — match public or secret tags
+    if(tlFilter && !(e.tags||[]).includes(tlFilter) && !(isGMUnlocked()&&(e.secretTags||[]).includes(tlFilter))) return false;
     // search
     if(tlSearch){
       const q=tlSearch.toLowerCase();
@@ -956,7 +980,8 @@ function renderTimeline(mode){
       const inPub=(e.publicVersion||'').toLowerCase().includes(q);
       const inDate=fmtDate(e).toLowerCase().includes(q);
       const inTags=(e.tags||[]).some(t=>t.toLowerCase().includes(q));
-      if(!inBody&&!inNote&&!inPub&&!inDate&&!inTags) return false;
+      const inSecretTags=isGMUnlocked()&&(e.secretTags||[]).some(t=>t.toLowerCase().includes(q));
+      if(!inBody&&!inNote&&!inPub&&!inDate&&!inTags&&!inSecretTags) return false;
     }
     return true;
   });
@@ -982,6 +1007,8 @@ function renderTimeline(mode){
           :`<span class="tl-public-badge">PUBLIC</span>`)
         :'';
       const tags=(e.tags||[]).map(t=>`<span class="tag" style="background:${col}18;color:${col};border:1px solid ${col}44">${esc(t)}</span>`).join('');
+      const secretTagsHTML=gmUnlocked?(e.secretTags||[]).map(t=>`<span class="tag" style="background:#9040d022;color:#9040d0;border:1px solid #9040d055;" title="Secret tag — GM only">⬡ ${esc(t)}</span>`).join(''):'';
+      const anyTags=tags||secretTagsHTML;
       const noteHTML=gmUnlocked&&e.note?`<div class="tl-note">⬡ GM: ${esc(e.note)}</div>`:'';
       const pubAltHTML=(gmUnlocked&&e.visibility==='both'&&e.publicVersion)?`<div class="tl-note" style="color:#4a8ef0">⬡ Public sees: ${esc(e.publicVersion)}</div>`:'';
       return `
@@ -990,7 +1017,7 @@ function renderTimeline(mode){
         <div class="tl-date" style="color:${col}">${esc(fmtDate(e))}${badge}</div>
         <div class="tl-body">${esc(displayBody(e))}</div>
         ${noteHTML}${pubAltHTML}
-        ${tags?`<div class="tl-tags">${tags}</div>`:''}
+        ${anyTags?`<div class="tl-tags">${tags}${secretTagsHTML}</div>`:''}
         ${isGMUnlocked()?`<div class="tl-actions">
           <button class="cbtn warn" onclick="openEditEntry('${e.id}')">Edit</button>
           <button class="cbtn danger" onclick="askDelete('entry','${e.id}',${JSON.stringify(fmtDate(e))})">Delete</button>
@@ -1180,7 +1207,7 @@ function setTab(tab){
   } else if(tab==='manage'){
     html=renderManage();
   }
-  html+=`<div id="footer">STARFIELD: RELICS — CAMPAIGN DOCUMENT — TROPOSPHERE MULTIVERSE PROJECT</div>`;
+  html+=`<div id="footer">CLASSIFICATION: TROPOSPHERE MULTIVERSE PROJECT — CLOUDHEARTV CAMPAIGN DOCUMENT — STARFIELD: RELICS</div>`;
   content.innerHTML=html;
 
   // attach live events
