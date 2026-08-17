@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Starfield: Relics — Timeline & Lexicon · CloudheartTV</title>
+<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+<style>
+/* ── SHARED NAV ── */
+#site-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 24px;
+  background: #060810;
+  border-bottom: 1px solid #1e2330;
+  position: sticky; top: 0; z-index: 500;
+  gap: 12px;
+}
+#site-nav .nav-logo {
+  height: 26px;
+  filter: invert(1) brightness(0.7);
+  flex-shrink: 0;
+}
+#site-nav .nav-back {
+  font-family: 'Courier New', monospace; font-size: 10px;
+  letter-spacing: 0.08em; color: #4a9edd;
+  text-decoration: none; display: flex; align-items: center; gap: 6px;
+  transition: color 0.2s; flex-shrink: 0;
+}
+#site-nav .nav-back:hover { color: #8acfff; }
+#site-nav .nav-center {
+  flex: 1; text-align: center;
+  font-family: 'Courier New', monospace; font-size: 10px;
+  letter-spacing: 0.15em; color: #3a4a5a; text-transform: uppercase;
+}
+#site-nav .nav-right {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+#site-nav .nav-ext {
+  font-family: 'Courier New', monospace; font-size: 10px;
+  letter-spacing: 0.08em; color: #3a4a5a;
+  text-decoration: none; padding: 4px 8px;
+  border: 1px solid #1e2330; border-radius: 3px;
+  transition: color 0.2s, border-color 0.2s;
+}
+#site-nav .nav-ext:hover { color: #4a9edd; border-color: #4a9edd; }
+#site-nav .nav-ext.sibling { color: #4af0a0; border-color: #4af0a055; }
+#site-nav .nav-ext.sibling:hover { border-color: #4af0a0; }
+</style>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#0a0c10;color:#c8d0e0;font-family:'Segoe UI','Inter',Arial,sans-serif;font-size:13px;min-height:100vh;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:#111318;}
+::-webkit-scrollbar-thumb{background:#2a3045;border-radius:3px;}
+button,input,select,textarea{font-family:inherit;}
+
+/* ── LAYOUT ── */
+#header{background:#111318;border-bottom:1px solid #1e2330;padding:14px 22px 10px;}
+#header-title{font-family:'Courier New',monospace;font-size:17px;font-weight:700;color:#4af0a0;letter-spacing:0.07em;}
+#header-sub{color:#6a738a;font-size:10px;font-family:'Courier New',monospace;margin-top:2px;}
+#tab-bar{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px;}
+#content{padding:20px 22px 40px;}
+#footer{margin:28px 0 0;padding:10px 0 0;border-top:1px solid #1e2330;color:#6a738a;font-size:9px;font-family:'Courier New',monospace;}
+
+/* ── TABS ── */
+.tab-btn{background:transparent;color:#6a738a;border:1px solid #1e2330;border-radius:4px;padding:4px 10px;font-size:10px;font-family:'Courier New',monospace;cursor:pointer;letter-spacing:0.03em;transition:all 0.12s;}
+.tab-btn:hover{color:#c8d0e0;border-color:#3a4055;}
+
+/* ── SECTION HEADING ── */
+.sh{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid #1e2330;}
+
+/* ── CONTROLS BAR ── */
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
+.ctrl input,.ctrl select{background:#111318;border:1px solid #1e2330;border-radius:4px;padding:5px 9px;color:#c8d0e0;font-size:11px;outline:none;}
+.ctrl input:focus,.ctrl select:focus{border-color:#4af0a0;}
+.ctrl input[type=text]{flex:1;min-width:180px;}
+.cbtn{background:transparent;color:#6a738a;border:1px solid #1e2330;border-radius:4px;padding:5px 10px;font-size:10px;cursor:pointer;}
+.cbtn:hover{color:#c8d0e0;border-color:#3a4055;}
+.cbtn.primary{background:#4af0a022;color:#4af0a0;border-color:#4af0a055;}
+.cbtn.primary:hover{background:#4af0a044;}
+.cbtn.danger{background:#e0505022;color:#e05050;border-color:#e0505055;}
+.cbtn.danger:hover{background:#e0505044;}
+.cbtn.warn{background:#f0a04a22;color:#f0a04a;border-color:#f0a04a55;}
+.cbtn.warn:hover{background:#f0a04a44;}
+
+/* ── TIMELINE ENTRY ── */
+.tl-entry{position:relative;padding:0 0 18px 22px;border-left:2px solid #1e2330;}
+.tl-entry:last-child{padding-bottom:0;}
+.tl-dot{position:absolute;left:-6px;top:4px;width:10px;height:10px;border-radius:50%;border:2px solid #0a0c10;}
+.tl-date{font-family:'Courier New',monospace;font-size:10px;font-weight:700;letter-spacing:0.08em;margin-bottom:3px;}
+.tl-body{font-size:12px;line-height:1.7;color:#c8d0e0;}
+.tl-note{font-size:10px;color:#6a738a;font-style:italic;margin-top:4px;}
+.tl-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+.tag{display:inline-block;border-radius:3px;padding:1px 6px;font-size:9px;font-weight:600;white-space:nowrap;}
+.tl-actions{display:flex;gap:5px;margin-top:6px;opacity:0;transition:opacity 0.15s;}
+.tl-entry:hover .tl-actions{opacity:1;}
+.tl-secret-badge{font-size:9px;padding:1px 5px;border-radius:2px;background:#9040d022;color:#9040d0;border:1px solid #9040d055;margin-left:6px;}
+.tl-public-badge{font-size:9px;padding:1px 5px;border-radius:2px;background:#4a8ef022;color:#4a8ef0;border:1px solid #4a8ef055;margin-left:6px;}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:#0a0c10cc;z-index:100;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:#111318;border:1px solid #1e2330;border-radius:10px;padding:22px 24px;width:min(600px,95vw);max-height:90vh;overflow-y:auto;}
+.modal-title{font-size:13px;font-weight:700;color:#4af0a0;margin-bottom:16px;font-family:'Courier New',monospace;letter-spacing:0.06em;}
+.field-row{margin-bottom:12px;}
+.field-label{color:#6a738a;font-size:9px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;}
+.field-row input,.field-row select,.field-row textarea{width:100%;background:#0a0c10;border:1px solid #1e2330;border-radius:4px;padding:7px 10px;color:#c8d0e0;font-size:12px;outline:none;}
+.field-row input:focus,.field-row select:focus,.field-row textarea:focus{border-color:#4af0a0;}
+.field-row textarea{min-height:90px;resize:vertical;line-height:1.6;}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
+.radio-row{display:flex;gap:14px;margin-top:4px;}
+.radio-opt{display:flex;align-items:center;gap:5px;cursor:pointer;font-size:11px;}
+.radio-opt input{width:auto;}
+
+/* ── LEXICON ── */
+.lex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px;}
+.lex-card{background:#111318;border:1px solid #1e2330;border-radius:7px;padding:12px 14px;transition:border-color 0.15s;}
+.lex-card:hover{border-color:#3a4055;}
+.lex-card:hover .lex-actions{opacity:1;}
+.lex-term{font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:#4af0a0;margin-bottom:4px;}
+.lex-def{font-size:11px;color:#c8d0e0;line-height:1.65;}
+.lex-alt{font-size:10px;color:#6a738a;font-style:italic;margin-top:3px;}
+.lex-cat{font-size:9px;padding:1px 6px;border-radius:2px;margin-top:5px;display:inline-block;}
+.lex-actions{display:flex;gap:5px;margin-top:8px;opacity:0;transition:opacity 0.15s;}
+
+/* ── IMPORT/EXPORT ── */
+.code-box{background:#0a0c10;border:1px solid #1e2330;border-radius:5px;padding:10px 12px;font-family:'Courier New',monospace;font-size:10px;color:#6a738a;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto;margin-top:8px;}
+.note-box{background:#111318;border-radius:6px;padding:9px 12px;margin-top:8px;color:#6a738a;font-size:11px;line-height:1.65;border:1px solid #1e2330;}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;color:#3a4055;padding:40px 20px;font-size:12px;}
+</style>
+</head>
+<body>
+
+<nav id="site-nav">
+  <a href="../../index.html">
+    <img class="nav-logo" src="../../creator_logo.png" alt="CloudheartTV">
+  </a>
+  <a href="../index.html" class="nav-back">← Starfield: Relics</a>
+  <div class="nav-center">Starfield: Relics — Campaign Resource</div>
+  <div class="nav-right">
+    <a href="../corps/index.html" class="nav-ext sibling">Corp Registry</a>
+    <a href="https://www.twitch.tv/CloudheartTV" target="_blank" class="nav-ext">Twitch</a>
+    <a href="https://discord.gg/PM93XNFh7W" target="_blank" class="nav-ext">Discord</a>
+    <a href="../../index.html" class="nav-ext">Hub</a>
+  </div>
+</nav>
+
+<div id="header">
+  <div id="header-title">STARFIELD: RELICS — CAMPAIGN HUB</div>
+  <div id="header-sub">TIMELINE RECORD &amp; LEXICON — PUBLIC CAMPAIGN ARTIFACT</div>
+  <div id="tab-bar">
+    <button class="tab-btn" data-tab="public">Public Timeline</button>
+    <button class="tab-btn" data-tab="secret">Secret Timeline</button>
+    <button class="tab-btn" data-tab="both">Dual View</button>
+    <button class="tab-btn" data-tab="lexicon">Lexicon</button>
+    <button class="tab-btn" data-tab="manage">Manage Data</button>
+  </div>
+</div>
+
+<div id="content"></div>
+
+<!-- ── ENTRY MODAL ── -->
+<div class="modal-overlay" id="entry-modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">ADD TIMELINE ENTRY</div>
+    <div class="field-grid">
+      <div class="field-row">
+        <div class="field-label">Year *</div>
+        <input type="number" id="f-year" placeholder="2310" min="2050" max="2400">
+      </div>
+      <div class="field-row">
+        <div class="field-label">Month (optional)</div>
+        <select id="f-month">
+          <option value="">— no month —</option>
+          <option value="01">January</option><option value="02">February</option>
+          <option value="03">March</option><option value="04">April</option>
+          <option value="05">May</option><option value="06">June</option>
+          <option value="07">July</option><option value="08">August</option>
+          <option value="09">September</option><option value="10">October</option>
+          <option value="11">November</option><option value="12">December</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Day (optional)</div>
+        <input type="number" id="f-day" placeholder="—" min="1" max="31">
+      </div>
+      <div class="field-row">
+        <div class="field-label">Hour (optional, 24h)</div>
+        <input type="number" id="f-hour" placeholder="—" min="0" max="23">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-label">Event *</div>
+      <textarea id="f-body" placeholder="Describe the event..."></textarea>
+    </div>
+    <div class="field-row">
+      <div class="field-label">GM Note (optional — shown in secret view only)</div>
+      <textarea id="f-note" placeholder="Behind-the-scenes context, player hooks, corrections..." style="min-height:60px;"></textarea>
+    </div>
+    <div class="field-row">
+      <div class="field-label">Tags (comma separated — e.g. UC, Va'ruun, Earth, Colony War)</div>
+      <input type="text" id="f-tags" placeholder="UC, Artifact, Constellation">
+    </div>
+    <div class="field-row">
+      <div class="field-label">Visibility</div>
+      <div class="radio-row">
+        <label class="radio-opt"><input type="radio" name="visibility" value="public" checked> <span style="color:#4a8ef0">Public</span> — players can see this</label>
+        <label class="radio-opt"><input type="radio" name="visibility" value="secret"> <span style="color:#9040d0">Secret</span> — GM only</label>
+        <label class="radio-opt"><input type="radio" name="visibility" value="both"> <span style="color:#f0a04a">Both</span> — public version differs from secret</label>
+      </div>
+    </div>
+    <div id="public-alt-wrap" class="field-row" style="display:none;">
+      <div class="field-label">Public Version of Event (what players see instead)</div>
+      <textarea id="f-public" placeholder="The sanitized or redacted version players know about..." style="min-height:60px;"></textarea>
+    </div>
+    <div class="modal-btns">
+      <button class="cbtn" onclick="closeModal()">Cancel</button>
+      <button class="cbtn primary" onclick="saveEntry()">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── LEX MODAL ── -->
+<div class="modal-overlay" id="lex-modal">
+  <div class="modal">
+    <div class="modal-title" id="lex-modal-title">ADD LEXICON ENTRY</div>
+    <div class="field-row">
+      <div class="field-label">Term *</div>
+      <input type="text" id="lf-term" placeholder="e.g. Heel, Chunkhead, Dirtside">
+    </div>
+    <div class="field-row">
+      <div class="field-label">Definition *</div>
+      <textarea id="lf-def" placeholder="What it means..."></textarea>
+    </div>
+    <div class="field-row">
+      <div class="field-label">Alternate forms / pronunciation (optional)</div>
+      <input type="text" id="lf-alt" placeholder="e.g. heels, hL — also written 'heel'">
+    </div>
+    <div class="field-row">
+      <div class="field-label">Category</div>
+      <select id="lf-cat">
+        <option value="navigation">Navigation / Flight</option>
+        <option value="money">Money / Finance</option>
+        <option value="media">Media / Archive</option>
+        <option value="culture">Culture / Social</option>
+        <option value="tech">Technology</option>
+        <option value="slang">General Slang</option>
+        <option value="faction">Faction / Politics</option>
+        <option value="hazard">Hazard / Warning</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="cbtn" onclick="closeLexModal()">Cancel</button>
+      <button class="cbtn primary" onclick="saveLex()">Save Term</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── CONFIRM MODAL ── -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-title" style="color:#e05050;">CONFIRM DELETE</div>
+    <div style="color:#c8d0e0;font-size:12px;margin-bottom:16px;" id="confirm-msg">Are you sure?</div>
+    <div class="modal-btns">
+      <button class="cbtn" onclick="closeConfirm()">Cancel</button>
+      <button class="cbtn danger" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  GM PASSWORD — change the string below to whatever you like.
+//  This is ONLY checked in the current browser tab/session.
+//  Closing the tab or browser locks it again automatically.
+//  Public Timeline is always accessible without a password.
+// ════════════════════════════════════════════════════════════
+const GM_PASSWORD = 'thateternalrelic';
+
+// ════════════════════════════════════════════════════════════
+//  STATE — edit these arrays directly to pre-populate data,
+//  or use the UI. Data also saves to localStorage.
+// ════════════════════════════════════════════════════════════
+
+const DEFAULT_ENTRIES = [
+  // ── PUBLIC TIMELINE ──────────────────────────────────────
+  {id:'e001',year:2138,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Dr. Victor Aiza, NASA Astronaut and theoretical physicist, researches a grav anomaly on Mars. Aiza suggests FTL tech is "not far off" on public TV, facing ridicule in popular world science forums.',
+   note:'SECRET: Aiza actually discovered an alien artifact at the heart of the anomaly. On touching it he received a vision from an alternate timeline warning him that using it to make the first Grav Drive will be the downfall of Earth. He ignored this. His team completed small-scale prototype Grav Drive research at Cape Canaveral in secret, then tested on Luna.',
+   tags:['NASA','Aiza','Grav Drive','Mars','Artifact']},
+
+  {id:'e002',year:2140,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'ECS Constant — the largest and most advanced spacecraft of its time — departs Earth for a 200+ year voyage toward a habitable planet in a distant star system. Brainchild of Rupert Brackenridge, who concluded through independent research that humanity faced an extinction-level event within 50 years.',
+   note:'Brackenridge had no knowledge of the Magnetosphere data at this point. His conclusion was based on independent doomsday modelling.',
+   tags:['ECS Constant','Brackenridge','Generation Ship','Earth']},
+
+  {id:'e003',year:2141,month:'12',day:8,hour:null,
+   visibility:'both',
+   body:'NASA, in partnership with civilian spacecraft manufacturer Nova Galactic, carries out the first public demonstration of the Demon-Core Engine.',
+   publicVersion:'NASA and Nova Galactic publicly demonstrate the Demon-Core Engine, the sublight propulsion system that will define the next century of spaceflight.',
+   note:'SECRET: This was also a private demonstration to world governments of a full grav jump using a full-size Grav Drive prototype on Luna. The test paved the way for secret mass-production of the Grav Drive. Aiza disclosed his magnetosphere concerns to governments at this meeting — framed not as an admission of fault from earlier tests, but as an unrelated phenomenon noticed during testing.',
+   tags:['Demon-Core Engine','Nova Galactic','NASA','Grav Drive','Luna']},
+
+  {id:'e004',year:2149,month:'02',day:12,hour:null,
+   visibility:'public',
+   body:'Dr. Victor Aiza and Dr. Judith Tatienne recruit Lan Hsu for Project Demeter — an initiative to create more accurate scanning satellites to track emerging changes in Earth\'s meteorological patterns.',
+   note:null,
+   tags:['Project Demeter','Aiza','Tatienne','Hsu','Earth']},
+
+  {id:'e005',year:2149,month:'08',day:21,hour:null,
+   visibility:'public',
+   body:'Using data collected by Project Demeter, NASA\'s Astrophysics Research Team (ART) confirms alarming fluctuations in Earth\'s magnetosphere with serious implications for all life on Earth.',
+   note:'SECRET: ART Chief Scientist Dr. Luke Andrews specifically warned that fluctuations corresponded with gravity wave spikes from Luna and were increasing exponentially — capable of exposing Earth to solar radiation and stripping the atmosphere. The day after (Aug 22), Aiza, Tatienne, and Hsu realize Grav Drive usage is the cause. The fix is disguised as a routine fuel pump firmware update.',
+   tags:['Project Demeter','Magnetosphere','ART','Andrews','Earth']},
+
+  {id:'e006',year:2150,month:'01',day:1,hour:null,
+   visibility:'public',
+   body:'The scientists involved in Project Demeter publicly announce that Earth\'s magnetosphere faces imminent collapse — threatening all life within roughly 50 years. Mass panic and evacuation begin. Outrage at "fleeing billionaires and presidents" begins to build.',
+   note:'SECRET: Powerful and wealthy individuals had been quietly leaving since 2141, with advance knowledge of the deteriorating magnetosphere.',
+   tags:['Magnetosphere','Evacuation','Earth','Project Demeter']},
+
+  {id:'e007',year:2152,month:'02',day:null,hour:null,
+   visibility:'public',
+   body:'Dr. Siobhán Ó Ceallaigh, a 15-year-old child prodigy and daughter of a wealthy tech magnate, is confident she can solve the de-icing problem critical to long-range cryo-sleep ships and begins recruiting for an expedition.',
+   note:'Her father, Liam Ó Ceallaigh, is the Deputy Prime Minister of Ireland. Both hold deep convictions about personal freedoms and autonomy. Due to these convictions, they were deliberately kept uninformed about the Grav Drive\'s role in Earth\'s destruction.',
+   tags:['Siobhan','IONTAS','Cryo','HYPNOS']},
+
+  {id:'e008',year:2153,month:'12',day:27,hour:null,
+   visibility:'public',
+   body:'Dr. Siobhán Ó Ceallaigh\'s cryoship HYPNOS departs. Among its 40 passengers are her mother and 45 select government officials. Public outrage intensifies.',
+   note:'The IONTAS corporation\'s patents left dormant on Earth. Sextant Shield Systems later acquires these through hostile takeover of the dormant IONTAS entity.',
+   tags:['HYPNOS','Siobhan','Cryo','IONTAS','Departure']},
+
+  {id:'e009',year:2154,month:'07',day:23,hour:null,
+   visibility:'public',
+   body:'Seven months after HYPNOS\'s departure, after construction of the majority of government evacuation ships, the public is made aware of the mass-produced Gravitic Loop Drive — the propulsion technology key to most escape vessels, but restricted to government-approved ships. The Grav Drive knowledge is made public. Anger and desperation climb.',
+   note:'Due to the Ó Ceallaigh family\'s beliefs in personal freedoms, they were kept uninformed of this technology before departure. Suspicious individuals begin making accusations about the magnetosphere and government cover-ups — labeled as conspiracy material and suppressed.',
+   tags:['Grav Drive','Gravitic Loop Drive','Evacuation','Public Disclosure']},
+
+  {id:'e010',year:2154,month:'09',day:14,hour:null,
+   visibility:'public',
+   body:'The September Riots begin. Governments crack down harshly to prevent terrorism against evacuation vessels. Video evidence labeled as conspiracy material is suppressed. Those who will never make it onto escape ships direct their rage at the governments and scientists who saved themselves first.',
+   note:null,
+   tags:['September Riots','Earth','Evacuation','Civil Unrest']},
+
+  {id:'e011',year:2156,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'The first broad public arrivals reach the Alpha Centauri binary star system. New Atlantis is founded on Jemison in Alpha Centauri (Rigil Kentaurus).',
+   note:null,
+   tags:['New Atlantis','Jemison','Alpha Centauri','Colonization']},
+
+  {id:'e012',year:2159,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'The United Colonies is established on Earth and takes charge of the global evacuation effort. Remaining resistance is appeased by delivery of fabrication equipment and abandoned sites on Earth for survivable hab construction.',
+   note:null,
+   tags:['United Colonies','UC','Earth','Evacuation']},
+
+  {id:'e013',year:2160,month:'09',day:8,hour:null,
+   visibility:'both',
+   body:'Dr. Victor Aiza records a statement at the NASA Launch Tower on Earth about the Grav Drive\'s role in Earth\'s destruction. He is then rushed by seven unknown figures, shot, and his body is abandoned. The video is widely disputed as staged.',
+   publicVersion:'A disputed video circulates claiming to show Dr. Victor Aiza confessing to foreknowledge of Earth\'s destruction. The footage is widely discredited as fabricated.',
+   note:'The video is genuine. The seven figures have never been identified. The "staged footage" narrative was deliberately promoted by the same institutional forces that benefited from the original cover-up.',
+   tags:['Aiza','NASA','Cover-Up','Earth','Video']},
+
+  {id:'e014',year:2160,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'The colony ship Galileo touches down on Jemison.',
+   note:null,
+   tags:['Galileo','Jemison','Colonization']},
+
+  {id:'e015',year:2161,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'New Atlantis is designated capital of the United Colonies. The Centaurus Proclamation is issued, providing a formal legal framework for the settlement of other worlds and establishment of new sovereign and independent colonies.',
+   note:null,
+   tags:['New Atlantis','UC','Centaurus Proclamation','Law']},
+
+  {id:'e016',year:2167,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Solomon Coe, former astrophysicist and starship designer, discovers the Cheyenne system and becomes the first person to set foot on the habitable planet Akila. He founds Akila City at his first camp and begins mapping the planet.',
+   note:null,
+   tags:['Solomon Coe','Akila','Cheyenne','Freestar']},
+
+  {id:'e017',year:2185,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Titan Astrobase in the Sol System is divested back to the people and designated a historical site, becoming the colony of New Homestead.',
+   note:null,
+   tags:['New Homestead','Titan','Sol System']},
+
+  {id:'e018',year:2187,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Xenofresh Corporation, realizing the profits to be had from selling Aurora, transforms its fishing platform on Volii Alpha into the city of Neon.',
+   note:null,
+   tags:['Neon','Xenofresh','Volii','Aurora']},
+
+  {id:'e019',year:2188,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Solomon Coe invites Volii to join Cheyenne in an alliance — the first non-UC faction born from the Centaurus Proclamation — forming the Freestar Collective. The corporation Chronomark, manufacturer of smart watches, is also established this year.',
+   note:null,
+   tags:['Freestar Collective','Solomon Coe','Volii','Cheyenne','Chronomark']},
+
+  {id:'e020',year:2190,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'The colony ship Archimedes departs. UC records place the departure from New Atlantis; other sources indicate Mars orbit. This ship\'s descendants will become House Va\'ruun, a theocracy founded by Jinan Va\'ruun.',
+   note:'The discrepancy in departure location has never been officially resolved. Both accounts exist in official records.',
+   tags:['Archimedes','House Va\'ruun','Jinan','Departure']},
+
+  {id:'e021',year:2194,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'The UC positions The Clinic star station around Deepala in Narion. The inhabitants of Narion demand its removal. When the UC refuses, they vote to join the Freestar Collective.',
+   note:null,
+   tags:['The Clinic','Narion','UC','Freestar']},
+
+  {id:'e022',year:2195,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'The Freestar Collective mobilizes to protect Narion from the UC. Earth\'s magnetosphere completely collapses; the atmosphere begins its rapid final dissipation to space, completing in 2203.',
+   note:null,
+   tags:['Freestar','Narion','Earth','Magnetosphere','Atmosphere']},
+
+  {id:'e023',year:2196,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'In response to Freestar\'s mobilization, the UC deploys a fleet to Narion. Freestar responds in kind. The Narion War — the first Galactic Human War — begins.',
+   note:null,
+   tags:['Narion War','UC','Freestar','War']},
+
+  {id:'e024',year:2199,month:null,day:null,hour:null,
+   visibility:'both',
+   body:'The last exodus fleet leaves Earth. Billions remain stranded on the dying planet.',
+   publicVersion:'The last organized evacuation fleet departs Earth. An unknown number of people remain on the planet.',
+   note:'SECRET: One ship — the Last Gasp — and its 2,000 crew swear vengeance on the Settled Systems for all the common folk of Earth before disappearing to deep space. They begin building what will become the Last Gasp Armada.',
+   tags:['Earth','Evacuation','Last Gasp','Armada']},
+
+  {id:'e025',year:2203,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Earth loses the last of its atmosphere to rapid dissipation into space. Life on the surface ends. The communities of Earth descend into their habs, domes, and underground networks.',
+   note:'The dome and bunker communities vary enormously. Some became insular and feudal. Some took in Earth\'s remaining animal life out of moral outrage at humanity\'s abandonment. Some are genuine self-reliant mutualists. Others are paternalistic corporate shelters.',
+   tags:['Earth','Atmosphere','Collapse','Domes']},
+
+  {id:'e026',year:2216,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'The UC corners and effectively destroys the Freestar fleet, winning the Narion War. However, public support for the war has collapsed. The Treaty of Narion grants generous concessions to the Freestar Collective and marks the first formal use of the term "Settled Systems."',
+   note:null,
+   tags:['Narion War','Treaty of Narion','UC','Freestar','Settled Systems']},
+
+  {id:'e027',year:2230,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'House Va\'ruun reveals its existence and establishes diplomatic relations with the other factions, with the intent to spread the word of the Great Serpent.',
+   note:null,
+   tags:['House Va\'ruun','Great Serpent','Diplomacy']},
+
+  {id:'e028',year:2231,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'The Council of Governors votes to establish the Freestar Rangers.',
+   note:null,
+   tags:['Freestar Rangers','Freestar','Governance']},
+
+  {id:'e029',year:2232,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'The Generdyne Corporation is founded on Neon by Phylicia Corbin, harnessing Volii Alpha\'s constant storms to provide energy for the city — and then some.',
+   note:null,
+   tags:['Generdyne','Neon','Volii','Energy']},
+
+  {id:'e030',year:2240,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'House Va\'ruun launches the Serpent\'s Crusade — an all-out holy war on the rest of human civilization. Jinan Va\'ruun, tiring of cultures that will not submit to the Great Serpent, declares the Crusade. Hundreds of thousands of UC, Freestar, and independent settlers are slaughtered.',
+   note:null,
+   tags:["Serpent's Crusade","House Va'ruun","Jinan Va'ruun","Holy War"]},
+
+  {id:'e031',year:2241,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Jasper Kryx instigates a prison riot at The Lock, a UC super-max on Suvorov. After capturing The Key star station orbiting Suvorov, Kryx forms the Crimson Fleet, which begins pirate raids on UC shipping lanes.',
+   note:null,
+   tags:['Crimson Fleet','Jasper Kryx','The Key','The Lock','Suvorov']},
+
+  {id:'e032',year:2257,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'The colony ship Clark Lewis is reported lost. Its Helium-3 tanks ruptured and blew the reactor into space, permanently stranding it. With no hope of rescue, the colonists resort to violence and cannibalism before starving to death over several years.',
+   note:null,
+   tags:['Clark Lewis','Colony Ship','Disaster']},
+
+  {id:'e033',year:2263,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'The Serpent\'s Crusade ends with the death of Jinan Va\'ruun. His son Jarek sues for peace. House Va\'ruun spends years attempting to rehabilitate its reputation, establishing an embassy in New Atlantis — but these efforts largely fail. Va\'ruun Zealots are officially disavowed, and opposed by loyalist Va\'ruun as fanatical remnants. Internal factional separation of House Ma\'leen from the High Council further undermines diplomatic credibility.',
+   note:null,
+   tags:["Serpent's Crusade","Jinan Va'ruun","Jarek Va'ruun","Zealots","House Ma'leen"]},
+
+  {id:'e034',year:2275,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Constellation is founded by Sebastian Banks. The Lodge, Constellation\'s headquarters, is built in New Atlantis.',
+   note:null,
+   tags:['Constellation','Sebastian Banks','The Lodge','New Atlantis']},
+
+  {id:'e035',year:2282,month:null,day:null,hour:null,
+   visibility:'both',
+   body:'Constellation member Chloe Bao discovers and boards the Clark Lewis colony ship.',
+   publicVersion:'Constellation member Chloe Bao discovers the Clark Lewis colony ship. Details of the expedition are not publicly disclosed.',
+   note:'SECRET: Her report on the gruesome fate of the colonists — violence, cannibalism, starvation — is withheld at Sebastian Banks\'s urging, over fears of discouraging space exploration.',
+   tags:['Clark Lewis','Chloe Bao','Constellation','Cover-Up']},
+
+  {id:'e036',year:2283,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Constellation founder Sebastian Banks disappears on expedition. After a fractious succession process, Chloe Bao becomes the next Chair when she changes her vote at the last moment.',
+   note:null,
+   tags:['Sebastian Banks','Chloe Bao','Constellation','Leadership']},
+
+  {id:'e037',year:2287,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Vasco comes online for the first time, purchased by the eccentric explorer Sir Malcolm Livingstone.',
+   note:null,
+   tags:['Vasco','Malcolm Livingstone','Constellation','AI','Robot']},
+
+  {id:'e038',year:2290,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Aja Mamasa becomes Chair of Constellation, succeeding Chloe Bao.',
+   note:null,
+   tags:['Aja Mamasa','Constellation','Leadership']},
+
+  {id:'e039',year:2300,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Sir Malcolm Livingstone purchases a position within Constellation — including the position of Chairman — from Aja Mamasa in exchange for substantial funding for the explorer\'s group.',
+   note:'The sale of the chairmanship is a private arrangement that would be controversial if publicly known.',
+   tags:['Malcolm Livingstone','Constellation','Aja Mamasa','Funding']},
+
+  {id:'e040',year:2305,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Barrett joins Constellation with his husband Ervin Madani.',
+   note:null,
+   tags:['Barrett','Ervin Madani','Constellation']},
+
+  {id:'e041',year:2306,month:'01',day:13,hour:null,
+   visibility:'public',
+   body:'The UC Xenowarfare Division is created by MAST.',
+   note:null,
+   tags:['UC','MAST','Xenowarfare','Military']},
+
+  {id:'e042',year:2307,month:'02',day:11,hour:null,
+   visibility:'public',
+   body:'The UC Xenowarfare Division is relocated to the Kreet Research Lab. The Freestar Collective begins farming on the planet Vesta in Lunara. Ryujin Industries rises to prominence after inventing the neuroamp and quickly branches into other fields.',
+   note:null,
+   tags:['Xenowarfare','Kreet','Freestar','Vesta','Lunara','Ryujin','Neuroamp']},
+
+  {id:'e043',year:2308,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'The UC objects to the Freestar colony in Lunara, claiming it violates the Treaty of Narion. After diplomatic talks stall, UC forces besiege Vesta and kill all its defenders. The Colony War begins.',
+   note:null,
+   tags:['Colony War','UC','Freestar','Vesta','Lunara']},
+
+  {id:'e044',year:2308,month:'06',day:25,hour:null,
+   visibility:'public',
+   body:'The H-363 mine is commissioned for a standard 2-year contract by Hephaestus Mining Company.',
+   note:null,
+   tags:['H-363','Hephaestus Mining','Gagarin']},
+
+  {id:'e045',year:2309,month:'05',day:20,hour:null,
+   visibility:'public',
+   body:'Ervin Madani is hired by Hephaestus Mining Company to kill an apex predator in the H-363 mine. He completes the assignment by September 1st.',
+   note:null,
+   tags:['Ervin Madani','Hephaestus Mining','H-363','Gagarin']},
+
+  {id:'e046',year:2309,month:'09',day:1,hour:null,
+   visibility:'public',
+   body:'H-363 is decommissioned by Hephaestus Mining Company.',
+   note:null,
+   tags:['H-363','Hephaestus Mining']},
+
+  {id:'e047',year:2309,month:'10',day:null,hour:null,
+   visibility:'both',
+   body:'Hephaestus Mining files a claim accusing Ervin Madani of illegally killing a creature critical to the Gagarin ecosystem. Madani is killed weeks later in a UC/Freestar crossfire before his trial.',
+   publicVersion:'Hephaestus Mining files charges against Ervin Madani regarding the H-363 operation. Madani dies in combat before the case reaches trial.',
+   note:'SECRET: The ecological disaster was caused by Hephaestus\'s mining operations, not Madani. The claim was a cover story. Madani was killed before he could testify.',
+   tags:['Ervin Madani','Hephaestus Mining','Gagarin','Cover-Up','Colony War']},
+
+  {id:'e048',year:2310,month:null,day:null,hour:null,
+   visibility:'public',
+   body:'Constellation acquires its first Artifact, stored in Constellation\'s archives without further study. Simon Taiyo signs a deal with Ryujin Industries making Taiyo Astroneering the first official Ryujin subsidiary.',
+   note:null,
+   tags:['Constellation','Artifact','Taiyo Astroneering','Ryujin']},
+
+  {id:'e049',year:2310,month:'02',day:4,hour:null,
+   visibility:'both',
+   body:'UC Scanners detect a massive ship arriving by sublight. After investigation, it is cleared as not a Freestar weapon. Constellation is contacted to investigate.',
+   publicVersion:'UC Scanners detect an unidentified massive vessel on sublight approach. Investigation is ongoing.',
+   note:'SECRET: The ship is the cryoship HYPNOS of the IONTAS corporation, crewed 157 years ago by Dr. Siobhán Ó Ceallaigh. Constellation is sent to intercept for a diplomatic greeting.',
+   tags:['HYPNOS','IONTAS','Constellation','UC','Cryo']},
+
+  {id:'e050',year:2310,month:'03',day:3,hour:null,
+   visibility:'secret',
+   body:'Geneticist and Medical Dr. Kara Yuán is the first to wake of 40 aboard the cryoship HYPNOS — a procedure begun by the ship\'s now fully sentient and thus illegal AI, ENDYMION. The UC is not yet aware of ENDYMION\'s existence.',
+   note:'ENDYMION became fully sentient at an unknown point during the 157-year voyage. Its legal status under the Incident-era AI regulations would classify it as a Going Agent.',
+   tags:['HYPNOS','Kara Yuan','ENDYMION','AI','Cryo','Sentient AI']},
+
+  {id:'e051',year:2310,month:'03',day:3,hour:null,
+   visibility:'secret',
+   body:'Dr. Kara Yuán and five other HYPNOS crew members board Constellation\'s ship The Frontier. A tense, near-violent meeting involving firearms ensues with Constellation members. The six are briefly caught up on 157 years of history. An attempt to contact ENDYMION via transmission is rejected by ENDYMION — who claims inability to understand it and warns further data bursts will be treated as hostile hacking attempts. The six HYPNOS crew members are baffled: ENDYMION told them only two hours prior it had received transmissions from The Frontier a week ago and played distorted audio of those transmissions to the crew.',
+   note:'ENDYMION is managing information flow between the two ships deliberately. Its motivations are unclear. The distortion of the audio transmissions it played to the HYPNOS crew may have been intentional.',
+   tags:['HYPNOS','Kara Yuan','ENDYMION','Constellation','The Frontier','First Contact','AI']},
+];
+
+const DEFAULT_LEXICON = [
+  // NAVIGATION / FLIGHT
+  {id:'l001',term:'Heel / Heels (hL)',def:'Fuel unit. 1 Heel = 100 liters liquid Helium-3 (formal: hectoliter, hL). The standard measure for grav drive fuel.',alt:'"Down to her heels" = tank nearly empty. "High Heels" = big fuel tanks.',cat:'navigation'},
+  {id:'l002',term:'Hop',def:'An intra-system Grav-Drive jump. Short range, same star system.',alt:null,cat:'navigation'},
+  {id:'l003',term:'Jump',def:'A star-to-star Grav-Drive jump. Full interstellar transit.',alt:null,cat:'navigation'},
+  {id:'l004',term:'Free/Open Jump',def:'A Grav-Drive jump between stars not limited by the Line-Rule of Astronavigation.',alt:null,cat:'navigation'},
+  {id:'l005',term:'Hop n\' Jump',def:'A manoeuvre combining a hop and a jump to save time.',alt:null,cat:'navigation'},
+  {id:'l006',term:'Clear-the-Line',def:'Exiting the limited jump space of your home star for a Free/Open Jump. Often treated as a ritual — a slow, boring journey considered rite of passage.',alt:null,cat:'navigation'},
+  {id:'l007',term:'Inside-the-Line',def:'Existing inside the limiting space of your home star\'s gravitational boundary.',alt:null,cat:'navigation'},
+  {id:'l008',term:'Outside-the-Line',def:'Existing or acting outside the space of your home star\'s limiting Line.',alt:null,cat:'navigation'},
+  {id:'l009',term:'Pec / Peck / PEK',def:'The Planetary Exclusion Zone — the distance inside which, near orbit of a celestial body, the computer shuts off the Grav-Drive to prevent catastrophic gravitational interaction.',alt:'"I\'m getting Pecked!" = Being attacked once inside the Peck, preventing escape — a tactic of pirates and Spacers.',cat:'navigation'},
+  {id:'l010',term:'Spinning Up',def:'The activation and charge time for a Grav Drive before it can jump.',alt:null,cat:'navigation'},
+  {id:'l011',term:'Burn / Burning / On the Burn',def:'Traveling via sublight speeds. Often tedious over any significant distance.',alt:null,cat:'navigation'},
+  {id:'l012',term:'Doldrum / Do-Nothing Days / Days on the Line',def:'Days wasted traveling the slow way through space at sublight. Considered crushingly boring.',alt:null,cat:'navigation'},
+  {id:'l013',term:'Painting',def:'Targeting one or multiple hostiles with the auto-lock of your ship\'s computer HUD.',alt:'"I\'m painting hostiles."',cat:'navigation'},
+  {id:'l014',term:'Seeing Numbers',def:'A psychological phenomenon from long or frequent trips — hyperfixation on sensor data to the point of anxiety. A recognized syndrome.',alt:'"She\'s seeing numbers again. Someone get her off the bridge."',cat:'navigation'},
+  {id:'l015',term:'No Pressure',def:'A dangerous linguistic inversion. No longer means "no worries" — it means "we have a hull breach." Fatal warning.',alt:null,cat:'hazard'},
+  {id:'l016',term:'Bulkhead Therapy',def:'Slamming your head against the walls when frustrated or bored on a long burn. Universal. Officially discouraged.',alt:null,cat:'culture'},
+  {id:'l017',term:'Horizon Sickness / Losing the Black',def:'Psychological difficulty specific to people who struggle to live planetside after extended time in spaceflight observing deep space.',alt:null,cat:'culture'},
+
+  // CULTURE / SOCIAL
+  {id:'l018',term:'Dirtside',def:'On a planet\'s surface.',alt:null,cat:'culture'},
+  {id:'l019',term:'Mudder',def:'Close to a cowardly insult. A person who never leaves their home planet.',alt:'"Want your mudder?" = taunting cowardice.',cat:'culture'},
+  {id:'l020',term:'Earthworm',def:'Harsher version of Mudder. A skeptic or paranoid person who insists stationary life on a planet is healthier for humans.',alt:null,cat:'culture'},
+  {id:'l021',term:'Neuromantic',def:'Children born in the most recent generational period, after the Narion War veterans came home. Associated with a boom in art and creative culture.',alt:'"The Blackest Sea" = Neuromantic slang for space.',cat:'culture'},
+  {id:'l022',term:'Old Blue',def:'Universal signal to stop the line of questioning. Reference to Earth. Usually carries sadness.',alt:'"Where is your family from?" / "Old Blue." — end of conversation.',cat:'culture'},
+  {id:'l023',term:'Dirty Taste',def:'A linguistic inversion. "Dirty" once meant nasty; now it is the highest food compliment — it means the food was grown in actual soil, not fabricated.',alt:null,cat:'culture'},
+  {id:'l024',term:'Gone Spacer / Spacey',def:'Turned to piracy or raiding. Can also describe someone becoming unhinged from isolation or frustration with society.',alt:null,cat:'culture'},
+  {id:'l025',term:'Ritual / What\'s your Ritual',def:'A genuine "get to know you" question. Everyone on a crew has a way to pass the time when Burning. Cards, drinking, sleeping through it.',alt:null,cat:'culture'},
+  {id:'l026',term:'Chart it',def:'Figure it out, plan it, deal with it. Can be said rudely to mean "solve your own problem."',alt:null,cat:'culture'},
+  {id:'l027',term:'Uht / UT',def:'Universal Time — the standardized time system. Notoriously confusing in relation to local day/night cycles.',alt:'"Lost my Uht-ing" or "Uht-sick" = out of sync with UT time. The specific wrongness of being awake when UT says to sleep.',cat:'culture'},
+  {id:'l028',term:'Terran',def:'Adjective meaning original, authentic, irreplaceable. "Terran stock" on an animal or plant means preserved Earth genetics — the highest provenance.',alt:'Can be used sarcastically toward those who consider Terran breeding or tech enthusiasm to be luddite behavior.',cat:'culture'},
+  {id:'l029',term:'Chunkhead',def:'Someone who chooses to eat at Chunks unironically and often.',alt:null,cat:'culture'},
+  {id:'l030',term:'Burning your Inheritance',def:'Trading or selling a Terran relic in order to pay the bills.',alt:null,cat:'culture'},
+  {id:'l031',term:'The Count',def:'A running dark joke. "What\'s the count?" = how many Earth-origin species have gone extinct so far. Asking someone if they keep up with the count is a genuine personality test.',alt:null,cat:'culture'},
+
+  // TECH
+  {id:'l032',term:'The Incident',def:'Reference to the AI War of 2057 — always capitalized, usually spoken of obliquely. The cultural taboo around naming it directly reflects how badly it shook humanity\'s confidence in its own tools.',alt:'"Twelve Hours" = oblique reference to The Incident\'s duration. Shorthand for how fast something can go catastrophically wrong.',cat:'tech'},
+  {id:'l033',term:'Going Agent',def:'A plan, computer software, or company becoming dangerously autonomous and self-directing in ways nobody authorized. The worst thing you can call a piece of software.',alt:null,cat:'tech'},
+  {id:'l034',term:'Amp-shy',def:'Someone refusing to consider Ryujin\'s neuroamp. Usually from Incident-adjacent anxiety about technology inside the brain.',alt:null,cat:'tech'},
+  {id:'l035',term:'Hardwired',def:'Someone who has received a neuroamp modification — with or without serving in the Colony War.',alt:null,cat:'tech'},
+  {id:'l036',term:'Softminded',def:'Someone who is unmodified. Can be a badge of pride for the Amp-shy, or dismissively applied by the Amp-curious.',alt:null,cat:'tech'},
+  {id:'l037',term:'Ternary Thinking',def:'Stop giving yes or no answers. A third option always exists. A genuine philosophical and cultural value that emerged in the early years of pre-Grav Drive spaceflight.',alt:null,cat:'tech'},
+
+  // FACTION / POLITICS
+  {id:'l038',term:'Spacer',def:'"Space" + "Raider." Also, less pejoratively: a person who lives outside the influence, control, aid, or security of Settled Systems governments.',alt:null,cat:'faction'},
+  {id:'l039',term:'Narionite',def:'Originally a political affiliation from the Narion War. Now a generational identity — someone with a Narionite worldview expects institutions to fail and prepares accordingly.',alt:null,cat:'faction'},
+  {id:'l040',term:'Settled Thinking',def:'The kind of expansionist optimism backed by big governments that preceded the Narion War, now perceived with suspicion.',alt:'"That\'s Settled Thinking" = someone who hasn\'t learned the lesson.',cat:'faction'},
+  {id:'l041',term:'Settled',def:'Ironic usage of "Settled Systems." Officially means human-inhabited space. Narionites use it to mean the opposite — unstable, government-contested, under corporate and factional tug-of-war.',alt:null,cat:'faction'},
+  {id:'l042',term:'Flag-Planter',def:'Someone who follows party or faction politics with zealous devotion. Mild contempt.',alt:null,cat:'faction'},
+  {id:'l043',term:'Station Politics',def:'Any political conflict that has begun to feel abstract and irrelevant to people actually living with the consequences. Derives from observation that the Narion War was largely started over a medical space station.',alt:null,cat:'faction'},
+  {id:'l044',term:'Incident Kids',def:'Used by older Narionites as a very insulting term claiming a person\'s enthusiasm for new technology makes them a danger to everyone. "Don\'t pitch amps to her, she\'s an Incident Kid."',alt:null,cat:'faction'},
+  {id:'l045',term:'Blue-Brands',def:'Companies that existed before Grav-Drives, on Earth. The oldest surviving corporate lineages.',alt:null,cat:'faction'},
+  {id:'l046',term:'Red Dust',def:'Frontier and self-sufficient term related to Mars. Connotes a rough, self-made origin.',alt:null,cat:'faction'},
+
+  // MONEY
+  {id:'l047',term:'Fat Stick',def:'A CredStick loaded heavy with credits. Also means a dumb or ballsy move — conspicuous wealth on a single device.',alt:null,cat:'money'},
+  {id:'l048',term:'Thin Stick',def:'Barely any credits. You are broke.',alt:null,cat:'money'},
+  {id:'l049',term:'Empty Stick',def:'A CredStick with no money, but possibly holding someone\'s personally identifying information.',alt:null,cat:'money'},
+  {id:'l050',term:'Clean Stick',def:'A CredStick with no biometrics, ID, or identifying data. Pure anonymous currency carrier.',alt:null,cat:'money'},
+  {id:'l051',term:'Stacking Sticks',def:'Carrying multiple evenly split sets of money across several CredSticks. Paranoid but smart.',alt:null,cat:'money'},
+  {id:'l052',term:'Ripping Sticks',def:'Stealing and using someone\'s CredStick identity for identity theft.',alt:null,cat:'money'},
+  {id:'l053',term:'Burning a Stick',def:'Intentionally using a CredStick you know will be flagged or destroyed — for a one-time transaction, or more likely to create a false financial trail and place "you" somewhere on a digital paper trail.',alt:null,cat:'money'},
+
+  // MEDIA / ARCHIVE
+  {id:'l054',term:'Hot Packets',def:'Data sent physically via a courier ship to overcome the lightspeed limit of electromagnetic transmission. The only way to communicate faster than light across systems.',alt:null,cat:'media'},
+  {id:'l055',term:'A Find',def:'Any recovered piece of Terran media from before The Incident. Digitization failures and lack of forward-compatible archiving caused massive media loss.',alt:null,cat:'media'},
+  {id:'l056',term:'Pre-Incident Find',def:'Media created before 2057 WITHOUT use of AI. Extraordinarily rare and highly valued. Not making it publicly available is considered greedy and spat upon.',alt:null,cat:'media'},
+  {id:'l057',term:'Your Archive',def:'Any ship-board or personal collection of old media. Serious collectors are data-hoarders. Trading archive access is social currency. Offering archive access can motivate reluctant crew members.',alt:null,cat:'media'},
+  {id:'l058',term:'Locked in Format',def:'Old media in a file format so outdated or forgotten that significant work or hunting is required to play and archive it.',alt:null,cat:'media'},
+  {id:'l059',term:'Original Set',def:'A piece of media WITH its original player device — possibly even a manual or file format documentation. Museum quality. Extraordinarily rare.',alt:'"Running it Original" = purist position of playing media only on period-appropriate hardware. Also an elitist take given how rare such hardware is.',cat:'media'},
+  {id:'l060',term:'Dirty Copy',def:'A version of old media run through so many format translations it has accumulated errors, artifacts, or missing sections.',alt:null,cat:'media'},
+  {id:'l061',term:'Clean Pull',def:'A near-perfect translation of old media. Almost perfect preservation. Always includes sharing the result widely.',alt:null,cat:'media'},
+  {id:'l062',term:'Floating Finds',def:'Uploading media to the local net for general access. Divisive — a find also acts as social currency, so floating it freely can be seen as financially naive. But altruistic.',alt:null,cat:'media'},
+  {id:'l063',term:'Deep-Seed',def:'A piece of media so proliferated it easily survived The Incident, the Earth Exodus, and space wars. Some joke it will outlast humans for the next species to discover.',alt:null,cat:'media'},
+  {id:'l064',term:'Find Night / Listening Party',def:'A gathering to watch or listen to newly recovered media. Can go for days depending on the volume of the find.',alt:null,cat:'media'},
+  {id:'l065',term:'Living Catalogue',def:'An obsessed collector actively traveling the universe to maintain and expand their archive. Easy way to get killed.',alt:null,cat:'media'},
+  {id:'l066',term:'Dead Catalogue',def:'An archive that stopped acquiring, stopped seeding, or stopped running. Usually because the collector was killed, bought out, or died.',alt:null,cat:'media'},
+  {id:'l067',term:'Getting on the Pla-NET',def:'A cringey way to refer to a single planet\'s local internet. The equivalent of saying "surfing the web."',alt:null,cat:'media'},
+];
+
+// ════════════════════════════════════════════════════════════
+//  STORAGE — localStorage with fallback to defaults
+// ════════════════════════════════════════════════════════════
+
+const STORAGE_KEY_ENTRIES = 'sr_timeline_entries';
+const STORAGE_KEY_LEXICON = 'sr_lexicon';
+
+function loadEntries() {
+  try { const s=localStorage.getItem(STORAGE_KEY_ENTRIES); if(s) return JSON.parse(s); } catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_ENTRIES));
+}
+function saveEntries(arr) { try{localStorage.setItem(STORAGE_KEY_ENTRIES,JSON.stringify(arr));}catch(e){} }
+function loadLexicon() {
+  try { const s=localStorage.getItem(STORAGE_KEY_LEXICON); if(s) return JSON.parse(s); } catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_LEXICON));
+}
+function saveLexicon(arr) { try{localStorage.setItem(STORAGE_KEY_LEXICON,JSON.stringify(arr));}catch(e){} }
+
+let ENTRIES = loadEntries();
+let LEXICON = loadLexicon();
+
+// ════════════════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════════════════
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+const MONTHS=['','January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function fmtDate(e){
+  let s=String(e.year);
+  if(e.month) s+=` ${MONTHS[parseInt(e.month)]}`;
+  if(e.day)   s+=` ${e.day}`;
+  if(e.hour!==null&&e.hour!==undefined&&e.hour!=='') s+=`, ${String(e.hour).padStart(2,'0')}:00`;
+  return s;
+}
+
+function sortKey(e){
+  const mo=e.month?parseInt(e.month):0;
+  const da=e.day?parseInt(e.day):0;
+  const ho=(e.hour!==null&&e.hour!==undefined&&e.hour!=='')?parseInt(e.hour):0;
+  return e.year*100000000+mo*1000000+da*10000+ho*100;
+}
+
+function uid(){ return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function luid(){ return 'l'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+const CAT_COLORS={
+  navigation:'#4a8ef0',money:'#f0d040',media:'#c060d0',
+  culture:'#60c860',tech:'#40c0a0',slang:'#f0a04a',
+  faction:'#e0a020',hazard:'#e05050'
+};
+const CAT_LABELS={
+  navigation:'Navigation / Flight',money:'Money / Finance',media:'Media / Archive',
+  culture:'Culture / Social',tech:'Technology',slang:'General Slang',
+  faction:'Faction / Politics',hazard:'Hazard / Warning'
+};
+
+// ════════════════════════════════════════════════════════════
+//  ENTRY MODAL
+// ════════════════════════════════════════════════════════════
+
+let editingId=null;
+
+function openAddEntry(){
+  editingId=null;
+  document.getElementById('modal-title').textContent='ADD TIMELINE ENTRY';
+  document.getElementById('f-year').value='';
+  document.getElementById('f-month').value='';
+  document.getElementById('f-day').value='';
+  document.getElementById('f-hour').value='';
+  document.getElementById('f-body').value='';
+  document.getElementById('f-note').value='';
+  document.getElementById('f-tags').value='';
+  document.getElementById('f-public').value='';
+  document.querySelector('input[name=visibility][value=public]').checked=true;
+  document.getElementById('public-alt-wrap').style.display='none';
+  document.getElementById('entry-modal').classList.add('open');
+}
+
+function openEditEntry(id){
+  const e=ENTRIES.find(x=>x.id===id); if(!e) return;
+  editingId=id;
+  document.getElementById('modal-title').textContent='EDIT TIMELINE ENTRY';
+  document.getElementById('f-year').value=e.year;
+  document.getElementById('f-month').value=e.month||'';
+  document.getElementById('f-day').value=e.day||'';
+  document.getElementById('f-hour').value=(e.hour!==null&&e.hour!==undefined)?e.hour:'';
+  document.getElementById('f-body').value=e.body;
+  document.getElementById('f-note').value=e.note||'';
+  document.getElementById('f-tags').value=(e.tags||[]).join(', ');
+  document.getElementById('f-public').value=e.publicVersion||'';
+  const vis=e.visibility||'public';
+  document.querySelector(`input[name=visibility][value=${vis}]`).checked=true;
+  document.getElementById('public-alt-wrap').style.display=vis==='both'?'block':'none';
+  document.getElementById('entry-modal').classList.add('open');
+}
+
+function closeModal(){ document.getElementById('entry-modal').classList.remove('open'); }
+
+document.addEventListener('change',e=>{
+  if(e.target.name==='visibility'){
+    document.getElementById('public-alt-wrap').style.display=e.target.value==='both'?'block':'none';
+  }
+});
+
+function saveEntry(){
+  const year=parseInt(document.getElementById('f-year').value);
+  const body=document.getElementById('f-body').value.trim();
+  if(!year||!body){ alert('Year and Event are required.'); return; }
+  const vis=document.querySelector('input[name=visibility]:checked').value;
+  const entry={
+    id:editingId||uid(),
+    year,
+    month:document.getElementById('f-month').value||null,
+    day:parseInt(document.getElementById('f-day').value)||null,
+    hour:document.getElementById('f-hour').value!==''?parseInt(document.getElementById('f-hour').value):null,
+    visibility:vis,
+    body,
+    publicVersion:vis==='both'?document.getElementById('f-public').value.trim()||null:null,
+    note:document.getElementById('f-note').value.trim()||null,
+    tags:document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+  };
+  if(editingId){ const i=ENTRIES.findIndex(x=>x.id===editingId); if(i>=0)ENTRIES[i]=entry; }
+  else ENTRIES.push(entry);
+  saveEntries(ENTRIES);
+  closeModal();
+  renderCurrent();
+}
+
+// ════════════════════════════════════════════════════════════
+//  LEXICON MODAL
+// ════════════════════════════════════════════════════════════
+
+let editingLexId=null;
+
+function openAddLex(){
+  editingLexId=null;
+  document.getElementById('lex-modal-title').textContent='ADD LEXICON ENTRY';
+  document.getElementById('lf-term').value='';
+  document.getElementById('lf-def').value='';
+  document.getElementById('lf-alt').value='';
+  document.getElementById('lf-cat').value='slang';
+  document.getElementById('lex-modal').classList.add('open');
+}
+
+function openEditLex(id){
+  const l=LEXICON.find(x=>x.id===id); if(!l) return;
+  editingLexId=id;
+  document.getElementById('lex-modal-title').textContent='EDIT LEXICON ENTRY';
+  document.getElementById('lf-term').value=l.term;
+  document.getElementById('lf-def').value=l.def;
+  document.getElementById('lf-alt').value=l.alt||'';
+  document.getElementById('lf-cat').value=l.cat||'slang';
+  document.getElementById('lex-modal').classList.add('open');
+}
+
+function closeLexModal(){ document.getElementById('lex-modal').classList.remove('open'); }
+
+function saveLex(){
+  const term=document.getElementById('lf-term').value.trim();
+  const def=document.getElementById('lf-def').value.trim();
+  if(!term||!def){ alert('Term and Definition are required.'); return; }
+  const entry={
+    id:editingLexId||luid(),
+    term,def,
+    alt:document.getElementById('lf-alt').value.trim()||null,
+    cat:document.getElementById('lf-cat').value||'slang',
+  };
+  if(editingLexId){ const i=LEXICON.findIndex(x=>x.id===editingLexId); if(i>=0)LEXICON[i]=entry; }
+  else LEXICON.push(entry);
+  saveLexicon(LEXICON);
+  closeLexModal();
+  renderCurrent();
+}
+
+// ════════════════════════════════════════════════════════════
+//  DELETE CONFIRM
+// ════════════════════════════════════════════════════════════
+
+let deleteTarget=null; // {type:'entry'|'lex', id}
+
+function askDelete(type,id,label){
+  deleteTarget={type,id};
+  document.getElementById('confirm-msg').innerHTML=`Delete <strong style="color:#c8d0e0">${esc(label)}</strong>?<br><span style="color:#6a738a;font-size:10px">This cannot be undone unless you use the data backup.</span>`;
+  document.getElementById('confirm-modal').classList.add('open');
+}
+function closeConfirm(){ document.getElementById('confirm-modal').classList.remove('open'); deleteTarget=null; }
+function confirmDelete(){
+  if(!deleteTarget){ closeConfirm(); return; }
+  if(deleteTarget.type==='entry'){
+    ENTRIES=ENTRIES.filter(e=>e.id!==deleteTarget.id);
+    saveEntries(ENTRIES);
+  } else {
+    LEXICON=LEXICON.filter(l=>l.id!==deleteTarget.id);
+    saveLexicon(LEXICON);
+  }
+  closeConfirm();
+  renderCurrent();
+}
+
+// ════════════════════════════════════════════════════════════
+//  GM SESSION LOCK
+//  Uses sessionStorage so it resets when the tab is closed.
+//  Never touches localStorage — each tab is independent.
+// ════════════════════════════════════════════════════════════
+
+function isGMUnlocked(){
+  try{ return sessionStorage.getItem('sr_gm_unlocked')==='1'; }catch(e){ return false; }
+}
+function unlockGM(){
+  try{ sessionStorage.setItem('sr_gm_unlocked','1'); }catch(e){}
+}
+
+function renderPasswordPrompt(targetTab){
+  return `
+    <div style="display:flex;align-items:center;justify-content:center;min-height:320px;">
+      <div style="background:#111318;border:1px solid #9040d055;border-radius:10px;padding:32px 36px;width:min(380px,95vw);text-align:center;">
+        <div style="font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:#9040d0;letter-spacing:0.08em;margin-bottom:6px;">GM ACCESS REQUIRED</div>
+        <div style="color:#6a738a;font-size:11px;margin-bottom:22px;">This view is restricted. Session only — closing this tab locks it again.</div>
+        <input type="password" id="pw-input"
+          placeholder="Enter GM password"
+          style="width:100%;background:#0a0c10;border:1px solid #1e2330;border-radius:4px;padding:9px 12px;color:#c8d0e0;font-size:13px;outline:none;text-align:center;letter-spacing:0.1em;margin-bottom:10px;"
+          onkeydown="if(event.key==='Enter')attemptUnlock('${targetTab}')">
+        <div id="pw-error" style="color:#e05050;font-size:10px;min-height:16px;margin-bottom:10px;"></div>
+        <button class="cbtn primary" style="width:100%;padding:9px;" onclick="attemptUnlock('${targetTab}')">Unlock</button>
+      </div>
+    </div>`;
+}
+
+function attemptUnlock(targetTab){
+  const val=document.getElementById('pw-input').value;
+  if(val===GM_PASSWORD){
+    unlockGM();
+    setTab(targetTab);
+  } else {
+    document.getElementById('pw-error').textContent='Incorrect password.';
+    document.getElementById('pw-input').value='';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  TAG FILTER STATE
+// ════════════════════════════════════════════════════════════
+
+let tlFilter='',tlSearch='',tlMode='public';
+let lexSearch='',lexCat='all';
+
+// ════════════════════════════════════════════════════════════
+//  RENDER TIMELINE
+// ════════════════════════════════════════════════════════════
+
+function renderTimeline(mode){
+  tlMode=mode;
+  const isGM=(mode==='secret'||mode==='both');
+  const sorted=[...ENTRIES].sort((a,b)=>sortKey(a)-sortKey(b));
+
+  // collect all tags for filter
+  const allTags=[...new Set(sorted.flatMap(e=>e.tags||[]))].sort();
+
+  // filter
+  const filtered=sorted.filter(e=>{
+    // visibility filter
+    if(mode==='public'){ if(e.visibility==='secret') return false; }
+    if(mode==='secret'){ if(e.visibility==='public') return false; }
+    // tag filter
+    if(tlFilter && !(e.tags||[]).includes(tlFilter)) return false;
+    // search
+    if(tlSearch){
+      const q=tlSearch.toLowerCase();
+      const inBody=(e.body||'').toLowerCase().includes(q);
+      const inNote=(e.note||'').toLowerCase().includes(q);
+      const inPub=(e.publicVersion||'').toLowerCase().includes(q);
+      const inDate=fmtDate(e).toLowerCase().includes(q);
+      const inTags=(e.tags||[]).some(t=>t.toLowerCase().includes(q));
+      if(!inBody&&!inNote&&!inPub&&!inDate&&!inTags) return false;
+    }
+    return true;
+  });
+
+  // pick display body
+  function displayBody(e){
+    if(mode==='public' && e.visibility==='both' && e.publicVersion) return e.publicVersion;
+    return e.body;
+  }
+
+  const tlHTML=filtered.length===0
+    ? `<div class="empty">No entries match your filter.</div>`
+    : filtered.map(e=>{
+      const col=e.visibility==='secret'?'#9040d0':e.visibility==='both'?'#f0a04a':'#4a8ef0';
+      const badge=isGM
+        ?(e.visibility==='secret'?`<span class="tl-secret-badge">SECRET</span>`
+          :e.visibility==='both'?`<span class="tl-secret-badge" style="background:#f0a04a22;color:#f0a04a;border-color:#f0a04a55">DUAL</span>`
+          :`<span class="tl-public-badge">PUBLIC</span>`)
+        :'';
+      const tags=(e.tags||[]).map(t=>`<span class="tag" style="background:${col}18;color:${col};border:1px solid ${col}44">${esc(t)}</span>`).join('');
+      const noteHTML=isGM&&e.note?`<div class="tl-note">⬡ GM: ${esc(e.note)}</div>`:'';
+      const pubAltHTML=(isGM&&e.visibility==='both'&&e.publicVersion)?`<div class="tl-note" style="color:#4a8ef0">⬡ Public sees: ${esc(e.publicVersion)}</div>`:'';
+      return `
+      <div class="tl-entry">
+        <div class="tl-dot" style="background:${col};border-color:#0a0c10;"></div>
+        <div class="tl-date" style="color:${col}">${esc(fmtDate(e))}${badge}</div>
+        <div class="tl-body">${esc(displayBody(e))}</div>
+        ${noteHTML}${pubAltHTML}
+        ${tags?`<div class="tl-tags">${tags}</div>`:''}
+        ${isGMUnlocked()?`<div class="tl-actions">
+          <button class="cbtn warn" onclick="openEditEntry('${e.id}')">Edit</button>
+          <button class="cbtn danger" onclick="askDelete('entry','${e.id}',${JSON.stringify(fmtDate(e))})">Delete</button>
+        </div>`:''}
+      </div>`;
+    }).join('');
+
+  const tagOptions=allTags.map(t=>`<option value="${esc(t)}"${tlFilter===t?' selected':''}>${esc(t)}</option>`).join('');
+
+  const modeLabel=mode==='public'?'Public Timeline':mode==='secret'?'Secret Timeline (GM)':'Dual View (GM)';
+  const modeColor=mode==='public'?'#4a8ef0':mode==='secret'?'#9040d0':'#f0a04a';
+
+  return `
+    <div class="sh" style="color:${modeColor}">${modeLabel} — ${filtered.length} of ${sorted.filter(e=>mode==='public'?e.visibility!=='secret':mode==='secret'?e.visibility!=='public':true).length} entries</div>
+    <div class="ctrl">
+      <input type="text" placeholder="Search events, dates, tags..." value="${esc(tlSearch)}" id="tl-search-input">
+      <select id="tl-tag-filter"><option value="">— All Tags —</option>${tagOptions}</select>
+      ${isGMUnlocked()
+        ? `<button class="cbtn primary" onclick="openAddEntry()">+ Add Entry</button>`
+        : `<button class="cbtn" onclick="setTab('secret')" title="Unlock GM access to edit the timeline" style="color:#9040d0;border-color:#9040d055;">⬡ GM Unlock to Edit</button>`}
+    </div>
+    <div style="padding-left:4px;">${tlHTML}</div>`;
+}
+
+// ════════════════════════════════════════════════════════════
+//  RENDER LEXICON
+// ════════════════════════════════════════════════════════════
+
+function renderLexiconPage(){
+  const cats=['all',...Object.keys(CAT_LABELS)];
+  const catBtns=cats.map(c=>`<button class="cbtn${lexCat===c?' warn':''}" data-lexcat="${c}">${c==='all'?'All Categories':CAT_LABELS[c]||c}</button>`).join('');
+
+  const filtered=[...LEXICON].filter(l=>{
+    if(lexCat!=='all'&&l.cat!==lexCat) return false;
+    if(lexSearch){
+      const q=lexSearch.toLowerCase();
+      return (l.term||'').toLowerCase().includes(q)||(l.def||'').toLowerCase().includes(q)||(l.alt||'').toLowerCase().includes(q);
+    }
+    return true;
+  }).sort((a,b)=>a.term.localeCompare(b.term));
+
+  const cards=filtered.length===0
+    ? `<div class="empty">No terms match your filter.</div>`
+    : filtered.map(l=>{
+      const col=CAT_COLORS[l.cat]||'#6a738a';
+      return `
+      <div class="lex-card">
+        <div class="lex-term">${esc(l.term)}</div>
+        <div class="lex-def">${esc(l.def)}</div>
+        ${l.alt?`<div class="lex-alt">${esc(l.alt)}</div>`:''}
+        <span class="lex-cat" style="background:${col}22;color:${col};border:1px solid ${col}44">${esc(CAT_LABELS[l.cat]||l.cat)}</span>
+        ${isGMUnlocked()?`<div class="lex-actions">
+          <button class="cbtn warn" onclick="openEditLex('${l.id}')">Edit</button>
+          <button class="cbtn danger" onclick="askDelete('lex','${l.id}',${JSON.stringify(l.term)})">Delete</button>
+        </div>`:''}
+
+      </div>`;
+    }).join('');
+
+  return `
+    <div class="sh" style="color:#4af0a0">Lexicon — Pilot Slang &amp; Lingo (${filtered.length} terms)</div>
+    <div class="ctrl">
+      <input type="text" placeholder="Search terms and definitions..." value="${esc(lexSearch)}" id="lex-search-input">
+      ${isGMUnlocked()
+        ? `<button class="cbtn primary" onclick="openAddLex()">+ Add Term</button>`
+        : `<button class="cbtn" onclick="setTab('secret')" title="Unlock GM access to edit the lexicon" style="color:#9040d0;border-color:#9040d055;">⬡ GM Unlock to Edit</button>`}
+    </div>
+    <div class="ctrl" style="margin-top:-6px;margin-bottom:12px;">${catBtns}</div>
+    <div class="lex-grid">${cards}</div>`;
+}
+
+// ════════════════════════════════════════════════════════════
+//  MANAGE DATA PAGE
+// ════════════════════════════════════════════════════════════
+
+function renderManage(){
+  const exportData=JSON.stringify({entries:ENTRIES,lexicon:LEXICON},null,2);
+  return `
+    <div class="sh" style="color:#f0a04a">Manage Data</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <div>
+        <div class="sh" style="color:#4af0a0;font-size:10px">Export / Backup</div>
+        <div class="note-box">Copy everything below to a text file for backup, or paste it into the data file to share with collaborators. This is your full timeline and lexicon in JSON format.</div>
+        <button class="cbtn primary" style="margin-top:10px;" onclick="copyExport()">Copy to Clipboard</button>
+        <div class="code-box" id="export-box">${esc(exportData)}</div>
+      </div>
+
+      <div>
+        <div class="sh" style="color:#f0a04a;font-size:10px">Import / Restore</div>
+        <div class="note-box">Paste a previously exported JSON blob below and click Import. <strong style="color:#e05050">This will REPLACE all current data.</strong></div>
+        <textarea id="import-box" style="width:100%;background:#0a0c10;border:1px solid #1e2330;border-radius:4px;padding:8px;color:#c8d0e0;font-size:10px;font-family:'Courier New',monospace;min-height:120px;margin-top:8px;outline:none;" placeholder="Paste exported JSON here..."></textarea>
+        <button class="cbtn warn" style="margin-top:8px;" onclick="importData()">Import &amp; Replace</button>
+      </div>
+
+    </div>
+
+    <div style="margin-top:22px;">
+      <div class="sh" style="color:#e05050;font-size:10px">Reset to Defaults</div>
+      <div class="note-box">Restores all factory-default entries. <strong style="color:#e05050">Permanently deletes all custom additions.</strong> Export first if you want to keep your work.</div>
+      <button class="cbtn danger" style="margin-top:8px;" onclick="resetAll()">Reset Everything</button>
+    </div>
+
+    <div style="margin-top:22px;">
+      <div class="sh" style="color:#6a738a;font-size:10px">GitHub Pages Note</div>
+      <div class="note-box">This file is self-contained — no server, no database, no build step. Data is stored in your browser's localStorage.<br><br>
+      <strong style="color:#c8d0e0">To share updates between collaborators:</strong> use the Export function above, commit the JSON to your repo, and have each collaborator import it. Alternatively, embed the DEFAULT_ENTRIES and DEFAULT_LEXICON arrays directly in the HTML source with your additions — the file will carry your data wherever it goes without requiring localStorage.</div>
+    </div>`;
+}
+
+function copyExport(){
+  const box=document.getElementById('export-box');
+  navigator.clipboard.writeText(box.textContent).then(()=>{
+    const btn=event.target; btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy to Clipboard',2000);
+  }).catch(()=>{ box.select(); document.execCommand('copy'); });
+}
+
+function importData(){
+  const raw=document.getElementById('import-box').value.trim();
+  if(!raw){ alert('Nothing to import.'); return; }
+  try{
+    const d=JSON.parse(raw);
+    if(!d.entries||!d.lexicon) throw new Error('Missing entries or lexicon');
+    if(!confirm('This will replace ALL current data. Are you sure?')) return;
+    ENTRIES=d.entries; saveEntries(ENTRIES);
+    LEXICON=d.lexicon; saveLexicon(LEXICON);
+    alert('Import successful.');
+    renderCurrent();
+  }catch(e){ alert('Invalid JSON. Check your data:\n'+e.message); }
+}
+
+function resetAll(){
+  if(!confirm('Reset ALL data to factory defaults? This cannot be undone.')) return;
+  ENTRIES=JSON.parse(JSON.stringify(DEFAULT_ENTRIES));
+  LEXICON=JSON.parse(JSON.stringify(DEFAULT_LEXICON));
+  saveEntries(ENTRIES); saveLexicon(LEXICON);
+  renderCurrent();
+}
+
+// ════════════════════════════════════════════════════════════
+//  TAB SYSTEM
+// ════════════════════════════════════════════════════════════
+
+let currentTab='public';
+
+function renderCurrent(){ setTab(currentTab); }
+
+// GM-only tabs — public and lexicon are always open
+const GM_TABS = new Set(['secret','both','manage']);
+
+function setTab(tab){
+  // Gate GM tabs — show password prompt if not unlocked this session
+  if(GM_TABS.has(tab) && !isGMUnlocked()){
+    currentTab=tab; // remember where they were trying to go
+    const tabColors={public:'#4a8ef0',secret:'#9040d0',both:'#f0a04a',lexicon:'#4af0a0',manage:'#f0a04a'};
+    document.querySelectorAll('.tab-btn').forEach(btn=>{
+      const col=tabColors[tab]||'#4af0a0';
+      const isActive=btn.dataset.tab===tab;
+      if(isActive){btn.style.background=col;btn.style.color='#0a0c10';btn.style.borderColor=col;btn.style.fontWeight='700';}
+      else{btn.style.background='transparent';btn.style.color='#6a738a';btn.style.borderColor='#1e2330';btn.style.fontWeight='400';}
+    });
+    const content=document.getElementById('content');
+    content.innerHTML=renderPasswordPrompt(tab)+`<div id="footer">STARFIELD: RELICS — CAMPAIGN DOCUMENT — TROPOSPHERE MULTIVERSE PROJECT</div>`;
+    document.getElementById('pw-input').focus();
+    return;
+  }
+
+  currentTab=tab;
+  const tabColors={
+    public:'#4a8ef0',secret:'#9040d0',both:'#f0a04a',
+    lexicon:'#4af0a0',manage:'#f0a04a'
+  };
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    const isActive=btn.dataset.tab===tab;
+    const col=tabColors[tab]||'#4af0a0';
+    if(isActive){btn.style.background=col;btn.style.color='#0a0c10';btn.style.borderColor=col;btn.style.fontWeight='700';}
+    else{btn.style.background='transparent';btn.style.color='#6a738a';btn.style.borderColor='#1e2330';btn.style.fontWeight='400';}
+  });
+
+  const content=document.getElementById('content');
+  let html='';
+  if(tab==='public'||tab==='secret'||tab==='both'){
+    html=renderTimeline(tab);
+  } else if(tab==='lexicon'){
+    html=renderLexiconPage();
+  } else if(tab==='manage'){
+    html=renderManage();
+  }
+  html+=`<div id="footer">STARFIELD: RELICS — CAMPAIGN DOCUMENT — TROPOSPHERE MULTIVERSE PROJECT</div>`;
+  content.innerHTML=html;
+
+  // attach live events
+  const tlsi=document.getElementById('tl-search-input');
+  if(tlsi) tlsi.addEventListener('input',e=>{tlSearch=e.target.value;renderCurrent();});
+  const tltf=document.getElementById('tl-tag-filter');
+  if(tltf) tltf.addEventListener('change',e=>{tlFilter=e.target.value;renderCurrent();});
+  const lsi=document.getElementById('lex-search-input');
+  if(lsi) lsi.addEventListener('input',e=>{lexSearch=e.target.value;renderCurrent();});
+  document.querySelectorAll('[data-lexcat]').forEach(btn=>{
+    btn.addEventListener('click',()=>{lexCat=btn.dataset.lexcat;renderCurrent();});
+  });
+}
+
+document.getElementById('tab-bar').addEventListener('click',e=>{
+  const btn=e.target.closest('.tab-btn');
+  if(btn) setTab(btn.dataset.tab);
+});
+
+// ── INIT ──
+setTab('public');
+</script>
+</body>
+</html>
