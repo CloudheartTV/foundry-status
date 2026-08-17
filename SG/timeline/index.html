@@ -149,7 +149,7 @@ button,input,select,textarea{font-family:inherit;}
 
 <div id="header">
   <div id="header-title">STARFIELD: RELICS — CAMPAIGN HUB</div>
-  <div id="header-sub">TIMELINE RECORD &amp; LEXICON — PUBLIC CAMPAIGN ARTIFACT</div>
+  <div id="header-sub">TIMELINE RECORD &amp; LEXICON — INTERNAL DOCUMENT</div>
   <div id="tab-bar">
     <button class="tab-btn" data-tab="public">Public Timeline</button>
     <button class="tab-btn" data-tab="secret">Secret Timeline</button>
@@ -616,7 +616,7 @@ const DEFAULT_LEXICON = [
   {id:'l013',term:'Painting',def:'Targeting one or multiple hostiles with the auto-lock of your ship\'s computer HUD.',alt:'"I\'m painting hostiles."',cat:'navigation'},
   {id:'l014',term:'Seeing Numbers',def:'A psychological phenomenon from long or frequent trips — hyperfixation on sensor data to the point of anxiety. A recognized syndrome.',alt:'"She\'s seeing numbers again. Someone get her off the bridge."',cat:'navigation'},
   {id:'l015',term:'No Pressure',def:'A dangerous linguistic inversion. No longer means "no worries" — it means "we have a hull breach." Fatal warning.',alt:null,cat:'hazard'},
-  {id:'l016',term:'Bulkhead Therapy',def:'Slamming your head against the walls when frustrated or bored on a long burn. Universal. Officially discouraged.',alt:null,cat:'culture'},
+  {id:'l016',term:'Bulkhead Therapy',def:'Slamming your head against the walls when frustrated or bored on a long burn.',alt:null,cat:'culture'},
   {id:'l017',term:'Horizon Sickness / Losing the Black',def:'Psychological difficulty specific to people who struggle to live planetside after extended time in spaceflight observing deep space.',alt:null,cat:'culture'},
 
   // CULTURE / SOCIAL
@@ -624,7 +624,7 @@ const DEFAULT_LEXICON = [
   {id:'l019',term:'Mudder',def:'Close to a cowardly insult. A person who never leaves their home planet.',alt:'"Want your mudder?" = taunting cowardice.',cat:'culture'},
   {id:'l020',term:'Earthworm',def:'Harsher version of Mudder. A skeptic or paranoid person who insists stationary life on a planet is healthier for humans.',alt:null,cat:'culture'},
   {id:'l021',term:'Neuromantic',def:'Children born in the most recent generational period, after the Narion War veterans came home. Associated with a boom in art and creative culture.',alt:'"The Blackest Sea" = Neuromantic slang for space.',cat:'culture'},
-  {id:'l022',term:'Old Blue',def:'Universal signal to stop the line of questioning. Reference to Earth. Usually carries sadness.',alt:'"Where is your family from?" / "Old Blue." — end of conversation.',cat:'culture'},
+  {id:'l022',term:'Old Blue',def:'Universal signal to stop the line of questioning. Reference to Earth.',alt:'"Where is your family from?" / "Old Blue." — end of conversation.',cat:'culture'},
   {id:'l023',term:'Dirty Taste',def:'A linguistic inversion. "Dirty" once meant nasty; now it is the highest food compliment — it means the food was grown in actual soil, not fabricated.',alt:null,cat:'culture'},
   {id:'l024',term:'Gone Spacer / Spacey',def:'Turned to piracy or raiding. Can also describe someone becoming unhinged from isolation or frustration with society.',alt:null,cat:'culture'},
   {id:'l025',term:'Ritual / What\'s your Ritual',def:'A genuine "get to know you" question. Everyone on a crew has a way to pass the time when Burning. Cards, drinking, sleeping through it.',alt:null,cat:'culture'},
@@ -636,7 +636,7 @@ const DEFAULT_LEXICON = [
   {id:'l031',term:'The Count',def:'A running dark joke. "What\'s the count?" = how many Earth-origin species have gone extinct so far. Asking someone if they keep up with the count is a genuine personality test.',alt:null,cat:'culture'},
 
   // TECH
-  {id:'l032',term:'The Incident',def:'Reference to the AI War of 2057 — always capitalized, usually spoken of obliquely. The cultural taboo around naming it directly reflects how badly it shook humanity\'s confidence in its own tools.',alt:'"Twelve Hours" = oblique reference to The Incident\'s duration. Shorthand for how fast something can go catastrophically wrong.',cat:'tech'},
+  {id:'l032',term:'The Incident',def:'Reference to the AI War of 2057 — usually capitalized and spoken of obliquely. The cultural taboo around naming it directly reflects how badly it shook humanity\'s confidence in our own tools.',alt:'"Twelve Hours" = oblique reference to The Incident\'s duration. Shorthand for how fast something can go catastrophically wrong.',cat:'tech'},
   {id:'l033',term:'Going Agent',def:'A plan, computer software, or company becoming dangerously autonomous and self-directing in ways nobody authorized. The worst thing you can call a piece of software.',alt:null,cat:'tech'},
   {id:'l034',term:'Amp-shy',def:'Someone refusing to consider Ryujin\'s neuroamp. Usually from Incident-adjacent anxiety about technology inside the brain.',alt:null,cat:'tech'},
   {id:'l035',term:'Hardwired',def:'Someone who has received a neuroamp modification — with or without serving in the Colony War.',alt:null,cat:'tech'},
@@ -652,7 +652,7 @@ const DEFAULT_LEXICON = [
   {id:'l043',term:'Station Politics',def:'Any political conflict that has begun to feel abstract and irrelevant to people actually living with the consequences. Derives from observation that the Narion War was largely started over a medical space station.',alt:null,cat:'faction'},
   {id:'l044',term:'Incident Kids',def:'Used by older Narionites as a very insulting term claiming a person\'s enthusiasm for new technology makes them a danger to everyone. "Don\'t pitch amps to her, she\'s an Incident Kid."',alt:null,cat:'faction'},
   {id:'l045',term:'Blue-Brands',def:'Companies that existed before Grav-Drives, on Earth. The oldest surviving corporate lineages.',alt:null,cat:'faction'},
-  {id:'l046',term:'Red Dust',def:'Frontier and self-sufficient term related to Mars. Connotes a rough, self-made origin.',alt:null,cat:'faction'},
+  {id:'l046',term:'Red Duster',def:'Frontier and self-sufficient term related to Mars. Connotes a rough, self-made origin.',alt:null,cat:'faction'},
 
   // MONEY
   {id:'l047',term:'Fat Stick',def:'A CredStick loaded heavy with credits. Also means a dumb or ballsy move — conspicuous wealth on a single device.',alt:null,cat:'money'},
@@ -970,15 +970,20 @@ function renderTimeline(mode){
   const tlHTML=filtered.length===0
     ? `<div class="empty">No entries match your filter.</div>`
     : filtered.map(e=>{
-      const col=e.visibility==='secret'?'#9040d0':e.visibility==='both'?'#f0a04a':'#4a8ef0';
-      const badge=isGM
+      const gmUnlocked=isGMUnlocked();
+      // Public view: all entries use neutral blue regardless of visibility.
+      // GM-unlocked view: secret=purple, dual=orange, public=blue.
+      const col=gmUnlocked
+        ? (e.visibility==='secret'?'#9040d0':e.visibility==='both'?'#f0a04a':'#4a8ef0')
+        : '#4a8ef0';
+      const badge=gmUnlocked
         ?(e.visibility==='secret'?`<span class="tl-secret-badge">SECRET</span>`
           :e.visibility==='both'?`<span class="tl-secret-badge" style="background:#f0a04a22;color:#f0a04a;border-color:#f0a04a55">DUAL</span>`
           :`<span class="tl-public-badge">PUBLIC</span>`)
         :'';
       const tags=(e.tags||[]).map(t=>`<span class="tag" style="background:${col}18;color:${col};border:1px solid ${col}44">${esc(t)}</span>`).join('');
-      const noteHTML=isGM&&e.note?`<div class="tl-note">⬡ GM: ${esc(e.note)}</div>`:'';
-      const pubAltHTML=(isGM&&e.visibility==='both'&&e.publicVersion)?`<div class="tl-note" style="color:#4a8ef0">⬡ Public sees: ${esc(e.publicVersion)}</div>`:'';
+      const noteHTML=gmUnlocked&&e.note?`<div class="tl-note">⬡ GM: ${esc(e.note)}</div>`:'';
+      const pubAltHTML=(gmUnlocked&&e.visibility==='both'&&e.publicVersion)?`<div class="tl-note" style="color:#4a8ef0">⬡ Public sees: ${esc(e.publicVersion)}</div>`:'';
       return `
       <div class="tl-entry">
         <div class="tl-dot" style="background:${col};border-color:#0a0c10;"></div>
