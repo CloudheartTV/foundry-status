@@ -318,19 +318,19 @@
 
     <div class="slider-row">
       <span class="ctrl-label" style="margin:0">HE-3 FUEL (units)</span>
-      <span class="slider-val" id="val-fuel">100</span>
+      <span class="slider-val" id="val-fuel">40</span>
     </div>
     <input type="range" id="slider-fuel" min="1" max="500" value="100" step="1">
 
     <div class="slider-row">
       <span class="ctrl-label" style="margin:0">JUMP DRIVE MAX (LY)</span>
-      <span class="slider-val" id="val-jump">20.0 LY</span>
+      <span class="slider-val" id="val-jump">6.0 LY</span>
     </div>
     <input type="range" id="slider-jump" min="1" max="30" value="20" step="0.5">
 
     <div class="slider-row">
       <span class="ctrl-label" style="margin:0">FUEL / JUMP (units)</span>
-      <span class="slider-val" id="val-fuelper">5</span>
+      <span class="slider-val" id="val-fuelper">15</span>
     </div>
     <input type="range" id="slider-fuelper" min="1" max="50" value="5" step="1">
 
@@ -1174,9 +1174,9 @@ function dijkstra(originId, destId, jumpRange) {
 //  ROUTE STATE
 // ══════════════════════════════════════════════════════════════════════
 let _lastPath      = null;
-let _lastFuelPer   = 5;
-let _lastFuelTotal = 100;
-let _lastJumpRange = 20;
+let _lastFuelPer   = 15;
+let _lastFuelTotal = 40;
+let _lastJumpRange = 6;
 let _syncedFromRemote = false;
 
 // ══════════════════════════════════════════════════════════════════════
