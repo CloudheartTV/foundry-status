@@ -38,20 +38,6 @@
 
 ---
 
-## Rotating the Player Portal Password
-
-Open `index.html` and find this line near the bottom of the `<script>` block:
-
-```js
-const PORTAL_PASSWORD = "streamcrew2025";
-```
-
-Change the string, commit, push. That's it. Share the new password in your crew Discord.
-
-The lock uses `sessionStorage` — players need to re-enter it each browser session but not each page load.
-
----
-
 ## Setting Media Counts Per Campaign
 
 Each campaign's `index.html` has one line at the bottom you need to update to match your actual files:
@@ -83,6 +69,5 @@ Files must be named exactly: `AdDemo1.mp4`, `AdDemo2.mp4`, `AdImage1.png`, `AdIm
 
 ## Player Portal Notes
 
-- Password is stored in plain JS — it's visible in source to anyone who views it. This is a soft lock, not true security. It deters casual visitors and is fast to rotate.
 - For stronger protection, consider GitHub Pages + a Cloudflare Worker with a real secret, or a simple Netlify password form.
 - The portal section auto-checks your Foundry API at `cloudheartfoundry.duckdns.org/api/status` — same logic as your original page.

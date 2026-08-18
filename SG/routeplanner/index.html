@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet'>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Starfield: Relics — Route Planner · CloudheartTV</title>
+  <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+  <style>
+  /* ── OVERLAY NAV — floats over the 3D canvas, auto-hides ── */
+  #site-nav {
+    position: fixed; top: 0; right: 0;
+    z-index: 1000;
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 10px;
+    background: rgba(6,8,16,0.82);
+    border-bottom-left-radius: 6px;
+    border: 1px solid #1e2330; border-top: none; border-right: none;
+    backdrop-filter: blur(6px);
+    opacity: 1;
+    transition: opacity 0.4s ease;
+  }
+  #site-nav:hover { opacity: 1 !important; }
+  #site-nav .nav-ext {
+    font-family: 'Orbitron', monospace; font-size: 9px;
+    letter-spacing: 0.08em; color: #3a4a5a;
+    text-decoration: none; padding: 4px 7px;
+    border: 1px solid #1e2330; border-radius: 3px;
+    transition: color 0.2s, border-color 0.2s; white-space: nowrap;
+  }
+  #site-nav .nav-ext:hover { color: #4a9edd; border-color: #4a9edd; }
+  #site-nav .nav-ext.back { color: #4a9edd; border-color: #4a9edd44; }
+  #site-nav .nav-ext.back:hover { border-color: #4a9edd; }
+  #site-nav .nav-ext.sibling { color: #4af0a0; border-color: #4af0a044; }
+  #site-nav .nav-ext.sibling:hover { border-color: #4af0a0; }
+  </style>
+  <style>
+    html, body {
+      height: 100%; margin: 0; overflow: hidden;
+      font-family: 'Orbitron', monospace; font-size: 12px;
+      background: #000; color: #B7B7B7;
+    }
+
+    /* ── Three.js canvas fills the viewport ── */
+    #three-canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+    }
+
+    /* ── CSS2D label layer (managed by Three.js CSS2DRenderer) ── */
+    #label-layer {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .star-label-3d {
+      font-family: 'Orbitron', monospace;
+      font-size: 10px;
+      color: #B7B7B7;
+      white-space: nowrap;
+      pointer-events: none;
+      text-shadow: 0 0 4px #000, 0 0 8px #000;
+      transform: translate(8px, -4px);
+    }
+    .star-label-3d.route-origin-label { color: cyan   !important; font-weight: bold; }
+    .star-label-3d.route-dest-label   { color: magenta!important; font-weight: bold; }
+    .star-label-3d.route-green-label  { color: lime; }
+    .star-label-3d.route-red-label    { color: #ff4444; }
+
+    /* ══════════════════════════════════════════
+       CONTROL PANEL
+    ══════════════════════════════════════════ */
+    #control-panel {
+      position: fixed; top: 10px; left: 10px;
+      width: 264px;
+      background: rgba(20,30,42,0.95);
+      border: 2px inset #B7B7B7; border-right: solid black; border-bottom: solid black;
+      z-index: 999; overflow: hidden;
+      transition: width 0.2s ease;
+    }
+    #panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px 8px; cursor: pointer;
+      border-bottom: 1px solid #1e3348; user-select: none;
+    }
+    #panel-header:hover { background: rgba(0,200,255,0.05); }
+    #panel-title { font-size: 13px; color: #e0e0e0; letter-spacing: 1px; flex: 1; }
+    #panel-toggle {
+      font-size: 18px; color: #8ab4cc; line-height: 1;
+      transition: transform 0.25s ease, color 0.15s;
+      flex-shrink: 0; margin-left: 8px;
+    }
+    #control-panel.collapsed #panel-toggle { transform: rotate(180deg); color: cyan; }
+    #panel-body {
+      padding: 10px 14px 14px;
+      transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.2s ease;
+      max-height: 900px; opacity: 1; overflow: hidden;
+    }
+    #control-panel.collapsed #panel-body  { max-height: 0; opacity: 0; padding-top: 0; padding-bottom: 0; }
+    #control-panel.collapsed             { width: auto; }
+    #control-panel.collapsed #panel-title { display: none; }
+    #control-panel.collapsed #panel-header { padding: 8px 10px; border-bottom: none; }
+
+    .ctrl-label { font-size: 10px; color: #8ab4cc; margin-bottom: 3px; display: block; }
+    select, input[type="range"] {
+      width: 100%; background: #0d1a27; color: #B7B7B7;
+      border: 1px solid #3a5a77; font-family: 'Orbitron', monospace;
+      font-size: 10px; margin-bottom: 10px; box-sizing: border-box;
+    }
+    select { padding: 4px; }
+    input[type="range"] { accent-color: cyan; height: 18px; cursor: pointer; }
+    .slider-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; font-size: 10px; }
+    .slider-val { color: cyan; font-size: 11px; min-width: 58px; text-align: right; }
+    .cp-btn {
+      width: 100%; background: #162537; color: #B7B7B7;
+      border: 2px inset #B7B7B7; border-right: solid black; border-bottom: solid black;
+      font-family: 'Orbitron', monospace; font-size: 11px;
+      padding: 6px; cursor: pointer; margin-top: 6px;
+      letter-spacing: 1px; transition: color 0.1s;
+    }
+    #btn-plot    { margin-top: 4px; }
+    #btn-plot:hover    { color: cyan; }
+    #btn-clear:hover   { color: #ff6666; }
+    #btn-jumplog:hover { color: #ffcc00; }
+    #btn-reset-view:hover { color: #aaffaa; }
+    #btn-jump-graph:hover { color: #ffffff; }
+    #btn-jump-graph.active {
+      color: #ffffff;
+      background: #1a2e1a;
+      border-color: #aaffaa;
+      border-style: outset;
+      border-right-color: black;
+      border-bottom-color: black;
+    }
+
+    /* ── View controls (3D/2D toggle + camera reset) ── */
+    .view-divider {
+      border: none; border-top: 1px solid #1e3348;
+      margin: 8px 0 6px;
+    }
+
+    /* ── Result box ── */
+    #result-box {
+      position: fixed; bottom: 10px; left: 10px; width: 264px;
+      background: rgba(20,30,42,0.95);
+      border: 2px inset #B7B7B7; border-right: solid black; border-bottom: solid black;
+      padding: 10px 14px; z-index: 999;
+      font-size: 10px; line-height: 1.7; transition: opacity 0.2s;
+    }
+    #control-panel.collapsed ~ #result-box { opacity: 0; pointer-events: none; }
+    #result-box h3 { margin: 0 0 6px; font-size: 11px; color: #8ab4cc; letter-spacing: 1px; }
+    .result-ok   { color: lime; }
+    .result-warn { color: #ff4444; }
+    .result-info { color: #B7B7B7; }
+
+    /* ── Legend ── */
+    #legend {
+      position: fixed; top: 10px; right: 10px;
+      background: rgba(20,30,42,0.92);
+      border: 2px inset #B7B7B7; border-right: solid black; border-bottom: solid black;
+      padding: 10px 14px; z-index: 999;
+      font-size: 10px; line-height: 2;
+    }
+    .legend-dot {
+      display: inline-block; width: 10px; height: 10px;
+      border-radius: 50%; margin-right: 6px; vertical-align: middle;
+    }
+
+    /* ── Clock ── */
+    #real-time {
+      position: fixed; top: 10px; left: 284px;
+      z-index: 999; pointer-events: none; line-height: 1.25;
+    }
+    #clock-stardate {
+      display: block; font-size: 16px; color: cyan;
+      letter-spacing: 1px; white-space: nowrap;
+    }
+    #clock-realtime {
+      display: block; font-size: 11px; color: #4a6a8a; letter-spacing: 0.5px;
+    }
+    @keyframes stardate-update { 0% { opacity: 0.3; } 100% { opacity: 1; } }
+    #clock-stardate.updated { animation: stardate-update 0.35s ease-out; }
+
+    /* ══════════════════════════════════════════
+       JUMP LOG DIALOG
+    ══════════════════════════════════════════ */
+    #jumplog-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55); z-index: 8888;
+    }
+    #jumplog-dialog {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(680px, 90vw); max-height: 75vh;
+      background: rgba(14,22,35,0.98);
+      border: 2px inset #B7B7B7; border-right: solid black; border-bottom: solid black;
+      z-index: 9000; display: none; flex-direction: column;
+    }
+    #jumplog-titlebar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px 8px; border-bottom: 1px solid #1e3348; flex-shrink: 0;
+    }
+    #jumplog-titlebar h3 { margin: 0; font-size: 13px; color: #e0e0e0; letter-spacing: 1px; }
+    #jumplog-close {
+      background: transparent; border: none; color: #B7B7B7; font-size: 18px;
+      cursor: pointer; font-family: 'Orbitron', monospace; line-height: 1; padding: 0 4px;
+    }
+    #jumplog-close:hover { color: red; }
+    #jumplog-summary {
+      padding: 8px 16px 6px; font-size: 10px; color: #8ab4cc; line-height: 1.7;
+      border-bottom: 1px solid #1e3348; flex-shrink: 0;
+    }
+    #jumplog-body {
+      overflow-y: auto; flex: 1; padding: 10px 16px 14px;
+      scrollbar-width: thin; scrollbar-color: #3a5a77 #0d1a27;
+    }
+    #jumplog-body::-webkit-scrollbar { width: 6px; }
+    #jumplog-body::-webkit-scrollbar-track { background: #0d1a27; }
+    #jumplog-body::-webkit-scrollbar-thumb { background: #3a5a77; border-radius: 3px; }
+    .jump-row {
+      display: grid;
+      grid-template-columns: 28px 1fr 14px 1fr 80px 60px 70px;
+      gap: 0 8px; align-items: center;
+      padding: 5px 0; border-bottom: 1px solid #141f2d; font-size: 10px;
+    }
+    .jump-row:last-child { border-bottom: none; }
+    .jump-num  { color: #4a6a8a; text-align: right; }
+    .jump-from { color: #B7B7B7; }
+    .jump-arr  { color: #4a6a8a; text-align: center; font-size: 14px; }
+    .jump-to   { color: #B7B7B7; }
+    .jump-dist { text-align: right; }
+    .jump-fuel { text-align: right; color: #8ab4cc; }
+    .jump-rem  { text-align: right; }
+    .jump-ok   .jump-dist { color: lime; }
+    .jump-ok   .jump-rem  { color: #aaffaa; }
+    .jump-warn .jump-dist { color: #ff4444; }
+    .jump-warn .jump-rem  { color: #ff8888; }
+    .jump-warn .jump-from,
+    .jump-warn .jump-to   { color: #ff6666; }
+    .jump-header {
+      color: #4a6a8a; font-size: 9px; letter-spacing: 0.5px;
+      padding-bottom: 4px; border-bottom: 1px solid #1e3348; margin-bottom: 2px;
+    }
+    #jumplog-footer {
+      padding: 8px 16px 10px; border-top: 1px solid #1e3348;
+      display: flex; gap: 8px; flex-shrink: 0;
+    }
+    #jumplog-copy {
+      background: #162537; color: #B7B7B7;
+      border: 2px inset #B7B7B7; border-right: solid black; border-bottom: solid black;
+      font-family: 'Orbitron', monospace; font-size: 10px;
+      padding: 5px 12px; cursor: pointer; flex: 1; transition: color 0.1s;
+    }
+    #jumplog-copy:hover { color: cyan; }
+    #jumplog-copy.copied { color: lime; }
+
+    /* ── GM close-all button ── */
+    #btn-close-all {
+      position: fixed; bottom: 18px; right: 178px; z-index: 9998;
+      background: rgba(35,10,10,0.95);
+      border: 2px inset #ff4444; border-right: solid black; border-bottom: solid black;
+      color: #ff4444; font-family: 'Orbitron', monospace; font-size: 11px;
+      letter-spacing: 1px; padding: 7px 16px; cursor: pointer;
+      transition: color 0.12s, background 0.12s; user-select: none; display: none;
+    }
+    #btn-close-all:hover { color: #fff; background: rgba(120,0,0,0.97); }
+
+    /* ── Per-client close button ── */
+    #btn-close-map {
+      position: fixed; bottom: 18px; right: 18px; z-index: 9998;
+      background: rgba(20,30,42,0.95);
+      border: 2px inset #B7B7B7; border-right: solid black; border-bottom: solid black;
+      color: #B7B7B7; font-family: 'Orbitron', monospace; font-size: 11px;
+      letter-spacing: 1px; padding: 7px 16px; cursor: pointer;
+      transition: color 0.12s, background 0.12s; user-select: none;
+    }
+    #btn-close-map:hover { color: #ff4444; background: rgba(35,10,10,0.97); }
+
+    /* ── Sol distance indicator (bottom center) ── */
+    #sol-distance {
+      position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+      background: rgba(20,30,42,0.85); border: 1px solid #3a5a77;
+      color: #8ab4cc; font-size: 10px; padding: 4px 14px;
+      z-index: 999; pointer-events: none; letter-spacing: 0.5px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Overlay nav — top-right corner, floats over the 3D canvas -->
+<nav id="site-nav">
+  <a href="../index.html" class="nav-ext back">← Starfield: Relics</a>
+  <a href="../corps/index.html" class="nav-ext sibling">Corp Registry</a>
+  <a href="../timeline/index.html" class="nav-ext sibling">Timeline</a>
+  <a href="https://www.twitch.tv/CloudheartTV" target="_blank" class="nav-ext">Twitch</a>
+  <a href="../../index.html" class="nav-ext">Hub</a>
+</nav>
+
+<!-- Three.js renders here -->
+<canvas id="three-canvas"></canvas>
+<!-- CSS2DRenderer labels render here -->
+<div id="label-layer"></div>
+
+<!-- ══ CONTROL PANEL ══════════════════════════════════════════════ -->
+<div id="control-panel">
+  <div id="panel-header" onclick="togglePanel()" title="Collapse / expand">
+    <span id="panel-title">ROUTE PLANNER</span>
+    <span id="panel-toggle">⟁</span>
+  </div>
+  <div id="panel-body">
+    <span class="ctrl-label">ORIGIN SYSTEM</span>
+    <select id="sel-origin"><option value="">-- select --</option></select>
+    <span class="ctrl-label">DESTINATION SYSTEM</span>
+    <select id="sel-dest"><option value="">-- select --</option></select>
+
+    <div class="slider-row">
+      <span class="ctrl-label" style="margin:0">HE-3 FUEL (units)</span>
+      <span class="slider-val" id="val-fuel">100</span>
+    </div>
+    <input type="range" id="slider-fuel" min="1" max="500" value="100" step="1">
+
+    <div class="slider-row">
+      <span class="ctrl-label" style="margin:0">JUMP DRIVE MAX (LY)</span>
+      <span class="slider-val" id="val-jump">20.0 LY</span>
+    </div>
+    <input type="range" id="slider-jump" min="1" max="30" value="20" step="0.5">
+
+    <div class="slider-row">
+      <span class="ctrl-label" style="margin:0">FUEL / JUMP (units)</span>
+      <span class="slider-val" id="val-fuelper">5</span>
+    </div>
+    <input type="range" id="slider-fuelper" min="1" max="50" value="5" step="1">
+
+    <button id="btn-plot"    class="cp-btn">▶ PLOT ROUTE</button>
+    <button id="btn-jumplog" class="cp-btn">≡ JUMP LOG</button>
+    <button id="btn-clear"   class="cp-btn">✕ CLEAR ROUTE</button>
+
+    <hr class="view-divider">
+    <button id="btn-reset-view"  class="cp-btn">⊙ RESET TO 2D VIEW</button>
+    <button id="btn-jump-graph"  class="cp-btn">⬡ SHOW JUMP GRAPH</button>
+  </div>
+</div>
+
+<!-- ══ STATUS BOX ══════════════════════════════════════════════════ -->
+<div id="result-box">
+  <h3>NAVIGATION STATUS</h3>
+  <div id="result-text" class="result-info">
+    Select origin &amp; destination,<br>set fuel &amp; jump drive, then plot.
+  </div>
+</div>
+
+<!-- ══ LEGEND ══════════════════════════════════════════════════════ -->
+<div id="legend">
+  <div><span class="legend-dot" style="background:cyan;   box-shadow:0 0 6px cyan"></span>Origin</div>
+  <div><span class="legend-dot" style="background:magenta;box-shadow:0 0 6px magenta"></span>Destination</div>
+  <div><span class="legend-dot" style="background:lime;   box-shadow:0 0 6px lime"></span>Route (fuel OK)</div>
+  <div><span class="legend-dot" style="background:red;    box-shadow:0 0 6px red"></span>Route (cut-off)</div>
+  <div style="border-top:1px solid #1e3348;margin-top:6px;padding-top:6px;color:#8ab4cc;font-size:9px;">
+    <span id="home-system-label">⌂ Sol</span>
+    <span style="color:#4a6a8a;margin-left:6px;">hover + H to change</span>
+  </div>
+</div>
+
+<div id="real-time">
+  <span id="clock-stardate">UT ····.··· ··:··:··</span>
+  <span id="clock-realtime">REAL 00:00:00</span>
+</div>
+
+<div id="sol-distance">Sol: — LY</div>
+
+<button id="btn-close-all" onclick="closeMapAll()" title="Close for ALL players">✕ &nbsp;CLOSE FOR ALL</button>
+<button id="btn-close-map" onclick="closeMap()"    title="Close map (your screen only)">✕ &nbsp;CLOSE MAP</button>
+
+<!-- ══ JUMP LOG DIALOG ════════════════════════════════════════════ -->
+<div id="jumplog-overlay" onclick="closeJumpLog()"></div>
+<div id="jumplog-dialog">
+  <div id="jumplog-titlebar">
+    <h3>⟁ NAVIGATION JUMP LOG</h3>
+    <button id="jumplog-close" onclick="closeJumpLog()">✕</button>
+  </div>
+  <div id="jumplog-summary"></div>
+  <div id="jumplog-body"></div>
+  <div id="jumplog-footer">
+    <button id="jumplog-copy" onclick="copyJumpLog()">⎘ COPY TO CLIPBOARD</button>
+  </div>
+</div>
+
+<!-- Three.js r128 UMD global build (sets window.THREE) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script src="/modules/combat-overlays/StarfieldRouteData/Scripts/PreventDefault.js"></script>
+
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════════════════════════════
+//  STAR SYSTEM DATA
+//  lx / ly / lz — heliocentric 3D coords in light-years (J2000, Sol=origin)
+//  map_x / map_y — legacy 2D pixel positions, used only for 2D reset camera
+// ══════════════════════════════════════════════════════════════════════
+const SYSTEMS = [
+  {id:"Sol_System",               name:"Sol",               map_x:570,  map_y:500, lx: 0.00, ly: 0.00, lz: 0.00},
+  {id:"Alpha_Centauri_System",    name:"Alpha Centauri",    map_x:613,  map_y:495, lx: 1.16, ly:-3.55, lz:-2.82},
+  {id:"Porrima_System",           name:"Porrima",           map_x:1075, map_y:590, lx:19.42, ly:32.34, lz: 9.94},
+  {id:"Tau_Ceti_System",          name:"Tau Ceti",          map_x:480,  map_y:570, lx:-8.59, ly:-7.88, lz: 2.55},
+  {id:"Barnard_Star_System",      name:"Barnard's Star",    map_x:371,  map_y:495, lx:-0.06, ly:-5.96, lz: 0.47},
+  {id:"Wolf_System",              name:"Wolf",              map_x:426,  map_y:535, lx:-6.08, ly:-4.86, lz: 2.00},
+  {id:"Sirius_System",            name:"Sirius",            map_x:430,  map_y:620, lx:-1.34, ly:-8.43, lz:-5.30},
+  {id:"Procyon_System",           name:"Procyon",           map_x:340,  map_y:530, lx:-6.85, ly:-9.03, lz: 0.39},
+  {id:"Eridani_System",           name:"Epsilon Eridani",           map_x:420,  map_y:710, lx:-4.79, ly:-5.76, lz:-7.82},
+  {id:"Bessel_System",            name:"Bessel",            map_x:229,  map_y:370, lx: 4.33, ly:-7.50, lz: 7.94},
+  {id:"Piazzi_System",            name:"Piazzi",            map_x:236,  map_y:353, lx: 4.32, ly:-7.51, lz: 7.95},
+  {id:"Luyten_Star_System",       name:"Luyten's Star",     map_x:121,  map_y:525, lx:-10.32,ly:-6.98, lz: 3.38},
+  {id:"Vega_System",              name:"Vega",              map_x:416,  map_y:222, lx: 6.92, ly: 2.39, lz:24.56},
+  {id:"Arcturus_System",          name:"Arcturus",          map_x:952,  map_y:321, lx:30.26, ly:19.47, lz:16.18},
+  {id:"Van_Maanen_Star_System",   name:"Van Maanen's Star", map_x:30,   map_y:465, lx:-11.11,ly:-7.99, lz: 4.48},
+  {id:"Narion_System",            name:"Narion",            map_x:487,  map_y:463, lx: 7.37, ly:-13.57,lz: 8.60},
+  {id:"Valo_System",              name:"Valo",              map_x:500,  map_y:445, lx: 7.38, ly:-13.59,lz: 8.60},
+  {id:"Cheyenne_System",          name:"Cheyenne",          map_x:600,  map_y:460, lx:18.56, ly:10.26, lz: 9.52},
+  {id:"Maheo_System",             name:"Maheo",             map_x:663,  map_y:384, lx:18.60, ly:10.27, lz: 9.53},
+  {id:"Volii_System",             name:"Volii",             map_x:829,  map_y:688, lx:16.01, ly:22.88, lz: 4.73},
+  {id:"Eta_Cassiopeiae_System",   name:"Eta Cassiopeiae",   map_x:290,  map_y:185, lx:10.49, ly:-9.85, lz:14.17},
+  {id:"Groombridge_System",       name:"Groombridge",       map_x:310,  map_y:440, lx:-8.07, ly:-8.36, lz: 3.47},
+  {id:"Beta_Andraste_System",     name:"Beta Andraste",     map_x:35,   map_y:222, lx:12.92, ly:-15.47,lz:15.28},
+  {id:"Newton_System",            name:"Newton",            map_x:653,  map_y:80,  lx: 4.10, ly:-7.56, lz: 8.45},
+  {id:"Aranae_System",            name:"Aranae",            map_x:653,  map_y:570, lx:14.61, ly:11.54, lz: 8.17},
+  {id:"Olympus_System",           name:"Olympus",           map_x:645,  map_y:553, lx:14.62, ly:11.55, lz: 8.17},
+  {id:"Lunara_System",            name:"Lunara",            map_x:682,  map_y:505, lx:12.80, ly:14.80, lz: 5.40},
+  {id:"Toliman_System",           name:"Toliman",           map_x:640,  map_y:595, lx: 1.17, ly:-3.57, lz:-2.83},
+  {id:"Oborum_Prime_System",      name:"Oborum Prime",      map_x:511,  map_y:703, lx:13.55, ly:18.04, lz:-5.22},
+  {id:"Oborum_Proxima_System",    name:"Oborum Proxima",    map_x:503,  map_y:719, lx:13.54, ly:18.05, lz:-5.23},
+  {id:"Bardeen_System",           name:"Bardeen",           map_x:727,  map_y:122, lx:16.82, ly:13.62, lz:20.30},
+  {id:"Zosma_System",             name:"Zosma",             map_x:1108, map_y:301, lx:46.52, ly:30.60, lz:22.24},
+  {id:"Denebola_System",          name:"Denebola",          map_x:1200, map_y:290, lx:33.28, ly:15.24, lz:11.24},
+  {id:"Bara_System",              name:"Bara",              map_x:1318, map_y:343, lx:48.31, ly:29.60, lz:20.80},
+  {id:"Beta_Ternion_System",      name:"Beta Ternion",      map_x:1400, map_y:645, lx:48.20, ly:40.80, lz: 5.30},
+  {id:"Beta_Tirna_System",        name:"Beta Tirna",        map_x:1089, map_y:881, lx:22.60, ly:20.40, lz:-5.50},
+  {id:"Delta_Pavonis_System",     name:"Delta Pavonis",     map_x:780,  map_y:700, lx: 8.22, ly:16.72, lz:-8.61},
+  {id:"Jaffa_System",             name:"Jaffa",             map_x:1560, map_y:340, lx:33.87, ly:30.12, lz:11.00},
+  {id:"Rasalhague_System",        name:"Rasalhague",        map_x:860,  map_y:310, lx:33.60, ly:24.07, lz:23.26},
+  {id:"Beta_Marae_System",        name:"Beta Marae",        map_x:755,  map_y:433, lx:29.75, ly:33.40, lz: 9.70},
+  {id:"Nemeria_System",           name:"Nemeria",           map_x:743,  map_y:59,  lx:30.77, ly:25.03, lz:28.64},
+  {id:"Muphrid_System",           name:"Muphrid",           map_x:965,  map_y:347, lx:31.77, ly:19.17, lz:16.16},
+  {id:"Xi_Ophiuchi_System",       name:"Xi Ophiuchi",       map_x:839,  map_y:636, lx:35.65, ly:37.30, lz: 5.62},
+  {id:"Zeta_Ophiuchi_System",     name:"Zeta Ophiuchi",     map_x:846,  map_y:661, lx:35.80, ly:37.55, lz: 5.50},
+  {id:"Kryx_System",              name:"Kryx",              map_x:1720, map_y:430, lx:30.00, ly:24.50, lz:13.00},
+  {id:"Ursae_Majoris_System",     name:"Ursae Majoris",     map_x:769,  map_y:335, lx:23.42, ly:14.25, lz:10.56},
+  {id:"Ursae_Minoris_System",     name:"Ursae Minoris",     map_x:777,  map_y:315, lx:23.45, ly:14.27, lz:10.58},
+  {id:"Linnaeus_System",          name:"Linnaeus",          map_x:554,  map_y:663, lx:22.05, ly:32.43, lz: 0.12},
+  {id:"McClure_System",           name:"McClure",           map_x:703,  map_y:201, lx:27.08, ly:21.18, lz:11.77},
+  {id:"Masada_System",            name:"Masada",            map_x:1279, map_y:658, lx:40.50, ly:36.40, lz: 2.80},
+  {id:"Alpha_Andraste_System",    name:"Alpha Andraste",    map_x:117,  map_y:268, lx:-6.10, ly:-6.30, lz:11.60},
+  {id:"Andromas_System",          name:"Andromas",          map_x:622,  map_y:527, lx:13.90, ly:12.10, lz: 5.20},
+  {id:"Archimedes_System",        name:"Archimedes",        map_x:1706, map_y:633, lx:57.50, ly:42.30, lz: 6.20},
+  {id:"Bannoc_System",            name:"Bannoc",            map_x:1456, map_y:555, lx:50.70, ly:37.40, lz: 8.50},
+  {id:"Bannoc_Secundus_System",   name:"Bannoc Secundus",   map_x:1452, map_y:533, lx:50.65, ly:37.35, lz: 8.55},
+  {id:"Bel_System",               name:"Bel",               map_x:1491, map_y:511, lx:51.80, ly:38.00, lz: 9.30},
+  {id:"Bohr_System",              name:"Bohr",              map_x:1829, map_y:321, lx:62.50, ly:46.00, lz:16.20},
+  {id:"Bolivar_System",           name:"Bolivar",           map_x:1081, map_y:733, lx:31.70, ly:30.50, lz:-2.50},
+  {id:"Copernicus_System",        name:"Copernicus",        map_x:870,  map_y:460, lx:25.80, ly:22.55, lz: 7.90},
+  {id:"Decaran_System",           name:"Decaran",           map_x:1100, map_y:420, lx:35.00, ly:26.50, lz:10.00},
+  {id:"Dhigurath_System",         name:"Dhigurath",         map_x:1540, map_y:440, lx:52.50, ly:39.00, lz:12.00},
+  {id:"Eureka_System",            name:"Eureka",            map_x:1650, map_y:710, lx:54.50, ly:43.00, lz: 2.10},
+  {id:"Feynman_System",           name:"Feynman",           map_x:960,  map_y:200, lx:29.50, ly:22.00, lz:19.50},
+  {id:"Fermi_System",             name:"Fermi",             map_x:1160, map_y:540, lx:37.80, ly:31.50, lz: 6.00},
+  {id:"Freya_System",             name:"Freya",             map_x:340,  map_y:590, lx:-4.20, ly:10.50, lz: 3.80},
+  {id:"Gliese_System",            name:"Gliese",            map_x:500,  map_y:640, lx: 9.20, ly:14.60, lz:-0.20},
+  {id:"Guniibuu_System",          name:"Guniibuu",          map_x:820,  map_y:560, lx:23.00, ly:22.80, lz: 4.80},
+  {id:"Hyla_System",              name:"Hyla",              map_x:1390, map_y:490, lx:47.80, ly:33.80, lz:10.50},
+  {id:"Indum_System",             name:"Indum",             map_x:1240, map_y:730, lx:38.20, ly:35.80, lz:-2.00},
+  {id:"Kagiso_System",            name:"Kagiso",            map_x:1080, map_y:600, lx:32.40, ly:30.10, lz: 4.00},
+  {id:"Katydid_System",           name:"Katydid",           map_x:650,  map_y:750, lx:16.80, ly:22.50, lz:-3.80},
+  {id:"Kepler_System",            name:"Kepler",            map_x:430,  map_y:280, lx: 7.00, ly:-2.80, lz:14.30},
+  {id:"Kumasi_System",            name:"Kumasi",            map_x:1300, map_y:600, lx:42.10, ly:34.50, lz: 5.40},
+  {id:"Leviathan_System",         name:"Leviathan",         map_x:1430, map_y:380, lx:49.50, ly:35.50, lz:14.00},
+  {id:"Maal_System",              name:"Maal",              map_x:1607, map_y:428, lx:54.00, ly:41.20, lz:12.50},
+  {id:"Marduk_System",            name:"Marduk",            map_x:1466, map_y:812, lx:47.60, ly:41.20, lz:-1.50},
+  {id:"Moloch_System",            name:"Moloch",            map_x:1304, map_y:372, lx:43.50, ly:30.10, lz:13.50},
+  {id:"Nirah_System",             name:"Nirah",             map_x:1380, map_y:421, lx:46.80, ly:32.60, lz:12.20},
+  {id:"Nirvana_System",           name:"Nirvana",           map_x:1108, map_y:806, lx:31.90, ly:33.50, lz:-5.20},
+  {id:"Nikola_System",            name:"Nikola",            map_x:613,  map_y:411, lx:14.50, ly:11.40, lz: 8.60},
+  {id:"Ophion_System",            name:"Ophion",            map_x:1277, map_y:449, lx:41.80, ly:31.50, lz:10.80},
+  {id:"Pytheas_System",           name:"Pytheas",           map_x:1000, map_y:450, lx:29.00, ly:24.30, lz: 8.80},
+  {id:"Rutherford_System",        name:"Rutherford",        map_x:1550, map_y:595, lx:51.90, ly:40.20, lz: 5.80},
+  {id:"Schrodinger_System",       name:"Schrodinger",       map_x:1800, map_y:540, lx:61.00, ly:45.00, lz: 6.50},
+  {id:"Shoza_System",             name:"Shoza",             map_x:1340, map_y:510, lx:44.40, ly:34.00, lz: 9.50},
+  {id:"Sumati_System",            name:"Sumati",            map_x:1200, map_y:460, lx:38.50, ly:30.90, lz:10.00},
+  {id:"Tidacha_System",           name:"Tidacha",           map_x:940,  map_y:720, lx:25.90, ly:29.20, lz:-2.60},
+  {id:"Titan_System",             name:"Titan",             map_x:1080, map_y:490, lx:32.20, ly:27.60, lz: 8.50},
+  {id:"Verne_System",             name:"Verne",             map_x:1702, map_y:474, lx:57.30, ly:42.90, lz:10.50},
+  {id:"Zelazny_System",           name:"Zelazny",           map_x:1575, map_y:874, lx:49.80, ly:43.50, lz:-3.80},
+  {id:"Keid_System", 			  name:"Keid (40 Eridani)", map_x:420, map_y:680,lx: 7.195, ly: 14.63, lz:-2.191},
+];
+
+// Deduplicate
+const _seen = new Set();
+const SYS = SYSTEMS.filter(s=>{ if(_seen.has(s.id)) return false; _seen.add(s.id); return true; });
+const SOL  = SYS.find(s => s.id === 'Sol_System');
+
+// ══════════════════════════════════════════════════════════════════════
+//  Map Scale Magic Numbers for Starfield Reference Map
+// ══════════════════════════════════════════════════════════════════════
+ 
+const REF_W = 1920, REF_H = 980;
+
+// ── lyToMapXY — console utility ───────────────────────────────────────
+// Converts real heliocentric lx/ly (light-years) to approximate pixel
+// positions on the 1920×980 Bethesda background map.
+// map_x/map_y are not used anywhere in the 3D view — this is purely
+// for reference when you want to know where a new star would fall on
+// the old 2D map, or to populate those fields for legacy reasons.
+//
+// Paste into browser console and call as needed:
+//   lyToMapXY(7.195, 14.63)   // → { map_x: 797, map_y: 389 }
+//
+// Scale of 15.5 px/LY derived from Sol→Porrima anchor pair.
+// Tune scaleX/scaleY if results look off.
+//
+// function lyToMapXY(lx, ly, options = {}) {
+//   const { solX=570, solY=500, scaleX=15.5, scaleY=15.5 } = options;
+//   return {
+//     map_x: Math.round(solX + (ly * scaleX)),
+//     map_y: Math.round(solY - (lx * scaleY)),
+//   };
+// }
+
+// ══════════════════════════════════════════════════════════════════════
+//  3D DISTANCE
+// ══════════════════════════════════════════════════════════════════════
+function dist3D(a,b){
+  const dx=a.lx-b.lx, dy=a.ly-b.ly, dz=a.lz-b.lz;
+  return Math.sqrt(dx*dx+dy*dy+dz*dz);
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  THREE.JS SCENE SETUP
+//
+//  Coordinate mapping:
+//    Three.js X = star lx (galactic east)
+//    Three.js Y = star lz (galactic north / up)
+//    Three.js Z = star ly (galactic depth)  ← note the swap:
+//    ly→Z so the "flat" XY galactic plane appears horizontal in 3D.
+//
+//  Scale: 1 Three.js unit = 1 light-year.
+// ══════════════════════════════════════════════════════════════════════
+const THREE = window.THREE;
+
+const canvas   = document.getElementById('three-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x000000, 1);
+
+const scene = new THREE.Scene();
+
+// ── Perspective camera ────────────────────────────────────────────────
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 2000);
+
+// ── CSS2DRenderer for labels ──────────────────────────────────────────
+// Inline the CSS2DRenderer — avoids needing a separate module file
+class CSS2DObject extends THREE.Object3D {
+  constructor(el){ super(); this.element = el; this.element.style.position='absolute'; }
+}
+class CSS2DRenderer {
+  constructor(){
+    this.domElement = document.getElementById('label-layer');
+    this._cache = new Map();
+  }
+  setSize(w,h){ this.width=w; this.height=h; }
+  render(scene, camera){
+    const w=this.width, h=this.height;
+    const vp = new THREE.Vector3();
+    scene.traverseVisible(obj => {
+      if (!(obj instanceof CSS2DObject)) return;
+      vp.setFromMatrixPosition(obj.matrixWorld);
+      vp.project(camera);
+      const x = (vp.x*0.5+0.5)*w;
+      const y = (-vp.y*0.5+0.5)*h;
+      const el = obj.element;
+      if (vp.z > 1) { el.style.display='none'; return; }
+      el.style.display = '';
+      el.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;
+    });
+  }
+}
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById('label-layer').appendChild; // already in DOM
+
+// ── Inline OrbitControls ──────────────────────────────────────────────
+// Minimal orbit implementation — avoids needing examples/jsm import
+class OrbitControls {
+  constructor(camera, domElement) {
+    this.camera     = camera;
+    this.domElement = domElement;
+    this.target     = new THREE.Vector3();
+    this.enableDamping   = true;
+    this.dampingFactor   = 0.08;
+    this.rotateSpeed     = 0.6;
+    this.zoomSpeed       = 1.2;
+    this.panSpeed        = 0.8;
+    this.minDistance     = 5;
+    this.maxDistance     = 500;
+    this.onChange        = null; // callback fired after user interaction ends
+
+    this._spherical      = new THREE.Spherical();
+    this._sphericalDelta = new THREE.Spherical();
+    this._scale          = 1;
+    this._panOffset      = new THREE.Vector3();
+    this._state          = 0; // 0=none 1=rotate 2=pan
+    this._pointerStart   = new THREE.Vector2();
+    this._pointerDelta   = new THREE.Vector2();
+    this._interacting    = false;
+
+    // Init spherical from current camera position
+    const offset = new THREE.Vector3().subVectors(camera.position, this.target);
+    this._spherical.setFromVector3(offset);
+
+    this._bindEvents();
+  }
+
+  _bindEvents() {
+    const el = this.domElement;
+    el.addEventListener('pointerdown',  e => this._onPointerDown(e));
+    el.addEventListener('pointermove',  e => this._onPointerMove(e));
+    el.addEventListener('pointerup',    e => this._onPointerUp(e));
+    el.addEventListener('wheel',        e => this._onWheel(e), {passive:false});
+    el.addEventListener('contextmenu',  e => e.preventDefault());
+  }
+
+  _onPointerDown(e) {
+    this._interacting = true;
+    this._pointerStart.set(e.clientX, e.clientY);
+    // left button = rotate, right/middle = pan
+    this._state = e.button === 0 ? 1 : 2;
+    this.domElement.setPointerCapture(e.pointerId);
+  }
+  _onPointerMove(e) {
+    if (!this._interacting) return;
+    this._pointerDelta.set(
+      e.clientX - this._pointerStart.x,
+      e.clientY - this._pointerStart.y
+    );
+    this._pointerStart.set(e.clientX, e.clientY);
+
+    if (this._state === 1) {
+      // Rotate
+      this._sphericalDelta.theta -= 2*Math.PI * this._pointerDelta.x / this.domElement.clientWidth  * this.rotateSpeed;
+      this._sphericalDelta.phi   -= 2*Math.PI * this._pointerDelta.y / this.domElement.clientHeight * this.rotateSpeed;
+    } else {
+      // Pan
+      const offset = new THREE.Vector3().subVectors(this.camera.position, this.target);
+      const dist   = offset.length();
+      const fov    = this.camera.fov * Math.PI / 180;
+      const ph     = 2 * Math.tan(fov/2) * dist;
+      const pw     = ph * this.camera.aspect;
+
+      const panX = new THREE.Vector3(); camera.getWorldDirection(panX);
+      const up   = camera.up.clone().normalize();
+      const right = new THREE.Vector3().crossVectors(panX, up).normalize();
+      const upV   = new THREE.Vector3().crossVectors(right, panX).normalize();
+
+      right.multiplyScalar(-(this._pointerDelta.x / this.domElement.clientWidth)  * pw * this.panSpeed);
+      upV  .multiplyScalar( (this._pointerDelta.y / this.domElement.clientHeight) * ph * this.panSpeed);
+      this._panOffset.add(right).add(upV);
+    }
+  }
+  _onPointerUp(e) {
+    this._interacting = false;
+    this._state = 0;
+    if (this.onChange) this.onChange(this._getState());
+  }
+  _onWheel(e) {
+    e.preventDefault();
+    this._scale *= e.deltaY > 0 ? Math.pow(0.95, this.zoomSpeed) : Math.pow(1.05, this.zoomSpeed);
+    if (this.onChange) this.onChange(this._getState());
+  }
+
+  _getState() {
+    return {
+      position: { x:this.camera.position.x, y:this.camera.position.y, z:this.camera.position.z },
+      target:   { x:this.target.x, y:this.target.y, z:this.target.z },
+    };
+  }
+
+  applyState(state) {
+    this.camera.position.set(state.position.x, state.position.y, state.position.z);
+    this.target.set(state.target.x, state.target.y, state.target.z);
+    const offset = new THREE.Vector3().subVectors(this.camera.position, this.target);
+    this._spherical.setFromVector3(offset);
+    this._sphericalDelta.set(0,0,0);
+    this._scale = 1;
+    this._panOffset.set(0,0,0);
+    this.camera.lookAt(this.target);
+  }
+
+  update() {
+    const offset = new THREE.Vector3().subVectors(this.camera.position, this.target);
+    this._spherical.setFromVector3(offset);
+
+    if (this.enableDamping) {
+      this._spherical.theta += this._sphericalDelta.theta * this.dampingFactor;
+      this._spherical.phi   += this._sphericalDelta.phi   * this.dampingFactor;
+      this._sphericalDelta.theta *= (1 - this.dampingFactor);
+      this._sphericalDelta.phi   *= (1 - this.dampingFactor);
+    } else {
+      this._spherical.theta += this._sphericalDelta.theta;
+      this._spherical.phi   += this._sphericalDelta.phi;
+      this._sphericalDelta.set(0,0,0);
+    }
+
+    this._spherical.phi = Math.max(0.01, Math.min(Math.PI-0.01, this._spherical.phi));
+    this._spherical.radius = Math.max(this.minDistance, Math.min(this.maxDistance, this._spherical.radius * this._scale));
+    this._scale = 1;
+
+    this.target.add(this._panOffset.clone().multiplyScalar(this.dampingFactor));
+    this._panOffset.multiplyScalar(1 - this.dampingFactor);
+
+    offset.setFromSpherical(this._spherical);
+    this.camera.position.copy(this.target).add(offset);
+    this.camera.lookAt(this.target);
+  }
+}
+
+// ── Camera starting position (2D top-down) ────────────────────────────
+// The settled systems span roughly -15→65 LY in X, -16→43 LY in Y(depth).
+// Centre ≈ (25, 13, 0). Camera sits 120 LY above on Y axis.
+const MAP_CENTER = new THREE.Vector3(20, 0, 13);
+const CAM_2D_POS = new THREE.Vector3(20, 120, 13); // top-down
+const CAM_2D_UP  = new THREE.Vector3(0, 0, -1);    // north = -Z in Three.js space
+
+camera.position.copy(CAM_2D_POS);
+camera.up.copy(CAM_2D_UP);
+camera.lookAt(MAP_CENTER);
+
+const controls = new OrbitControls(camera, canvas);
+controls.target.copy(MAP_CENTER);
+
+// ── Sync camera state to parent on interaction end ─────────────────────
+let _syncCameraTimer = null;
+controls.onChange = (state) => {
+  // Debounce — wait until motion settles before broadcasting
+  clearTimeout(_syncCameraTimer);
+  _syncCameraTimer = setTimeout(() => {
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage(JSON.stringify({
+          type: 'co-sync-camera',
+          payload: state,
+        }), '*');
+      }
+    } catch(_) {}
+  }, 150);
+};
+
+// ══════════════════════════════════════════════════════════════════════
+//  STARFIELD BACKGROUND (procedural points)
+// ══════════════════════════════════════════════════════════════════════
+(function buildBackgroundStars() {
+  const count  = 4000;
+  const positions = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    positions[i*3]   = (Math.random()-0.5) * 1800;
+    positions[i*3+1] = (Math.random()-0.5) * 1800;
+    positions[i*3+2] = (Math.random()-0.5) * 1800;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const mat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.4, sizeAttenuation: true });
+  scene.add(new THREE.Points(geo, mat));
+})();
+
+// ── Sol marker (crosshair at origin) ─────────────────────────────────
+(function buildSolMarker() {
+  const mat  = new THREE.LineBasicMaterial({ color: 0x446688, transparent: true, opacity: 0.4 });
+  const s    = 2;
+  const lines = [
+    [-s,0,0],[s,0,0],
+    [0,-s,0],[0,s,0],
+    [0,0,-s],[0,0,s],
+  ];
+  for (let i=0; i<lines.length; i+=2) {
+    const geo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(...lines[i]),
+      new THREE.Vector3(...lines[i+1]),
+    ]);
+    scene.add(new THREE.Line(geo, mat));
+  }
+})();
+
+// ══════════════════════════════════════════════════════════════════════
+//  STAR SYSTEM SPRITES
+//  Each system gets a sprite (always faces camera) and a CSS2D label.
+//  We keep a map from system id → { sprite, labelObj, labelEl }
+//  so route highlighting can update material colors directly.
+// ══════════════════════════════════════════════════════════════════════
+
+// Build a small canvas texture for the star dot
+function makeStarTexture(color, glow) {
+  const c  = document.createElement('canvas'); c.width=c.height=64;
+  const ctx = c.getContext('2d');
+  const r   = 32;
+  const grad = ctx.createRadialGradient(r,r,0,r,r,r);
+  grad.addColorStop(0, color);
+  grad.addColorStop(glow, color.replace('1)', '0.3)'));
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,64,64);
+  return new THREE.CanvasTexture(c);
+}
+
+const texDefault  = makeStarTexture('rgba(255,100,60,1)',   0.35);
+const texOrigin   = makeStarTexture('rgba(0,255,255,1)',    0.5);
+const texDest     = makeStarTexture('rgba(255,0,255,1)',    0.5);
+const texRouteOK  = makeStarTexture('rgba(0,255,80,1)',     0.5);
+const texRouteBAD = makeStarTexture('rgba(255,60,60,1)',    0.5);
+
+const matDefault  = new THREE.SpriteMaterial({ map: texDefault,  transparent:true, depthWrite:false });
+const matOrigin   = new THREE.SpriteMaterial({ map: texOrigin,   transparent:true, depthWrite:false });
+const matDest     = new THREE.SpriteMaterial({ map: texDest,     transparent:true, depthWrite:false });
+const matRouteOK  = new THREE.SpriteMaterial({ map: texRouteOK,  transparent:true, depthWrite:false });
+const matRouteBAD = new THREE.SpriteMaterial({ map: texRouteBAD, transparent:true, depthWrite:false });
+
+// Store per-system Three.js objects
+const sysObjects = {}; // id → { sprite, labelObj, labelEl }
+
+SYS.forEach(sys => {
+  // Map: lx→X, lz→Y(up), ly→Z(depth)  [galactic plane stays horizontal]
+  const pos = new THREE.Vector3(sys.lx, sys.lz, sys.ly);
+
+  // Sprite
+  const sprite = new THREE.Sprite(matDefault.clone());
+  sprite.position.copy(pos);
+  sprite.scale.set(1.4, 1.4, 1);
+  sprite.userData.sysId = sys.id;
+  scene.add(sprite);
+
+  // CSS2D label
+  const el  = document.createElement('div');
+  el.className   = 'star-label-3d';
+  el.textContent = sys.name;
+  el.id          = 'lbl-' + sys.id;
+
+  const labelObj = new CSS2DObject(el);
+  labelObj.position.copy(pos);
+  scene.add(labelObj);
+
+  // Add the element to the label layer so it actually appears
+  document.getElementById('label-layer').appendChild(el);
+  // Position will be updated each frame by labelRenderer
+
+  sysObjects[sys.id] = { sprite, labelObj, labelEl: el, pos: pos.clone() };
+});
+
+// ── Route label id tracking — populated by plotRoute(), cleared by clearRoute() ──
+// updateLabels uses this to decide which labels are always shown regardless
+// of zoom level or proximity suppression.
+const _routeLabelIds = new Set();
+
+// ── Per-frame label positioning — Option B (radial offset) + C (zoom declutter) ──
+//
+//  Zoom thresholds (camera distance to target in LY):
+//    < ZOOM_FULL   → all labels shown, offset only
+//    < ZOOM_SPARSE → proximity-suppress non-route labels within PROX_PX pixels
+//    ≥ ZOOM_SPARSE → only route nodes + Sol shown
+//
+const ZOOM_FULL   = 45;   // LY — below this everything is labelled
+const ZOOM_SPARSE = 90;   // LY — above this only route + Sol
+const PROX_PX     = 32;   // screen-pixel radius for proximity suppression
+const OFFSET_PX   = 14;   // how far to push the label away from its nearest neighbour
+
+function updateLabels() {
+  const w = window.innerWidth, h = window.innerHeight;
+  const vp = new THREE.Vector3();
+  const camDist = camera.position.distanceTo(controls.target);
+
+  // ── Pass 1: project every star to screen space ──────────────────────
+  const proj = SYS.map(sys => {
+    vp.copy(sysObjects[sys.id].pos).project(camera);
+    return {
+      id:     sys.id,
+      sx:     (vp.x *  0.5 + 0.5) * w,
+      sy:     (-vp.y * 0.5 + 0.5) * h,
+      behind: vp.z > 1,
+    };
+  });
+
+  // ── Pass 2: per-star decision + radial offset ────────────────────────
+  proj.forEach((p, i) => {
+    const el = sysObjects[p.id]?.labelEl;
+    if (!el) return;
+
+    // Always hide stars behind the camera
+    if (p.behind) { el.style.display = 'none'; return; }
+
+    const isRoute = _routeLabelIds.has(p.id) || p.id === 'Sol_System';
+
+    // Zoom-level C: far out → only route + Sol
+    if (camDist >= ZOOM_SPARSE && !isRoute) {
+      el.style.display = 'none'; return;
+    }
+
+    // Zoom-level C: medium → proximity-suppress non-route labels
+    if (camDist >= ZOOM_FULL && !isRoute) {
+      let tooClose = false;
+      for (let j = 0; j < proj.length; j++) {
+        if (i === j || proj[j].behind) continue;
+        const dx = p.sx - proj[j].sx;
+        const dy = p.sy - proj[j].sy;
+        if (dx*dx + dy*dy < PROX_PX*PROX_PX) { tooClose = true; break; }
+      }
+      if (tooClose) { el.style.display = 'none'; return; }
+    }
+
+    // Option B: find nearest visible neighbour on screen
+    let nearestDist = Infinity, ndx = 1, ndy = 0;
+    for (let j = 0; j < proj.length; j++) {
+      if (i === j || proj[j].behind) continue;
+      const dx = p.sx - proj[j].sx;
+      const dy = p.sy - proj[j].sy;
+      const d2 = dx*dx + dy*dy;
+      if (d2 < nearestDist) { nearestDist = d2; ndx = dx; ndy = dy; }
+    }
+
+    // Compute radial offset — push label away from nearest neighbour.
+    // Only apply when the neighbour is within OFFSET_TRIGGER_PX pixels;
+    // beyond that the default top-right nudge is fine.
+    const OFFSET_TRIGGER = 80;
+    let ox = 8, oy = -4; // default nudge (top-right of the dot)
+    if (nearestDist < OFFSET_TRIGGER * OFFSET_TRIGGER) {
+      const len = Math.sqrt(ndx*ndx + ndy*ndy) || 1;
+      ox = (ndx / len) * OFFSET_PX;
+      oy = (ndy / len) * OFFSET_PX;
+      // Ensure minimum horizontal clearance so the label doesn't sit on the dot
+      if (Math.abs(ox) < 6) ox = ox >= 0 ? 6 : -6;
+    }
+
+    el.style.display   = 'block';
+    el.style.position  = 'absolute';
+    el.style.left      = p.sx.toFixed(1) + 'px';
+    el.style.top       = p.sy.toFixed(1) + 'px';
+    el.style.transform = `translate(${ox.toFixed(1)}px,${oy.toFixed(1)}px)`;
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  ROUTE LINE GEOMETRY
+//  Lines are stored in a group so we can clear them easily.
+// ══════════════════════════════════════════════════════════════════════
+const routeGroup = new THREE.Group();
+scene.add(routeGroup);
+
+// ══════════════════════════════════════════════════════════════════════
+//  JUMP GRAPH
+//  White lines connecting every pair of stars within the current jump
+//  range, ignoring fuel. Toggled on/off by the ⬡ SHOW JUMP GRAPH button.
+//  Rebuilt whenever the button is activated or the jump range slider moves
+//  while the graph is visible.
+// ══════════════════════════════════════════════════════════════════════
+const jumpGraphGroup = new THREE.Group();
+scene.add(jumpGraphGroup);
+let _jumpGraphVisible = false;
+
+const _jumpGraphMat = new THREE.LineBasicMaterial({
+  color:       0xffffff,
+  transparent: true,
+  opacity:     0.18,   // subtle — enough to read the network, not overwhelm the route
+  depthWrite:  false,
+});
+
+function buildJumpGraph() {
+  // Clear existing
+  while (jumpGraphGroup.children.length) {
+    const c = jumpGraphGroup.children[0];
+    c.geometry?.dispose();
+    jumpGraphGroup.remove(c);
+  }
+
+  const jumpRange = parseFloat(document.getElementById('slider-jump').value);
+  const n = SYS.length;
+
+  // Build one Line per reachable pair (i < j avoids duplicates)
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      const d = dist3D(SYS[i], SYS[j]);
+      if (d <= 0.1 || d > jumpRange) continue;
+
+      const geo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(SYS[i].lx, SYS[i].lz, SYS[i].ly),
+        new THREE.Vector3(SYS[j].lx, SYS[j].lz, SYS[j].ly),
+      ]);
+      jumpGraphGroup.add(new THREE.Line(geo, _jumpGraphMat));
+    }
+  }
+  console.log(`Starfield Route Planner | Jump graph built at ${jumpRange} LY — ${jumpGraphGroup.children.length} edges.`);
+}
+
+function clearJumpGraph() {
+  while (jumpGraphGroup.children.length) {
+    const c = jumpGraphGroup.children[0];
+    c.geometry?.dispose();
+    jumpGraphGroup.remove(c);
+  }
+}
+
+function toggleJumpGraph() {
+  _jumpGraphVisible = !_jumpGraphVisible;
+  const btn = document.getElementById('btn-jump-graph');
+
+  if (_jumpGraphVisible) {
+    buildJumpGraph();
+    jumpGraphGroup.visible = true;
+    btn.textContent = '⬡ HIDE JUMP GRAPH';
+    btn.classList.add('active');
+  } else {
+    jumpGraphGroup.visible = false;
+    clearJumpGraph();
+    btn.textContent = '⬡ SHOW JUMP GRAPH';
+    btn.classList.remove('active');
+  }
+}
+
+function clearRouteLines() {
+  while (routeGroup.children.length) {
+    const c = routeGroup.children[0];
+    c.geometry?.dispose();
+    routeGroup.remove(c);
+  }
+}
+
+function addRouteLine(a, b, color) {
+  const geo = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(a.lx, a.lz, a.ly),
+    new THREE.Vector3(b.lx, b.lz, b.ly),
+  ]);
+  const mat  = new THREE.LineBasicMaterial({ color, transparent:true, opacity:0.85 });
+  const line = new THREE.Line(geo, mat);
+  routeGroup.add(line);
+
+  // Distance label at midpoint
+  const mid = new THREE.Vector3(
+    (a.lx+b.lx)/2, (a.lz+b.lz)/2, (a.ly+b.ly)/2
+  );
+  const d   = dist3D(a,b).toFixed(1)+' LY';
+  const el  = document.createElement('div');
+  el.className     = 'star-label-3d';
+  el.textContent   = d;
+  el.style.color   = '#' + new THREE.Color(color).getHexString();
+  el.style.fontSize= '9px';
+  el.dataset.midX  = mid.x;
+  el.dataset.midY  = mid.y;
+  el.dataset.midZ  = mid.z;
+  el.dataset.isDistLabel = '1';
+  document.getElementById('label-layer').appendChild(el);
+}
+
+function clearDistLabels() {
+  document.querySelectorAll('[data-is-dist-label]').forEach(el => el.remove());
+}
+
+function updateDistLabels() {
+  const w = window.innerWidth, h = window.innerHeight;
+  const vp = new THREE.Vector3();
+  document.querySelectorAll('[data-is-dist-label]').forEach(el => {
+    vp.set(
+      parseFloat(el.dataset.midX),
+      parseFloat(el.dataset.midY),
+      parseFloat(el.dataset.midZ)
+    ).project(camera);
+    const x = (vp.x*0.5+0.5)*w;
+    const y = (-vp.y*0.5+0.5)*h;
+    if (vp.z > 1) { el.style.display='none'; return; }
+    el.style.display  = 'block';
+    el.style.position = 'absolute';
+    el.style.left     = x.toFixed(1)+'px';
+    el.style.top      = y.toFixed(1)+'px';
+    el.style.transform= 'translate(-50%,-50%)';
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  STAR HIGHLIGHT HELPERS
+// ══════════════════════════════════════════════════════════════════════
+function resetAllStarMaterials() {
+  _routeLabelIds.clear(); // clear route tracking on reset
+  SYS.forEach(sys => {
+    const obj = sysObjects[sys.id];
+    if (!obj) return;
+    obj.sprite.material = matDefault.clone();
+    obj.sprite.scale.set(1.4, 1.4, 1);
+    obj.labelEl.classList.remove('route-origin-label','route-dest-label','route-green-label','route-red-label');
+  });
+}
+
+function highlightStar(id, mat, labelCls, scale=2.2) {
+  const obj = sysObjects[id];
+  if (!obj) return;
+  obj.sprite.material = mat;
+  obj.sprite.scale.set(scale, scale, 1);
+  if (labelCls) obj.labelEl.classList.add(labelCls);
+  _routeLabelIds.add(id); // mark as always-shown regardless of zoom/proximity
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  DROPDOWNS
+// ══════════════════════════════════════════════════════════════════════
+const selOrigin = document.getElementById('sel-origin');
+const selDest   = document.getElementById('sel-dest');
+[...SYS].sort((a,b)=>a.name.localeCompare(b.name)).forEach(sys=>{
+  [selOrigin,selDest].forEach(sel=>{
+    const o=document.createElement('option');
+    o.value=sys.id; o.textContent=sys.name; sel.appendChild(o);
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════
+//  SLIDERS
+// ══════════════════════════════════════════════════════════════════════
+const slFuel=document.getElementById('slider-fuel');
+const slJump=document.getElementById('slider-jump');
+const slFPJ =document.getElementById('slider-fuelper');
+const vFuel =document.getElementById('val-fuel');
+const vJump =document.getElementById('val-jump');
+const vFPJ  =document.getElementById('val-fuelper');
+slFuel.addEventListener('input',()=>{ vFuel.textContent=slFuel.value; });
+slJump.addEventListener('input',()=>{ vJump.textContent=parseFloat(slJump.value).toFixed(1)+' LY'; });
+slFPJ .addEventListener('input',()=>{ vFPJ.textContent=slFPJ.value; });
+vJump.textContent = parseFloat(slJump.value).toFixed(1)+' LY';
+
+// ══════════════════════════════════════════════════════════════════════
+//  PANEL TOGGLE
+// ══════════════════════════════════════════════════════════════════════
+function togglePanel() {
+  document.getElementById('control-panel').classList.toggle('collapsed');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  DIJKSTRA
+// ══════════════════════════════════════════════════════════════════════
+function dijkstra(originId, destId, jumpRange) {
+  const n=SYS.length, idx={};
+  SYS.forEach((s,i)=>{ idx[s.id]=i; });
+  const si=idx[originId], ei=idx[destId];
+  if (si===undefined||ei===undefined) return null;
+
+  const D=new Array(n).fill(Infinity), prev=new Array(n).fill(-1), vis=new Array(n).fill(false);
+  D[si]=0;
+  for (let iter=0;iter<n;iter++) {
+    let u=-1;
+    for (let i=0;i<n;i++) if(!vis[i]&&(u===-1||D[i]<D[u])) u=i;
+    if (u===-1||D[u]===Infinity) break;
+    vis[u]=true;
+    if (u===ei) break;
+    for (let v=0;v<n;v++) {
+      if (vis[v]) continue;
+      const d=dist3D(SYS[u],SYS[v]);
+      if (d>0.1&&d<=jumpRange) {
+        const nd=D[u]+d;
+        if (nd<D[v]){ D[v]=nd; prev[v]=u; }
+      }
+    }
+  }
+  if (D[ei]===Infinity) return null;
+  const path=[];
+  let cur=ei;
+  while(cur!==-1){ path.unshift(SYS[cur]); cur=prev[cur]; }
+  return path;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  ROUTE STATE
+// ══════════════════════════════════════════════════════════════════════
+let _lastPath      = null;
+let _lastFuelPer   = 5;
+let _lastFuelTotal = 100;
+let _lastJumpRange = 20;
+let _syncedFromRemote = false;
+
+// ══════════════════════════════════════════════════════════════════════
+//  CLEAR ROUTE
+// ══════════════════════════════════════════════════════════════════════
+function clearRoute() {
+  clearRouteLines();
+  clearDistLabels();
+  resetAllStarMaterials();
+  _lastPath = null;
+  setResult('Route cleared.','result-info');
+
+  try {
+    if (!_syncedFromRemote && window.parent && window.parent !== window) {
+      window.parent.postMessage(JSON.stringify({ type: 'co-clear-route' }), '*');
+    }
+  } catch(_) {}
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  PLOT ROUTE
+// ══════════════════════════════════════════════════════════════════════
+function plotRoute() {
+  clearRoute();
+  const originId    = selOrigin.value;
+  const destId      = selDest.value;
+  if (!originId||!destId){ setResult('Select both origin and destination.','result-info'); return; }
+  if (originId===destId) { setResult('Origin and destination are the same.','result-info'); return; }
+
+  const jumpRange   = parseFloat(slJump.value);
+  const fuelTotal   = parseFloat(slFuel.value);
+  const fuelPerJump = parseFloat(slFPJ.value);
+
+  const path = dijkstra(originId, destId, jumpRange);
+  if (!path) {
+    setResult(`No route found within <b>${jumpRange.toFixed(1)} LY</b>.<br>Increase jump drive range.`,'result-warn');
+    return;
+  }
+
+  _lastPath=path; _lastFuelPer=fuelPerJump; _lastFuelTotal=fuelTotal; _lastJumpRange=jumpRange;
+
+  const jumps      = path.length-1;
+  const fuelNeeded = jumps*fuelPerJump;
+  const affordable = Math.floor(fuelTotal/fuelPerJump);
+  const canFinish  = fuelNeeded<=fuelTotal;
+
+  // Highlight origin + destination
+  highlightStar(originId, matOrigin, 'route-origin-label', 2.8);
+  highlightStar(destId,   matDest,   'route-dest-label',   2.8);
+
+  let totalDist=0;
+  const segDists=[];
+
+  for (let i=0;i<jumps;i++) {
+    const from=path[i], to=path[i+1];
+    const sd=dist3D(from,to);
+    totalDist+=sd; segDists.push(sd);
+    const done=i+1, ok=done<=affordable;
+    const color = ok ? 0x00ff44 : 0xff3333;
+    addRouteLine(from, to, color);
+
+    if (i>0)       highlightStar(from.id, ok?matRouteOK:matRouteBAD, ok?'route-green-label':'route-red-label', 2.0);
+    if (i<jumps-1) highlightStar(to.id,   done<affordable?matRouteOK:matRouteBAD, done<affordable?'route-green-label':'route-red-label', 2.0);
+  }
+
+  const maxJump=Math.max(...segDists).toFixed(2);
+
+  if (canFinish) {
+    setResult(
+      `<span class="result-ok">▶ ROUTE VIABLE</span><br>`+
+      `Jumps: ${jumps} &nbsp;|&nbsp; Total: ${totalDist.toFixed(2)} LY<br>`+
+      `Longest jump: ${maxJump} LY<br>`+
+      `Fuel: ${fuelNeeded} / ${fuelTotal} units used<br>`+
+      `Remaining: ${fuelTotal-fuelNeeded} units`,
+      'result-ok'
+    );
+  } else {
+    const last=path[affordable]?path[affordable].name:'unknown';
+    setResult(
+      `<span class="result-warn">⚠ INSUFFICIENT FUEL</span><br>`+
+      `Jumps req: ${jumps} &nbsp;|&nbsp; Can make: ${affordable}<br>`+
+      `Total: ${totalDist.toFixed(2)} LY &nbsp;|&nbsp; Max: ${maxJump} LY<br>`+
+      `Fuel needed: ${fuelNeeded} &nbsp;|&nbsp; Available: ${fuelTotal}<br>`+
+      `Last reachable: <b>${last}</b>`,
+      'result-warn'
+    );
+  }
+
+  // Broadcast to other clients
+  try {
+    if (!_syncedFromRemote && window.parent && window.parent !== window) {
+      window.parent.postMessage(JSON.stringify({
+        type: 'co-sync-route',
+        payload: { originId, destId, jumpRange, fuelTotal, fuelPerJump },
+      }), '*');
+    }
+  } catch(_) {}
+}
+
+function setResult(html,cls){
+  const el=document.getElementById('result-text');
+  el.innerHTML=html; el.className=cls;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  2D RESET VIEW
+//  Animates camera smoothly back to the top-down canonical position.
+// ══════════════════════════════════════════════════════════════════════
+function resetTo2DView() {
+  _animateCamera(
+    CAM_2D_POS.clone(),
+    MAP_CENTER.clone(),
+    CAM_2D_UP.clone(),
+    1200
+  );
+}
+
+// Generic camera animation
+let _camAnim = null;
+function _animateCamera(toPos, toTarget, toUp, durationMs) {
+  const fromPos    = camera.position.clone();
+  const fromTarget = controls.target.clone();
+  const fromUp     = camera.up.clone();
+  const start      = performance.now();
+
+  if (_camAnim) cancelAnimationFrame(_camAnim);
+
+  function step(now) {
+    const t   = Math.min((now-start)/durationMs, 1);
+    const ease = t<0.5 ? 2*t*t : -1+(4-2*t)*t; // ease-in-out quad
+
+    camera.position.lerpVectors(fromPos,    toPos,    ease);
+    controls.target.lerpVectors(fromTarget, toTarget, ease);
+    camera.up.lerpVectors(fromUp, toUp, ease).normalize();
+    camera.lookAt(controls.target);
+
+    const offset = new THREE.Vector3().subVectors(camera.position, controls.target);
+    controls._spherical.setFromVector3(offset);
+
+    if (t < 1) _camAnim = requestAnimationFrame(step);
+    else        _camAnim = null;
+  }
+  _camAnim = requestAnimationFrame(step);
+}
+
+// Apply remote camera state with smooth lerp
+function applyCameraState(state) {
+  _animateCamera(
+    new THREE.Vector3(state.position.x, state.position.y, state.position.z),
+    new THREE.Vector3(state.target.x,   state.target.y,   state.target.z),
+    camera.up.clone(), // preserve current up
+    300
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  JUMP LOG
+// ══════════════════════════════════════════════════════════════════════
+function buildJumpLog() {
+  if (!_lastPath || _lastPath.length < 2) return null;
+  const path=_lastPath, fuelPer=_lastFuelPer, fuelTotal=_lastFuelTotal, jumpRange=_lastJumpRange;
+  const jumps=path.length-1;
+  let fuelRemaining=fuelTotal, totalDist=0;
+  const jumpRows=[];
+  for (let i=0;i<jumps;i++) {
+    const from=path[i], to=path[i+1];
+    const d=dist3D(from,to);
+    const viable=fuelRemaining>=fuelPer;
+    fuelRemaining=viable?fuelRemaining-fuelPer:fuelRemaining;
+    totalDist+=d;
+    jumpRows.push({ num:i+1, from:from.name, to:to.name, distLY:d, fuelUsed:fuelPer, fuelAfter:fuelRemaining, viable });
+  }
+  const fuelNeeded=jumps*fuelPer, affordable=Math.floor(fuelTotal/fuelPer), canFinish=fuelNeeded<=fuelTotal;
+  return {
+    summary:{ origin:path[0].name, destination:path[path.length-1].name, jumps, totalDistLY:totalDist,
+      maxJumpLY:Math.max(...jumpRows.map(j=>j.distLY)), jumpRangeLY:jumpRange, fuelTotal, fuelPerJump:fuelPer,
+      fuelNeeded, affordable, canFinish, fuelLeft:canFinish?fuelTotal-fuelNeeded:0 },
+    jumps:jumpRows,
+  };
+}
+
+function buildJumpLogText() {
+  const log=buildJumpLog(); if (!log) return 'No route plotted.';
+  const s=log.summary;
+  const pad=(str,len)=>String(str).padEnd(len);
+  const rpad=(str,len)=>String(str).padStart(len);
+  const header=
+    `STARFIELD NAVIGATION JUMP LOG\n${'─'.repeat(60)}\n`+
+    `Origin      : ${s.origin}\nDestination : ${s.destination}\n`+
+    `Total jumps : ${s.jumps}\nTotal dist  : ${s.totalDistLY.toFixed(2)} LY\n`+
+    `Max jump    : ${s.maxJumpLY.toFixed(2)} LY  (drive: ${s.jumpRangeLY.toFixed(1)} LY)\n`+
+    `Fuel total  : ${s.fuelTotal} units  |  ${s.fuelPerJump} units/jump\n`+
+    `Fuel needed : ${s.fuelNeeded} units  |  `+
+    (s.canFinish?`${s.fuelLeft} units remaining`:`⚠ INSUFFICIENT — last reachable: jump ${s.affordable}`)+'\n'+
+    `${'─'.repeat(60)}\n${rpad('#',3)}  ${pad('FROM',22)}  →  ${pad('TO',22)}  ${rpad('DIST',8)}  ${rpad('FUEL',6)}  ${rpad('REM',6)}  STATUS\n${'─'.repeat(60)}\n`;
+  const rows=log.jumps.map(j=>`${rpad(j.num,3)}  ${pad(j.from,22)}  →  ${pad(j.to,22)}  ${rpad(j.distLY.toFixed(2)+' LY',8)}  ${rpad('-'+j.fuelUsed,6)}  ${rpad(j.fuelAfter,6)}  ${j.viable?'OK':'⚠ NO FUEL'}`).join('\n');
+  return header+rows+'\n'+'─'.repeat(60);
+}
+
+function openJumpLog() {
+  const log=buildJumpLog();
+  if (!log){ setResult('Plot a route first to view the jump log.','result-info'); return; }
+  const s=log.summary;
+  const viableLabel=s.canFinish
+    ?`<span style="color:lime">VIABLE — ${s.fuelLeft} units remaining</span>`
+    :`<span style="color:#ff4444">⚠ INSUFFICIENT — reachable: ${s.affordable} of ${s.jumps} jumps</span>`;
+  document.getElementById('jumplog-summary').innerHTML=
+    `<b>${s.origin}</b><span style="color:#4a6a8a"> → </span><b>${s.destination}</b>&nbsp;&nbsp;|&nbsp;&nbsp;`+
+    `${s.jumps} jumps &nbsp; ${s.totalDistLY.toFixed(2)} LY total &nbsp; max ${s.maxJumpLY.toFixed(2)} LY/jump<br>`+
+    `Fuel: ${s.fuelNeeded} / ${s.fuelTotal} &nbsp;|&nbsp; ${s.fuelPerJump}/jump &nbsp;|&nbsp; ${viableLabel}`;
+  let html=`<div class="jump-row jump-header"><div>#</div><div>FROM</div><div></div><div>TO</div><div style="text-align:right">DIST</div><div style="text-align:right">FUEL</div><div style="text-align:right">REMAINING</div></div>`;
+  log.jumps.forEach(j=>{
+    html+=`<div class="jump-row ${j.viable?'jump-ok':'jump-warn'}">
+      <div class="jump-num">${j.num}</div><div class="jump-from">${j.from}</div>
+      <div class="jump-arr">›</div><div class="jump-to">${j.to}</div>
+      <div class="jump-dist">${j.distLY.toFixed(2)} LY</div>
+      <div class="jump-fuel">-${j.fuelUsed}</div>
+      <div class="jump-rem">${j.viable?j.fuelAfter:'<span style="color:#ff4444">─</span>'}</div></div>`;
+  });
+  document.getElementById('jumplog-body').innerHTML=html;
+  const btn=document.getElementById('jumplog-copy');
+  btn.textContent='⎘ COPY TO CLIPBOARD'; btn.classList.remove('copied');
+  document.getElementById('jumplog-overlay').style.display='block';
+  document.getElementById('jumplog-dialog').style.display='flex';
+}
+
+function closeJumpLog() {
+  document.getElementById('jumplog-overlay').style.display='none';
+  document.getElementById('jumplog-dialog').style.display='none';
+}
+
+function copyJumpLog() {
+  const text=buildJumpLogText();
+  const finish=()=>{
+    const btn=document.getElementById('jumplog-copy');
+    btn.textContent='✓ COPIED'; btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='⎘ COPY TO CLIPBOARD'; btn.classList.remove('copied'); }, 2200);
+  };
+  navigator.clipboard.writeText(text).then(finish).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta); finish();
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  BUTTON WIRING
+// ══════════════════════════════════════════════════════════════════════
+document.getElementById('btn-plot')      .addEventListener('click', plotRoute);
+document.getElementById('btn-jumplog')   .addEventListener('click', openJumpLog);
+document.getElementById('btn-clear')     .addEventListener('click', clearRoute);
+document.getElementById('btn-reset-view').addEventListener('click', resetTo2DView);
+document.getElementById('btn-jump-graph').addEventListener('click', toggleJumpGraph);
+
+// Rebuild jump graph live when the slider changes (if graph is currently visible)
+document.getElementById('slider-jump').addEventListener('input', () => {
+  if (_jumpGraphVisible) buildJumpGraph();
+});
+
+// ══════════════════════════════════════════════════════════════════════
+//  KEYBOARD SHORTCUTS
+// ══════════════════════════════════════════════════════════════════════
+document.addEventListener('keydown', e=>{
+  if (e.key==='Enter')  { if(document.getElementById('jumplog-dialog').style.display==='flex') closeJumpLog(); else plotRoute(); }
+  if (e.key==='l'||e.key==='L') openJumpLog();
+  if (e.key==='r'||e.key==='R') resetTo2DView();
+  if (e.key==='h'||e.key==='H') {
+    // Set home system to whatever is currently hovered
+    if (_hoveredId) {
+      const sys = SYS.find(s => s.id === _hoveredId);
+      if (sys) setHomeSystem(sys);
+    }
+  }
+});
+document.addEventListener('keydown', e=>{
+  if (e.key==='Escape') {
+    const logOpen=document.getElementById('jumplog-dialog').style.display==='flex';
+    if (!logOpen) closeMap();
+  }
+}, true);
+
+// ══════════════════════════════════════════════════════════════════════
+//  WINDOW RESIZE
+// ══════════════════════════════════════════════════════════════════════
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  labelRenderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ══════════════════════════════════════════════════════════════════════
+//  HOME SYSTEM — reference point for distance tooltips
+//  Defaults to Sol. Press H while hovering any star to change it.
+//  All hover distance readouts update to show distance from home.
+// ══════════════════════════════════════════════════════════════════════
+let _homeSystem = SOL; // mutable reference, starts at Sol
+
+function setHomeSystem(sys) {
+  _homeSystem = sys;
+  // Update the legend label so the current home is always visible
+  const homeEl = document.getElementById('home-system-label');
+  if (homeEl) homeEl.textContent = `⌂ ${sys.name}`;
+  // Force a tooltip refresh if something is currently hovered
+  _hoveredId = null;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  RAYCASTER — hover over stars to show coord tooltip / home distance
+// ══════════════════════════════════════════════════════════════════════
+const raycaster  = new THREE.Raycaster();
+raycaster.params.Sprite = { threshold: 0.8 };
+const mouse      = new THREE.Vector2();
+const solDistEl  = document.getElementById('sol-distance');
+let   _hoveredId = null;
+
+canvas.addEventListener('mousemove', e => {
+  mouse.set(
+    (e.clientX / window.innerWidth)  * 2 - 1,
+   -(e.clientY / window.innerHeight) * 2 + 1
+  );
+  raycaster.setFromCamera(mouse, camera);
+  const sprites = SYS.map(s=>sysObjects[s.id]?.sprite).filter(Boolean);
+  const hits    = raycaster.intersectObjects(sprites);
+
+  if (hits.length > 0) {
+    const hit  = hits[0].object;
+    const sysId= hit.userData.sysId;
+    if (sysId !== _hoveredId) {
+      _hoveredId = sysId;
+      const sys  = SYS.find(s=>s.id===sysId);
+      if (sys) {
+        const d        = dist3D(sys, _homeSystem);
+        const isHome   = sys.id === _homeSystem.id;
+        const distText = isHome
+          ? `⌂ HOME`
+          : `${d.toFixed(2)} LY from ${_homeSystem.name}`;
+        solDistEl.innerHTML =
+          `<b>${sys.name}</b>`+
+          `&nbsp;&nbsp;|&nbsp;&nbsp;`+
+          `X:${sys.lx.toFixed(1)} Y:${sys.ly.toFixed(1)} Z:${sys.lz.toFixed(1)} LY`+
+          `&nbsp;&nbsp;|&nbsp;&nbsp;`+
+          `${distText}`+
+          `&nbsp;&nbsp;&nbsp;`+
+          `<span style="color:#4a6a8a;font-size:9px;">⌂ H to set home</span>`;
+        solDistEl.style.display='block';
+      }
+    }
+  } else {
+    _hoveredId = null;
+    solDistEl.style.display='none';
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════════
+//  RENDER LOOP
+// ══════════════════════════════════════════════════════════════════════
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  updateLabels();
+  updateDistLabels();
+  renderer.render(scene, camera);
+}
+animate();
+
+// ══════════════════════════════════════════════════════════════════════
+//  CALENDARIA CLOCK BRIDGE
+// ══════════════════════════════════════════════════════════════════════
+const elStardate = document.getElementById('clock-stardate');
+const elRealtime = document.getElementById('clock-realtime');
+let _calendariaTicking=false, _interpTimer=null;
+
+function tickRealClock() {
+  const n=new Date();
+  const h=String(n.getHours()).padStart(2,'0');
+  const m=String(n.getMinutes()).padStart(2,'0');
+  const s=String(n.getSeconds()).padStart(2,'0');
+  elRealtime.textContent=`REAL ${h}:${m}:${s}`;
+  if (!_calendariaTicking) elStardate.textContent=`${h}:${m}:${s}`;
+}
+tickRealClock(); setInterval(tickRealClock, 1000);
+
+function startInterp(payload) {
+  clearInterval(_interpTimer);
+  let sec=payload.second, min=payload.minute, hr=payload.hour;
+  _interpTimer=setInterval(()=>{
+    sec++; if(sec>=60){sec=0;min++;} if(min>=60){min=0;hr++;} if(hr>=24) hr=0;
+    elStardate.textContent=`UT ${payload.year}.${String(payload.dayOfYear).padStart(3,'0')} ${String(hr).padStart(2,'0')}:${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  }, 1000);
+}
+
+window.receiveStardate = (payload) => {
+  window.dispatchEvent(new MessageEvent('message', {
+    data: JSON.stringify({ type:'calendaria-stardate', ...payload }),
+    origin: window.location.origin,
+  }));
+};
+
+// ══════════════════════════════════════════════════════════════════════
+//  GM DETECTION
+// ══════════════════════════════════════════════════════════════════════
+(function detectGM() {
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(JSON.stringify({ type:'co-query-is-gm' }), '*');
+    }
+  } catch(_) {}
+})();
+
+// ══════════════════════════════════════════════════════════════════════
+//  UNIFIED postMessage LISTENER
+// ══════════════════════════════════════════════════════════════════════
+window.addEventListener('message', (event) => {
+  let data;
+  try { data=typeof event.data==='string'?JSON.parse(event.data):event.data; }
+  catch(_){ return; }
+  if (!data?.type) return;
+
+  switch (data.type) {
+
+    case 'co-is-gm-response':
+      if (data.isGM) {
+        const btn=document.getElementById('btn-close-all');
+        if (btn) btn.style.display='block';
+      }
+      break;
+
+    case 'co-apply-route': {
+      const p=data.payload; if (!p) break;
+      _syncedFromRemote=true;
+      selOrigin.value=p.originId??'';
+      selDest.value  =p.destId??'';
+      slJump.value   =p.jumpRange??slJump.value;
+      slFuel.value   =p.fuelTotal??slFuel.value;
+      slFPJ.value    =p.fuelPerJump??slFPJ.value;
+      vJump.textContent=parseFloat(slJump.value).toFixed(1)+' LY';
+      vFuel.textContent=slFuel.value;
+      vFPJ.textContent =slFPJ.value;
+      plotRoute();
+      _syncedFromRemote=false;
+      break;
+    }
+
+    case 'co-apply-clear':
+      _syncedFromRemote=true;
+      clearRoute();
+      _syncedFromRemote=false;
+      break;
+
+    case 'co-apply-camera':
+      applyCameraState(data.payload);
+      break;
+
+    case 'calendaria-stardate':
+      _calendariaTicking=true;
+      elStardate.textContent=data.stardate;
+      elStardate.classList.remove('updated');
+      void elStardate.offsetWidth;
+      elStardate.classList.add('updated');
+      setTimeout(()=>elStardate.classList.remove('updated'), 400);
+      startInterp(data);
+      break;
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════════
+//  GM CLOSE-ALL
+// ══════════════════════════════════════════════════════════════════════
+function closeMapAll() {
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(JSON.stringify({ type:'co-close-all-clients' }), '*');
+      return;
+    }
+  } catch(_) {}
+  console.warn('Route Planner | closeMapAll() called outside Foundry context.');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  PER-CLIENT CLOSE
+// ══════════════════════════════════════════════════════════════════════
+function closeMap() {
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(JSON.stringify({ type:'co-close-route-planner' }), '*');
+      return;
+    }
+  } catch(_) {}
+  document.body.style.opacity='0';
+  setTimeout(()=>{ document.body.style.opacity='1'; try{window.close();}catch(_){} }, 250);
+}
+// ── NAV AUTO-FADE ──────────────────────────────────────────────────────────
+// Fades out after 4s of mouse inactivity, reappears on mouse move
+(function(){
+  const nav = document.getElementById('site-nav');
+  let fadeTimer;
+  function resetFade(){
+    nav.style.opacity = '1';
+    clearTimeout(fadeTimer);
+    fadeTimer = setTimeout(() => { nav.style.opacity = '0.15'; }, 4000);
+  }
+  document.addEventListener('mousemove', resetFade);
+  resetFade();
+})();
+</script>
+</body>
+</html>
